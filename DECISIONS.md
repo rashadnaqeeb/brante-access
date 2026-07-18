@@ -21,6 +21,22 @@ stream of questions.
   NullReferenceException inside the GAME for the game's own mouse path too (our activation
   invokes the same Button_Click). The game demonstrably survives it; aborting on it would
   block coverage of everything past the fourth death. Mod errors still abort hard.
+- **The fourth-death trial's scene-reload is same-frame, and the mod must survive it**: the
+  trial loops FourthDeath_* scenes (one per judgment question) by reloading the scene
+  synchronously from a Bolt "Click" trigger - the death screen never observes an inactive
+  frame, so no pop/push, and the watched pager becomes a DESTROYED Unity object that reads
+  as null under Unity's overloaded ==. DeathScreen distinguishes real null (OnPop cleared,
+  navigator seat announcement speaks) from destroyed (same-screen swap, deliver the new
+  page after settle) with ReferenceEquals. Heard live: reload spoke only "next page,
+  button, 2 of 2" before the fix; title + full page after.
+- **A wedge caused by the game's own NRE cascade is unwedged by firing the un-run tail of
+  the game's handler, not by mod code**: FourthDeath_3's ContinueButton carried a NULL
+  serialized DeathObjective, so ShowObjectivePopupEvent, the popup's Start, and
+  DisactivePopup all NREd; the popup hid but never broadcast CloseTrueDeathPopupEvent, set
+  GoToFinals, or triggered the TalismanFlowMachine Bolt "Click" - the game was stuck with a
+  self-disabled Continue. One dev /eval replayed exactly those remaining game steps and the
+  flow advanced cleanly (zero new errors). Nothing mod-side changed: a real player on this
+  path hits the same wedge, and the mod cannot fix game data.
 
 ## Conversion panel and panel-sweep judgment calls (2026-07-18, Phase 6)
 

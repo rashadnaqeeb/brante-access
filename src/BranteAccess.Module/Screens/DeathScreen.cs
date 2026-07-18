@@ -133,7 +133,12 @@ namespace BranteAccess.Module.Screens
             string text = PageText(t);
             if (t != _watched)
             {
-                bool entry = _watched == null;
+                // Real null means OnPop cleared it (screen entry: the navigator's seat
+                // announcement reads the page). A DESTROYED pager means the death scene
+                // swapped under an alive screen (the fourth-death trial reloads its scene
+                // per judgment question, synchronously - no pop frame), which Unity's
+                // overloaded == also reports as null: that is new content to deliver.
+                bool entry = ReferenceEquals(_watched, null);
                 _watched = t;
                 _spokenPage = page;
                 _pendingText = null;
