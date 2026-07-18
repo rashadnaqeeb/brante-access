@@ -33,7 +33,7 @@ namespace BranteAccess.Module.Screens
         }
 
         public override Message ScreenName
-            => Message.MaybeRaw(GameLoc.GetTranslation("HUD.Relations"));
+            => Message.MaybeRaw(GameLoc.GetTranslation("HUD.Relation"));
 
         private static RelationsWindow Window()
         {
@@ -44,6 +44,18 @@ namespace BranteAccess.Module.Screens
         private static List<CharacterTile> Tiles(RelationsWindow wm)
             => new List<CharacterTile>(
                 wm.CharacterContainer.GetComponentsInChildren<CharacterTile>());
+
+        // The controller's own generate query: every unlocked non-family character gets a tile.
+        private static int ExpectedTileCount()
+        {
+            var helper = _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate;
+            var count = 0;
+            foreach (var cm in helper.Characters)
+                if (cm.IsUnlocked
+                    && !helper.CharacterObjects.Find(co => co.Name == cm.Character).IsFamily)
+                    count++;
+            return count;
+        }
 
         // Selecting a tile changes no focus, so the state change is the delivery: watch the
         // game's own selected-character marker and speak it once per change. Seeded on focus
@@ -80,10 +92,13 @@ namespace BranteAccess.Module.Screens
             var wm = Window();
             if (wm == null) return;
             // The tile list is generated in the controller's Start(), a beat after ShowWindow
-            // instantiates the prefab; tile texts are written at instantiation, so any tile
-            // present is real. The empty list is real content only once the game has decided
-            // it (its Start switches the placeholder), so the placeholder gates that case.
+            // instantiates the prefab; until then the prefab's own placeholder sits active with
+            // unlocalized serialized text. The same model query Start runs (unlocked non-family
+            // characters) says how many tiles to expect, so the graph waits for that count -
+            // and trusts the placeholder only for a genuinely empty list, where the game
+            // activating it has also run its localization.
             var tiles = Tiles(wm);
+            if (tiles.Count < ExpectedTileCount()) return;
             if (tiles.Count == 0 && !wm.Placeholder.activeSelf) return;
 
             b.PushContext("", role: null, positions: true);

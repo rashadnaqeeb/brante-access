@@ -5,6 +5,18 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Relations window judgment calls (2026-07-18, Phase 5)
+
+- **Build gate is the controller's own model query, not the placeholder**: the window prefab
+  ships with the placeholder active and its text unlocalized (its TextMeshProLocalization
+  runs on enable, which never happens when characters exist); the tile list only appears in
+  the controller's Start. Gating on the placeholder spoke raw Russian on the first frame
+  (caught live). The gate now counts unlocked non-family characters exactly as
+  GenerateCharacterList does and waits until that many tiles exist; the placeholder is
+  trusted only for a genuinely empty list, where the game activating it has also localized it.
+- **ScreenName term is HUD.Relation (singular)**: HUD.Relations returns empty; the singular
+  term is the HUD button's own label term and translates to "Relations".
+
 ## Chapter final window judgment calls (2026-07-18, Phase 5)
 
 - **Timeline rows fold the year from the year headers above them**: the game renders the

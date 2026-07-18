@@ -330,14 +330,18 @@ go to DECISIONS.md, not to the user.
       name row, the game's own redirect); Escape returned to the scene. Entry gated on the
       hero tile's Start()-written name. Status skipped when CharacterStatus.Good - the game
       renders a bare dash and placeholder detail there.)
-- [ ] built - Relations window (+ RelationPopup, relation tooltips)
-      (2026-07-18: RelationsWindowScreen written on the Family-window pattern - tile rows with
-      role/estate/relation/status folded on via new shared Readouts character helpers
-      (CharacterEstate/RelationPair/StatusWord/Detail, Family window refactored onto them),
-      selection delivery, placeholder row for the no-acquaintances case. NOT yet driven live:
-      the window needs a chapter 2+ save (chapter 1 has no Relations HUD button). Prefab name
-      "Window_Relations" and ScreenName key "HUD.Relations" are unconfirmed guesses to check
-      first. RelationPopup still unexamined.)
+- [x] verified - Relations window (relation tooltips folded; RelationPopup still pending)
+      (2026-07-18: RelationsWindowScreen on the Family-window pattern - tile rows with
+      role/estate/relation/status folded on via the shared Readouts character helpers,
+      selection delivery, placeholder row for the no-acquaintances case. Verified live in
+      chapter 2 scene 1 via the real HUD button: entry "Relations" + "Tommas Guerro, Lowborn,
+      Relations 0 (Indifference)", Space read his description paragraph, Enter delivered
+      "Tommas Guerro selected", Escape back to the scene. Two guesses corrected live: the
+      I2 term is HUD.Relation (HUD.Relations is empty), and the build gate now waits for the
+      controller's own model count (unlocked non-family characters) - the prefab placeholder
+      sits active with unlocalized Russian text until the controller's Start, and the first
+      graph build beat it. RelationPopup still unexamined - kept on the todo list below.)
+- [ ] todo - RelationPopup (relation-change popup surface; unexamined)
 - [ ] todo - Empire window
 - [ ] todo - Work window
 - [x] verified - Home window
