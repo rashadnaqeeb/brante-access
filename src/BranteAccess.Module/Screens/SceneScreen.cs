@@ -7,8 +7,10 @@ using BranteAccess.Module.UI.Graph;
 using UnityEngine;
 using TextController = _Scripts.AMVCC.Controllers.TextController;
 using SceneController = _Scripts.AMVCC.Controllers.SceneController;
+using ConsequenceSceneController = _Scripts.AMVCC.Controllers.ConsequenceSceneController;
 using ParameterButtonChanger = _Scripts.AMVCC.Views.ParameterButtonChanger;
 using SceneConsequenceGenerator = _Scripts.AMVCC.Views.Windows.SceneConsequenceGenerator;
+using UniversalParametersGenerator = _Scripts.AMVCC.Views.Windows.Popup.UniversalParametersGenerator;
 
 namespace BranteAccess.Module.Screens
 {
@@ -34,17 +36,28 @@ namespace BranteAccess.Module.Screens
         // skip works); this screen must not sit under it claiming UI keys.
         public override bool IsActive()
             => GameUi.State == GameState.RUNNING
-            && Object.FindObjectOfType<SceneController>() != null
+            && TitleObject() != null
             && Object.FindObjectOfType<CutsceneIntro>() == null
             && Object.FindObjectOfType<ChapterCutscene>() == null;
+
+        // Epilogue scenes (070.* game-over outcomes, e.g. after a True Death) run on
+        // ConsequenceSceneController - the same ISceneController/TextController surface as a
+        // normal scene, minus choices. Both carry the title the screen is named by.
+        private static GameObject TitleObject()
+        {
+            var sc = Object.FindObjectOfType<SceneController>();
+            if (sc != null) return sc.Title;
+            var epilogue = Object.FindObjectOfType<ConsequenceSceneController>();
+            return epilogue != null ? epilogue.Title : null;
+        }
 
         public override Message ScreenName
         {
             get
             {
-                var sc = Object.FindObjectOfType<SceneController>();
-                return sc == null ? null
-                    : Message.MaybeRaw(sc.Title.GetComponent<TMPro.TextMeshProUGUI>().text);
+                var title = TitleObject();
+                return title == null ? null
+                    : Message.MaybeRaw(title.GetComponent<TMPro.TextMeshProUGUI>().text);
             }
         }
 
@@ -146,11 +159,24 @@ namespace BranteAccess.Module.Screens
         // panel's rendered rows ARE the game's localized composition ("+1 (Become 3)", segment
         // names) - a new or swapped panel is delivered whole, once, off the rendered content.
         // Focus needs no re-seat: it sits on the Continue button, which survives the rebuild.
-        private void DeliverStatPanels()
+        // Whichever generator the scene runs: normal scenes chain SceneConsequenceGenerator
+        // panels; epilogue scenes end on the UniversalParametersGenerator's control panel
+        // (stat rows when the outcome grants any, plus the Continue onward - the panel object
+        // only activates once the pager reaches its last page).
+        private static GameObject StatPanelRoot()
         {
             var gen = Object.FindObjectOfType<SceneConsequenceGenerator>();
-            if (gen == null) { _spokenStatsSig = null; return; }
-            var sig = PanelSweep.JoinVisible(gen.gameObject);
+            if (gen != null) return gen.gameObject;
+            if (Object.FindObjectOfType<ConsequenceSceneController>() == null) return null;
+            var upg = Object.FindObjectOfType<UniversalParametersGenerator>();
+            return upg != null ? upg.gameObject : null;
+        }
+
+        private void DeliverStatPanels()
+        {
+            var root = StatPanelRoot();
+            if (root == null) { _spokenStatsSig = null; return; }
+            var sig = PanelSweep.JoinVisible(root);
             if (sig.Length == 0) { _spokenStatsSig = null; return; }
             if (sig == _spokenStatsSig) return;
             _spokenStatsSig = sig;
@@ -191,8 +217,8 @@ namespace BranteAccess.Module.Screens
             // The post-choice stat panels: rows + the chaining button as nodes, so the player can
             // re-read what the delivery spoke. Swept before the Continue node - if the game's
             // Continue lives inside the generator, the sweep's button node covers it.
-            var gen = Object.FindObjectOfType<SceneConsequenceGenerator>();
-            if (gen != null) PanelSweep.Build(b, gen.gameObject, "scene:stats");
+            var statRoot = StatPanelRoot();
+            if (statRoot != null) PanelSweep.Build(b, statRoot, "scene:stats");
 
             // The consequence's Continue button (the game shows its control panel after the last
             // consequence page) - the way onward to the next scene.
@@ -200,7 +226,7 @@ namespace BranteAccess.Module.Screens
                 && tc.ConsequenceControlPanel.activeInHierarchy)
             {
                 var cont = tc.ConsequenceControlPanel.GetComponentInChildren<UnityEngine.UI.Button>();
-                if (cont != null && (gen == null || !cont.transform.IsChildOf(gen.transform)))
+                if (cont != null && (statRoot == null || !cont.transform.IsChildOf(statRoot.transform)))
                     b.AddItem(ControlId.Referenced(cont, "scene:continue"), new NodeVtable
                     {
                         ControlType = ControlTypes.Button,

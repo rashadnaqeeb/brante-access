@@ -144,7 +144,9 @@ while [ "$STEP" -lt "$MAX" ]; do
     sleep 2; continue
   fi
   SILENT=0
-  if [ "$SPOKEN" != "$LAST_SPOKEN" ]; then TITLE_COUNT=0; LAST_SPOKEN="$SPOKEN"; fi
+  # Ring cursor numbers make identical repeated text look new - strip them before comparing.
+  SPOKEN_TEXT=$(echo "$SPOKEN" | sed 's/^[0-9]*: //')
+  if [ "$SPOKEN_TEXT" != "$LAST_SPOKEN" ]; then TITLE_COUNT=0; LAST_SPOKEN="$SPOKEN_TEXT"; fi
   echo "step $STEP [$KIND -> $ACTION] $(echo "$SPOKEN" | head -2 | cut -c1-140)"
 done
 echo "STOP: max steps ($MAX) reached"
