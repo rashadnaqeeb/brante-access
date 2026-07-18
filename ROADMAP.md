@@ -488,8 +488,27 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 7 - Whole-game text surfaces
 
-- [ ] todo - All remaining tooltip types (TooltipWithTitle, ObjectiveTooltip, EventTooltip,
-      SimpleTooltip) reachable and spoken wherever they appear
+- [ ] in progress - All remaining tooltip types (TooltipWithTitle, ObjectiveTooltip,
+      EventTooltip, SimpleTooltip) reachable and spoken wherever they appear
+      (2026-07-18 live audit of every loaded TooltipWithTitleBehavior (43 instances): each
+      hover target carries TitleKey/TitleMainText I2 keys read at speech time - the mod folds
+      from the same keys, never the tooltip prefab. Gaps found are the four items below; the
+      per-surface tooltip data elsewhere (parameter scales, objectives, characters, choice
+      conditions/consequences) is already folded and verified per window.)
+- [ ] todo - Map window detail pass: every city item carries Map.<X>.Description behind its
+      TooltipWithTitleBehavior (label IS GetTranslation(TitleKey) via MapItemTranslation, so
+      the pairing is authoritative) - fold description onto Space; and the window has an
+      inactive-in-ch2 Regions layer (MapRegionItem with Map.<Region>.Description) - find what
+      activates it (chapter? toggle?) and cover it
+- [ ] todo - Destiny locked chapter tabs: speak the game's own HUD.WillOpen2..5 tooltip title
+      as the unavailable reason (currently bare "unavailable"; rule: announce the failed
+      requirement with the game's own string)
+- [ ] todo - Window title-row help: every window's TitleRow HelpIcon carries
+      Window_<X>.Title/.Description (what-this-window-is help) - expose per window (likely
+      Space on a title node or a help row; decide one pattern for all windows)
+- [ ] todo - Pause-menu toggle descriptions: the pause window's toggles carry
+      TooltipWithTitleBehavior descriptions (ConsequenceToggle.Description,
+      IsPictureAnimatedToggle.Desription (sic)) - fold onto Space on those toggles
 - [x] verified - Objectives/quest surfaces (GameObjectives, ObjectiveContainerBehaviour)
       (2026-07-18: examined - neither names a UI surface. GameObjectives is a serializable
       data list on the save model; ObjectiveContainerBehaviour only deactivates itself at
