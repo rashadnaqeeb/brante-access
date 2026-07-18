@@ -1,0 +1,3 @@
+# Brante Access - input action labels (bind.<action key>), English.
+
+bind.focusmode = Toggle focus mode

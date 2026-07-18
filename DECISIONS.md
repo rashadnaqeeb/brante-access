@@ -5,6 +5,28 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Framework judgment calls (2026-07-18, Phase 2)
+
+- **Localization layer built with the input manager** (roadmap items 1 and 4 landed together):
+  the focus-mode announcement and binding display labels are user-facing strings, and the
+  no-inline-strings rule means the Loc table had to exist before the first announcement.
+- **Mod strings are flat `key = value` text files** under `lang/<code>/<table>.txt` - the game
+  ships no JSON library and pulling one in for two-column data is not worth it. English is
+  always loaded as the fallback layer; language follows I2's live CurrentLanguageCode via a
+  per-frame poll (verified live with an en->ru->en swap).
+- **Input categories trimmed to Global + UI** (wotr has seven): Brante is a menu-driven
+  narrative game - no world cursor, no exploration layer. New categories get added only when a
+  screen genuinely needs a different key layer (likely candidate: name-entry text capture).
+- **Game-input suppression = Harmony prefix (`!FocusMode.Active`) on the 14 input-only game
+  Update bodies** (complete survey of every Input.GetKeyDown site in Assembly-CSharp). Brante
+  has no KeyboardAccess-style lever to hold, so the flag+prefix IS the lever. Deliberately not
+  patched: NameRequestWindow.Update (drives button interactable per frame - Phase 3 handles it
+  with text entry), GameManager/Console dev-console toggles (dev-gated, harmless). Focus mode
+  defaults ON (the mod's whole audience runs focused); F10 toggles it for a sighted co-pilot.
+- **/input dispatches by action key** (e.g. `focusmode`) through InputManager.Dispatch - the
+  same routing a real press takes minus the physical key poll. Physical-key behavior (F10,
+  held-key typematic repeat) is verified in the Phase 8 keyboard-only playthrough instead.
+
 ## Bring-up judgment calls (2026-07-18, Phase 1)
 
 - **Unique module AssemblyName per Debug build** (`BranteAccess.Module.g<utc-stamp>`), because

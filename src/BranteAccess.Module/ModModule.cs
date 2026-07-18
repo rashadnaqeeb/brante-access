@@ -1,4 +1,8 @@
+using System.Text;
 using BranteAccess.Core.Modularity;
+using BranteAccess.Module.Input;
+using BranteAccess.Module.Patches;
+using UnityEngine;
 
 namespace BranteAccess.Module
 {
@@ -10,30 +14,54 @@ namespace BranteAccess.Module
     /// </summary>
     public sealed class ModModule : IModModule, IDevDriver
     {
-        private IModHost _host;
-
         public void Load(IModHost host)
         {
-            _host = host;
+            Mod.Host = host;
+            Localization.LocalizationManager.Initialize();
+            RegisterActions();
+            FocusModePatches.Apply();
             // Generation is not logged here: the loader bumps it only after Load succeeds (so a
             // failed reload leaves the old module live), and it logs the real number itself.
-            _host.LogInfo("module code up, waiting for first tick");
+            Mod.Log("module code up, waiting for first tick");
         }
 
         public void Tick()
         {
+            Localization.LocalizationManager.Tick();
+            InputManager.Tick();
         }
 
         public void Dispose()
         {
-            _host.LogInfo("module disposed (generation " + _host.ModuleGeneration + ")");
+            FocusModePatches.Remove();
+            Mod.Log("module disposed (generation " + Mod.Host.ModuleGeneration + ")");
         }
 
-        // IDevDriver - the navigator does not exist yet; every probe says so rather than pretending.
+        // Global actions live here; screens register their own categories' actions when the screen
+        // stack lands. Registration labels are fallbacks - DisplayLabel resolves lang/<code>/settings.txt.
+        private static void RegisterActions()
+        {
+            InputManager.Register("focusmode", "Toggle focus mode", InputCategory.Global, FocusMode.Toggle)
+                .AddBinding(KeyCode.F10);
+        }
 
-        public string DispatchUi(string action) => null;
+        // IDevDriver - probed by the host per request, so the newest generation always answers.
 
-        public string DescribeNav() => "(navigator not built yet; hot reload proven)\n";
+        public string DispatchUi(string action)
+            => InputManager.Dispatch(action) ? "dispatched " + action : null;
+
+        public string DescribeNav()
+        {
+            var sb = new StringBuilder();
+            sb.Append("focus mode ").Append(FocusMode.Active ? "on" : "off")
+              .Append("; language ").Append(Localization.LocalizationManager.Language)
+              .Append("; navigator not built yet\n");
+            foreach (var a in InputManager.Actions)
+                sb.Append(a.Category).Append('.').Append(a.Key)
+                  .Append(" [").Append(a.BindingsDisplay).Append("] ")
+                  .Append(a.DisplayLabel).Append('\n');
+            return sb.ToString();
+        }
 
         public string TypeText(string text) => null;
     }

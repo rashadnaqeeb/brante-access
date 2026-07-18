@@ -56,16 +56,27 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 2 - Core framework (ported from wotr-access, adapted to uGUI)
 
-- [ ] todo - Input manager: action registry, keyboard bindings, OS-matched key repeat,
+- [x] verified - Input manager: action registry, keyboard bindings, OS-matched key repeat,
       category priority; game-input suppression strategy decided and working (EventSystem +
       the game's own Update handlers - see TextController/A/D keys) - focus-mode toggle
+      (/input focusmode dispatched through InputManager.Dispatch spoke "focus mode off"/"on"
+      with interrupt; OS typematic read live: delay 0.5s, interval 0.033s; suppression = Harmony
+      prefix on the 14 input-only game Update bodies, gate checked via /eval in BOTH focus
+      states; module reload swapped all 14 patches to the new generation id with zero leftovers.
+      Physical key presses (F10, held-key repeat) cannot be injected via the dev server - that
+      slice rides the Phase 8 keyboard-only playthrough)
 - [ ] todo - Screen stack: ScreenManager poll-and-diff over UIManager.OpenedWindow /
       OpenedPopup / OpenedTooltip / SceneStateMachine + scene name; lifecycle, layers,
       child screens
 - [ ] todo - Graph navigator port: KeyGraph, GraphBuilder, GraphAnnouncer, ControlId two-tier
       reconciliation, Tab-stops, regions, typeahead search
-- [ ] todo - Localization layer for mod strings (enGB manifest); pass-through of game strings
+- [x] verified - Localization layer for mod strings (enGB manifest); pass-through of game strings
       via I2 LocalizationManager
+      (done together with the input item - labels/announcements need it, see DECISIONS.md.
+      lang/en tables loaded; Message.Localized("ui","focusmode.on") resolved live; I2
+      pass-through translated a term from the game's 17552-term list; live language swap
+      en->ru->en followed by the per-frame poll within 1s each way, and with no lang/ru dir the
+      mod string fell back to English, not a raw key)
 - [ ] todo - uGUI adapter helpers: read TMP text under a node, invoke Button handlers, gate on
       CanvasGroup/interactable visibility (the visibility-gate primitives)
 
