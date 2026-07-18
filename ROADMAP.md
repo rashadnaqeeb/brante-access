@@ -16,8 +16,8 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 1 - Bring-up (dev server before features)
 
-- [ ] todo - Obtain/vendor BepInEx 5 x64 (Mono) and install into the game folder; game still
-      boots clean with an empty plugin
+- [ ] todo - Install vendored BepInEx (third_party/bepinex, 5.4.23.5 win x64 Mono) into the
+      game folder; game still boots clean with an empty plugin
 - [ ] todo - Solution + plugin skeleton (net48, BranteAccess), BepInEx logging with prefix,
       auto-deploy on Debug build; document exact build/deploy in CLAUDE.md
 - [ ] todo - Per-frame pump (host MonoBehaviour), master enable flag

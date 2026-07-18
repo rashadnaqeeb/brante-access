@@ -58,7 +58,9 @@ HudController.cs`, `_Scripts/AMVCC/Views/Windows/*` (all windows), `Messenger.cs
 (Unity 2018.3's .NET 4.x Mono profile; drop to net471/net46 only if an API turns out missing at
 runtime - record it here if so), references game assemblies from `<Game>\..._Data\Managed`
 and BepInEx's bundled Harmony (HarmonyX, use 2.x API). Prism (`prism.dll`) deploys next to the
-game exe. Install for players = copy files (screen-reader-friendly); no admin, no registry.
+game exe. Both dependencies are vendored in-repo so no run ever needs the network:
+`third_party/bepinex/BepInEx_win_x64_5.4.23.5.zip` and `third_party/prism/prism.dll` (with its
+licenses).
 
 Prefer Messenger subscriptions and reading live MonoBehaviour state over Harmony patches;
 patch only where no event/state exists. Activation = invoking the game's own handlers
