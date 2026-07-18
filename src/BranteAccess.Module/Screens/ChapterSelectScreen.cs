@@ -23,7 +23,10 @@ namespace BranteAccess.Module.Screens
         public override string Key => "chapterselect";
         public override Message ScreenName => Message.Localized("ui", "screen.chapterselect");
         public override int Layer => 10;
-        public override bool IsActive() => GameUi.IsSceneLoaded("GameLoadingScreen");
+        // Behaviour presence, not a scene name: the same page is "GameLoadingScreen" (additive,
+        // from the load window) but also "LoadingScreen_Child" etc. between chapters (caught
+        // live - the between-chapters variant left the stack empty and silent).
+        public override bool IsActive() => Behaviour() != null;
 
         private static readonly FieldInfo AgeField = typeof(LoadingScreen)
             .GetField("_ageTmp", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -114,18 +117,24 @@ namespace BranteAccess.Module.Screens
                     });
             }
 
-            var back = screen.transform.Find("Container/BotPanel/BackToMainMenu").gameObject;
-            b.AddItem(ControlId.Referenced(back.GetComponent<UnityEngine.UI.Button>(),
-                "chapterselect:back"), new NodeVtable
+            // Only the load-window variant has a quit-to-menu panel; the between-chapters
+            // loading-progress variant has no BotPanel at all.
+            var backPanel = screen.transform.Find("Container/BotPanel/BackToMainMenu");
+            if (backPanel != null)
             {
-                ControlType = ControlTypes.Button,
-                Announcements = new[]
+                var back = backPanel.gameObject;
+                b.AddItem(ControlId.Referenced(back.GetComponent<UnityEngine.UI.Button>(),
+                    "chapterselect:back"), new NodeVtable
                 {
-                    new NodeAnnouncement(() => UiWidgets.LabelText(back),
-                        kind: AnnouncementKinds.Label),
-                },
-                OnActivate = () => UiWidgets.Click(back),
-            });
+                    ControlType = ControlTypes.Button,
+                    Announcements = new[]
+                    {
+                        new NodeAnnouncement(() => UiWidgets.LabelText(back),
+                            kind: AnnouncementKinds.Label),
+                    },
+                    OnActivate = () => UiWidgets.Click(back),
+                });
+            }
         }
 
         private static string LockReason(LoadChapterItemBehavior item)

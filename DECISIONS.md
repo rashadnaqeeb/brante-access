@@ -5,6 +5,38 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Chapter-flow and choice judgment calls (2026-07-18, Phases 4-6)
+
+- **One click on a choice applies it - there is no confirm step in this build.** The game's
+  own GetButtonClickedState double-click gate is what the mouse UI uses, and our activation
+  path drives it twice in one Enter, matching how the game treats a committed click. The
+  description folded onto the choice row is the read-back; a mod-invented confirm dialog
+  would add a keypress the sighted flow does not have.
+- **Choice list was taken before the scene title/date item** because the live game sat on an
+  open choice list when the work cycle started - verifying against live state beats queue
+  order.
+- **InterludeScreen sits at layer 21, above the generic popup's 20.** Both read
+  UIManager's popup slot; when the open popup IS the interlude, the specific screen must win
+  or the sweep reads the same panel with no pager semantics.
+- **PanelSweep exists for game-composed surfaces** (generated stat panels, information
+  popups, the begin-chapter page): there the rendered TMP/legacy text IS the game's own
+  localized output of its model, so reading it live is reuse, not caching, and per-surface
+  adapters would duplicate the game's composition.
+- **Pager arrows get mod labels** (pager.next / pager.prev): the buttons are image-only,
+  no game string exists, which is the sole condition for authoring one.
+- **Chapter select IsActive is behaviour presence, not scene name**: the same
+  GameLoadingScreenBehaviour page appears additively from the load window AND standalone
+  between chapters under scene names like LoadingScreen_Child; the between-chapters variant
+  has no BotPanel, so the back-to-menu node is conditional on the transform existing.
+- **After a chapter-start page turn, focus deliberately stays on the pager button** (it is
+  Referenced and survives the rebuild), so reading the whole book is one keypress per page;
+  the page announcement itself is the delivery.
+- **Tolerated noise, revisit in polish**: pager/begin buttons speak stop positions ("2 of
+  2"); scene boundaries can double-announce (popup re-seat, stale chapter title spoken
+  before ChangeSceneTitleEvent lands). Logged so the sweep does not chase them as bugs.
+- **"Tempos de paz" popup title is Portuguese leaking in the game's own I2 data** for the
+  transition popup; we speak exactly what the game shows, so no mod-side fix.
+
 ## Scene transcript judgment calls (2026-07-18, Phase 4)
 
 - **Transcript rows use Structural ids, not Referenced.** Every page row shares the single

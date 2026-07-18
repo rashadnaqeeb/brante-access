@@ -151,7 +151,12 @@ go to DECISIONS.md, not to the user.
       Childhood", Escape cancels), Quit to Main Menu returns clean. Full resume chain live:
       Continue -> slot -> chapter select -> Continue -> Intro scene RUNNING with no stale
       menu chatter (menu gated on the game's Continue-disabled handoff flag). sweep.sh 24/24
-      with new save/load section)
+      with new save/load section. 2026-07-18 later: the SAME page also appears between chapters
+      under per-chapter scene names ("LoadingScreen_Child") - caught live as a dead surface;
+      IsActive now keys on the GameLoadingScreenBehaviour component, and the quit-to-menu node
+      is guarded (that variant has no BotPanel). Verified live on the between-chapters variant:
+      Continue "0 Years" start node, 5 chapter rows "unavailable, not reached", locked refusal
+      on Enter, Continue entered Childhood.)
 - [x] verified - Pause/Escape menu + exit confirmation popup
       (2026-07-18: PauseScreen off WindowPause's serialized refs - Music/Sound sliders (left
       spoke "40 percent", game volume applied), Hidden Consequences + Animated Illustrations
@@ -190,13 +195,37 @@ go to DECISIONS.md, not to the user.
       focused row. Page-row ids are Structural, not Referenced - all rows share the pager
       component and reference-tier reconciliation snapped focus back to row 1 on every rebuild,
       caught live.)
-- [ ] todo - Scene title + year/date announcements (ChangeSceneTitleEvent, DayTimePopup)
-- [ ] todo - Speaker attribution: portrait character name prefixed to spoken line when present
-- [ ] todo - Choice list: all ParameterButtonChanger nodes with availability state; unavailable
-      choices announce the failed requirement(s); choice description read-back before confirm;
-      confirm advances (game's own Button_Click path)
-- [ ] todo - Consequence pages after a choice (ConsequenceText flow, next/previous, control
+- [x] verified - Scene title + year/date announcements (ChangeSceneTitleEvent, DayTimePopup)
+      (2026-07-18: the scene screen's name reads SceneController.Title live, spoken on every
+      scene arrival ("The Newborn's Cry" after the 01.04 consequence); the between-scene
+      date popups ride GenericPopupScreen: chapter/age popup rows "Childhood" + "4 Years",
+      year-case popup "Brother and Sister's Sacrament" / "Year 1122" / description / Continue
+      all spoken row-by-row and dismissed by Enter, landing in the next scene with title +
+      page 0 delivered.)
+- [x] verified - Speaker attribution: portrait character name prefixed to spoken line when present
+      (2026-07-18: PageText prefixes GetCharacterTrueName when the block carries a Character -
+      verified live in Childhood 01.02.01_2: "Robert Brante: ...", "Lydia Brante: ...",
+      "Stephan Brante: ...", "Gloria: ..." each spoken with the game's hero-name substitution
+      intact ("little Testname Brante"). Same helper drives InterludeScreen pages.)
+- [x] verified - Choice list: all ParameterButtonChanger nodes with availability state; unavailable
+      choices announce the failed requirement(s); confirm advances (game's own Button_Click path)
+      (2026-07-18: choices as positioned Referenced nodes after the transcript, label folds the
+      game's post-click elaboration (I2 key sceneName_buttonName) onto the line. Verified live:
+      Intro 4 choices + Childhood scenes 2-4 choices all listed "n of m"; activation runs the
+      game's Button_Click (GAME_RESOLVE, sounds, stat effects); double-activation gated by the
+      game's GetButtonClickedState. Unavailable path verified in 01.04.01: choice 1 announced
+      "unavailable, requires Determination at least 2" composed from the serialized failed check
+      (game's localized parameter name + mod operation word), Enter refused with the same reason
+      interrupt-spoken and did NOT apply (GetButtonClickedState stayed False). NOTE: this build
+      has no separate confirm step - one click applies immediately; "description read-back
+      before confirm" is satisfied by folding the description into the choice label itself.)
+- [x] verified - Consequence pages after a choice (ConsequenceText flow, next/previous, control
       panel at the end)
+      (2026-07-18: the active ItsConsequence pager wins Pager() while resolving; the mid-screen
+      pager swap is delivered as new content (page 0 spoken, silent re-home). Verified live in
+      Intro and three Childhood scenes: consequence pages deliver once each via Enter, the
+      ConsequenceControlPanel's Continue appears as a node when the game shows it, activating it
+      leaves the scene and the next scene's title + page 0 deliver on arrival.)
 - [ ] todo - Willpower/parameter changes spoken when shown (ShowParameterInformationEvent,
       ShowCharacterInformationEvent, ParameterSlider/ConsequenceComponent surfaces)
 - [ ] todo - Death trigger flow in text blocks (BlockTextPanel → death window → resume)
@@ -221,17 +250,49 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Destiny window (+ objective earned shine → spoken notification)
 - [ ] todo - Insurrection window (+ InsurrectionSidePopup/tooltip)
 - [ ] todo - War window (WindowsList.WarWindow - confirm where it appears)
-- [ ] todo - Chapter start window (keyboarded page turner)
+- [x] built - Chapter start window (keyboarded page turner)
+      (2026-07-18: ChapterStartScreen - header + page title/position/description rows,
+      objectives fold their hover-only description onto the row, parameter rows fold
+      name/value/segment, other panels swept; Prev/Next as nodes (image-only buttons, mod
+      labels) refusing while the window's _blockPages gate holds; page turns deliver
+      title+position+description with focus staying on the pager button. Verified live at
+      Childhood start: all 5 pages turned one keypress each, objective rows with descriptions,
+      end-stop refusal "unavailable", Begin Chapter swept + activated into scene 01.01.01.
+      Remaining before verified: read a parameter-page CONTENT row live (next chapter start).)
 - [ ] todo - Chapter final window (stats summary pages)
 
 ## Phase 6 - Popups, cutscenes, special flows
 
-- [ ] todo - Generic popup screen family from PopupsEnum: TriggerPopup, ObjectivePopup,
+- [x] built - Generic popup screen family from PopupsEnum: TriggerPopup, ObjectivePopup,
       InfoPopup, EventPopup, ConditionHelpPopup, GameFinalsRemindPopup
-- [ ] todo - InterludePopup + YearIncrementPopup + CaseOfYear popups (page-turn popups)
+      (2026-07-18: GenericPopupScreen replaces the silent popup scaffolding - PanelSweep reads
+      the UIManager popup slot: visible TMP/legacy texts as rows (button labels excluded),
+      visible buttons as nodes with unavailable state. Verified live: InfoPopup
+      "Prologue/Growing up" read row-by-row with hero-name substitution + Continue closed it;
+      scene-transition popup (title/year/description/Continue) same; chapter/age popup
+      ("Childhood" + "4 Years") and CaseOfYear popup (title/year/description/Continue) read
+      row-by-row and dismissed by Enter. Remaining before verified: exercise the remaining
+      family members (TriggerPopup, ObjectivePopup, EventPopup, ConditionHelpPopup,
+      GameFinalsRemindPopup) as they appear in play.)
+- [x] verified - InterludePopup + YearIncrementPopup + CaseOfYear popups (page-turn popups)
+      (2026-07-18: InterludeScreen - transcript pattern on the popup's own _pageIndex/_textBlock
+      through its InsertCharacterName, close button node when the game reveals it, post-close
+      generated stat panels fall back to PanelSweep. Verified live on three interludes (Chapter I
+      opening, 3 pages; growing-up interlude, 9 pages; "Year 1122, Winter. The Coming Sacrament"
+      mid-chapter intermission with speaker-attributed Lydia Brante pages) plus the year/case
+      popups: post-close stat panels read row-by-row ("Stephan Brante", "Relations -1",
+      "= 0 (Indifference)") with per-panel Continue chaining to the next panel and out; the
+      year-increment "Childhood / 4 Years" and CaseOfYear "Brother and Sister's Sacrament /
+      Year 1122" popups spoken via the generic popup sweep and dismissed by Enter.)
 - [ ] todo - Parameters conversion panel (chapter transition stat conversion)
 - [ ] todo - Death windows: standard death, fourth-death continue flow, GameOverWindow +
       restart/continue popup
+- [x] verified - Chapter title splash (StartPictureHelper, "ChildhoodPicture" et al - the
+      click-anywhere picture between chapter select and the chapter start book)
+      (2026-07-18: ChapterPictureScreen - one node, game's localized title + "Enter continues"
+      hint (the whole screen is the control - unusual enough to earn one). Enter runs the
+      game's OnPointerClick (hide animation, sfx, Bolt advance). Verified live: "Chapter I.
+      Childhood, Enter continues" spoken, Enter advanced to ChildhoodChapterStart.)
 - [ ] todo - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
 - [ ] todo - Timeline (WindowLiveTimelineController / life timeline) readable
 - [ ] todo - Insurrection-day and other special scene variants (from scene census below)
@@ -253,7 +314,9 @@ go to DECISIONS.md, not to the user.
       save → load → quit. Run after every ~4 verified items; keep it green.
       (first run green 14/14: health, mainmenu graph, End/Home speech, tooltip fallback,
       Settings activation + refocus, focus-mode toggle both ways, zero mod error log lines.
-      Last run: 2026-07-18, green)
+      Last run: 2026-07-18, green 38/38 - now includes the event-scene section: transcript
+      row focused on load, safe re-reads leave the pager alone, End+Enter driver reaches
+      choices/continue without ever activating a choice, choice speaks with position.)
 - [ ] todo - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
       spot-checks deep into the game
 - [ ] todo - Full keyboard-only playthrough of the prologue + chapter 1 via dev server, zero

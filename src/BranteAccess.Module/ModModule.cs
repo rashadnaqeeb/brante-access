@@ -117,9 +117,12 @@ namespace BranteAccess.Module
                 new PauseScreen(),
                 new ExitConfirmScreen(),
                 new CreditsScreen(),
+                new ChapterPictureScreen(),
+                new ChapterStartScreen(),
+                new InterludeScreen(),
                 new SceneScreen(),
                 new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null),
-                new PredicateScreen("popup", null, 20, () => GameUi.OpenedPopup != null),
+                new GenericPopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);
             Mod.Log("ScreenManager: " + screens.Length + " outer screens registered");

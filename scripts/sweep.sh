@@ -20,6 +20,14 @@ check() { # name, expected substring, haystack
   fi
 }
 
+check_nonempty() { # name, haystack (content varies with save state; presence is the assertion)
+  if [[ -n "$2" ]]; then
+    PASS=$((PASS + 1)); echo "PASS $1"
+  else
+    FAIL=$((FAIL + 1)); echo "FAIL $1 - empty"
+  fi
+}
+
 cursor()  { curl -s -m 5 "$BASE/health" | sed -E 's/.*speechCursor=([0-9]+).*/\1/'; }
 speech()  { curl -s -m 5 "$BASE/speech?since=$1"; }
 press()   { curl -s -m 5 -X POST "$BASE/input" -d "$1" > /dev/null; sleep 0.6; }
@@ -106,13 +114,43 @@ press ui.activate
 sleep 2.5
 check "quit to main menu returns" "main menu" "$(speech "$C")"
 
-# --- 5c. Pause menu in-game + exit confirmation (ends back at the main menu) ---
+# --- 5c. Event scene: transcript rows, safe re-reads, choices/continue reachable ---
 press ui.activate   # Continue -> load window
 sleep 1
 press ui.activate   # first slot -> chapter select
 sleep 2
 press ui.activate   # Continue -> into the game
 sleep 4
+NAV=$(curl -s -m 5 "$BASE/nav")
+check "scene screen focused" "scene(0)*" "$NAV"
+check "transcript row focused" "scene:page:" "$NAV"
+C=$(cursor)
+press ui.home
+check_nonempty "transcript re-read speaks" "$(speech "$C")"
+# Re-reading must not touch game state: the newest delivered page is unchanged.
+NAV2=$(curl -s -m 5 "$BASE/nav")
+LASTPAGE=$(echo "$NAV" | grep -o 'scene:page:[0-9]*' | sort -t: -k3 -n | tail -1)
+LASTPAGE2=$(echo "$NAV2" | grep -o 'scene:page:[0-9]*' | sort -t: -k3 -n | tail -1)
+check "re-read left pager alone" "$LASTPAGE" "$LASTPAGE2"
+# Advance with the universal driver (End + Enter on the newest row, gated on the game's own
+# next-button) until the scene offers choices or a consequence Continue. The loop inspects
+# the graph BEFORE each press, so it can never activate a choice (which would alter the save).
+FOUND=""
+for i in $(seq 1 20); do
+  NAV=$(curl -s -m 5 "$BASE/nav")
+  if [[ "$NAV" == *"scene:choice:"* || "$NAV" == *"scene:continue"* ]]; then FOUND=yes; break; fi
+  press ui.end
+  press ui.activate
+  sleep 0.8
+done
+check_nonempty "choices or continue reached" "$FOUND"
+if [[ "$NAV" == *"scene:choice:"* ]]; then
+  C=$(cursor)
+  press ui.end   # last node is a choice; choices are a positioned list
+  check "choice speaks with position" " of " "$(speech "$C")"
+fi
+
+# --- 5d. Pause menu in-game + exit confirmation (ends back at the main menu) ---
 C=$(cursor)
 evalcs '_Scripts.Managers.UIManager.Initiate.ShowPauseMenu(); "opened"' > /dev/null
 sleep 1.2
@@ -136,7 +174,7 @@ press ui.activate
 sleep 3
 check "quit confirm returns to main menu" "main menu" "$(speech "$C")"
 
-# --- 5d. Credits roll: text rows in reading order, Escape skips back to the menu ---
+# --- 5e. Credits roll: text rows in reading order, Escape skips back to the menu ---
 press ui.end
 press ui.up      # Credits button
 C=$(cursor)

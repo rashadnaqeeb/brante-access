@@ -43,9 +43,32 @@ edit.space = space
 namerequest.name_row = {prefix} {value} {postfix}
 namerequest.start_unavailable = unavailable, name needs at least 2 letters
 
+# Event scene choices. Requirements are composed from the game's serialized per-check data
+# with the game's own localized names; only the operation words are mod-authored (the game's
+# terms are bare symbols, which readers voice unreliably).
+choice.unavailable = unavailable, requires {req}
+choice.req.param = {name} {op} {value}
+choice.req.relation = {name} relation {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = not {req}
+choice.op.more = more than
+choice.op.less = less than
+choice.op.equal = exactly
+choice.op.moreequal = at least
+choice.op.lessequal = at most
+choice.op.not = not
+
 # Voiceover cutscenes (the game's own skip keys stay live; the hint is the content)
 cutscene.intro = cutscene, spoken narration, any key skips
 cutscene.chapter = cutscene, spoken narration, Enter skips
+
+# Chapter title splash (the title is the game's own localized text; the whole screen is the
+# dismiss control - unusual enough to earn a hint)
+chapterpicture.hint = Enter continues
+
+# Page-turner windows (the game's pager arrows are image-only buttons - no game string)
+pager.next = next page
+pager.prev = previous page
 
 # Credits roll (no on-screen title; the menu button label is not an I2 term either)
 screen.credits = credits
