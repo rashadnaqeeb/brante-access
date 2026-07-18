@@ -31,7 +31,17 @@ namespace BranteAccess.Module.Screens
         public override bool IsActive()
         {
             var w = Window();
-            return w != null && w.gameObject.activeInHierarchy;
+            return w != null && w.gameObject.activeInHierarchy && !ForeignPopupOpen();
+        }
+
+        // A popup-slot occupant that is not the death window itself (the achievement popup
+        // the fourth-death Continue opens) is modal OVER the death window - yield so the
+        // generic popup screen wins; this screen re-pushes when the popup closes.
+        private static bool ForeignPopupOpen()
+        {
+            var p = GameUi.OpenedPopup;
+            return p != null && p.activeInHierarchy
+                && p.GetComponentInChildren<DeathWindow>() == null;
         }
 
         public override Message ScreenName

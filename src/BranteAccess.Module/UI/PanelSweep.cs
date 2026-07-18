@@ -33,6 +33,11 @@ namespace BranteAccess.Module.UI
             foreach (var btn in root.GetComponentsInChildren<UnityEngine.UI.Button>())
             {
                 if (!UiWidgets.Visible(btn.gameObject)) continue;
+                // The popup prefabs' full-screen click-away backdrop ("back", image-only,
+                // identified live on AchievementPopup): dismissal stays on the labeled
+                // Continue, so the backdrop would only add a bare unlabeled stop.
+                if (btn.gameObject.name == "back"
+                    && string.IsNullOrEmpty(UiWidgets.LabelText(btn.gameObject))) continue;
                 var bt = btn;
                 b.AddItem(ControlId.Referenced(bt, idPrefix + ":btn:" + bt.GetInstanceID()),
                     new NodeVtable
