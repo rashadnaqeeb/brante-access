@@ -544,13 +544,17 @@ go to DECISIONS.md, not to the user.
       will see the consequences of your possible choices in advance.", on Animated
       Illustrations "Choose whether illustrations in scenes will be animated."; Escape
       resumed the scene.)
-- [ ] todo - Pause window first-open announces the prefab's serialized RUSSIAN text: on the
+- [x] verified - Pause window first-open announces the prefab's serialized RUSSIAN text: on the
       first ShowPauseMenu of a game session the entry announcement spoke "Настройки" and
       "Музыка, slider, 50 percent" while the nav graph a frame later showed English - the
-      game's localize pass runs after our focus announcement. Announce off the localized
-      state (read captions via their I2 Localize terms, or defer the entry announcement
-      until the localize pass has run); check other game-composed windows for the same
-      first-open race.
+      game's localize pass runs after our focus announcement.
+      (2026-07-18: PauseScreen title and slider/toggle/spinner captions now announce through
+      UiWidgets.LocalizedLabel (I2 term via the caption's TextMeshProLocalization, rendered
+      text fallback). Verified on a fresh game restart, pause opened as the session's first
+      window: entry spoke "Settings" + "Music, slider, 50 percent, 1 of 6", all six rows
+      English. Exit-confirm popup also checked on its session-first open: "QUIT GAME" + full
+      question in English - popups announce off I2 terms already, no race. Other windows read
+      ScreenName from GetTranslation directly, immune by construction.)
 - [x] verified - Objectives/quest surfaces (GameObjectives, ObjectiveContainerBehaviour)
       (2026-07-18: examined - neither names a UI surface. GameObjectives is a serializable
       data list on the save model; ObjectiveContainerBehaviour only deactivates itself at

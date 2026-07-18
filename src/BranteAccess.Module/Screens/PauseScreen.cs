@@ -33,10 +33,13 @@ namespace BranteAccess.Module.Screens
             get
             {
                 var w = Window();
-                // The window's own title text (the game titles its pause window "Settings").
+                // The window's own title (the game titles its pause window "Settings"), read
+                // through the localization key where one exists - on the session's FIRST open
+                // the rendered text is still the prefab's serialized editor Russian for a
+                // frame, and announcements fire before the game's localize pass.
                 return w == null ? null
-                    : Message.MaybeRaw(w.transform.Find("Buttons/Panel/Title")
-                        .GetComponentInChildren<TMPro.TMP_Text>().text);
+                    : Message.MaybeRaw(UiWidgets.LocalizedLabel(
+                        w.transform.Find("Buttons/Panel/Title").gameObject));
             }
         }
 
@@ -91,7 +94,8 @@ namespace BranteAccess.Module.Screens
                 ControlType = ControlTypes.Slider,
                 Announcements = new[]
                 {
-                    new NodeAnnouncement(() => caption.text, kind: AnnouncementKinds.Label),
+                    new NodeAnnouncement(() => UiWidgets.LocalizedLabel(caption.gameObject),
+                        kind: AnnouncementKinds.Label),
                     new NodeAnnouncement(() => Percent(slider), live: true, kind: AnnouncementKinds.Value),
                 },
                 OnAdjust = (sign, large) =>
@@ -121,7 +125,8 @@ namespace BranteAccess.Module.Screens
                 ControlType = ControlTypes.Toggle,
                 Announcements = new[]
                 {
-                    new NodeAnnouncement(() => caption.text, kind: AnnouncementKinds.Label),
+                    new NodeAnnouncement(() => UiWidgets.LocalizedLabel(caption.gameObject),
+                        kind: AnnouncementKinds.Label),
                     new NodeAnnouncement(() => Loc.T(toggle.isOn ? "state.on" : "state.off"),
                         live: true, kind: AnnouncementKinds.Value),
                 },
@@ -148,7 +153,8 @@ namespace BranteAccess.Module.Screens
                 ControlType = ControlTypes.ComboBox,
                 Announcements = new[]
                 {
-                    new NodeAnnouncement(() => caption.text, kind: AnnouncementKinds.Label),
+                    new NodeAnnouncement(() => UiWidgets.LocalizedLabel(caption.gameObject),
+                        kind: AnnouncementKinds.Label),
                     new NodeAnnouncement(() => valueText.text, live: true, kind: AnnouncementKinds.Value),
                 },
                 OnAdjust = (sign, large) => UiWidgets.Click((sign > 0 ? right : left).gameObject),
