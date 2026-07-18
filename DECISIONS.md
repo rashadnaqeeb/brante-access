@@ -26,6 +26,14 @@ stream of questions.
 - **/input dispatches by action key** (e.g. `focusmode`) through InputManager.Dispatch - the
   same routing a real press takes minus the physical key poll. Physical-key behavior (F10,
   held-key typematic repeat) is verified in the Phase 8 keyboard-only playthrough instead.
+- **Main-menu sub-surfaces are additive scene loads, not window slots** (discovered live):
+  MainMenuController loads "Settings" and "LoadWindow" via SceneManager additive loads and
+  Credits via a full scene swap - UIManager.OpenedWindow stays null. Screens for these poll
+  `SceneManager.GetSceneByName(name).isLoaded` (GameUi.IsSceneLoaded). The generic
+  window/popup/pause screens registered now are silent scaffolding proving the stack against
+  the real UIManager slots; Phase 3 replaces them with per-surface speaking screens.
+- **Screen names resolve at speech time** (Message, not a construction-time string) so a
+  mid-session language change reaches screen announcements too.
 
 ## Bring-up judgment calls (2026-07-18, Phase 1)
 

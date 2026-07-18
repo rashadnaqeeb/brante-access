@@ -34,6 +34,10 @@ namespace BranteAccess.Module.Input
         /// Null until the navigator lands - then every UI press falls through to Performed.</summary>
         public static Func<InputAction, bool> UiDispatcher;
 
+        /// <summary>When true, the whole poll stands down so raw keys reach the game (a screen that
+        /// captures raw input, e.g. key-binding capture). Wired to the screen stack.</summary>
+        public static Func<bool> SuppressDispatch;
+
         public static InputAction Register(string key, string label, InputCategory category, Action onPerformed = null)
         {
             var action = new InputAction(key, label) { Category = category };
@@ -113,6 +117,9 @@ namespace BranteAccess.Module.Input
             // Don't steal keystrokes while the player is typing in a game text field
             // (the hero-name entry; the dev console).
             if (IsTypingInTextField()) return;
+
+            // A focused screen capturing raw input wants keys to reach the game untouched.
+            if (SuppressDispatch != null && SuppressDispatch()) return;
 
             RebuildLive(); // this frame's category claims + chord shadowing
 

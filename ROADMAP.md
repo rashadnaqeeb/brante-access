@@ -65,9 +65,15 @@ go to DECISIONS.md, not to the user.
       states; module reload swapped all 14 patches to the new generation id with zero leftovers.
       Physical key presses (F10, held-key repeat) cannot be injected via the dev server - that
       slice rides the Phase 8 keyboard-only playthrough)
-- [ ] todo - Screen stack: ScreenManager poll-and-diff over UIManager.OpenedWindow /
+- [x] verified - Screen stack: ScreenManager poll-and-diff over UIManager.OpenedWindow /
       OpenedPopup / OpenedTooltip / SceneStateMachine + scene name; lifecycle, layers,
       child screens
+      (mainmenu screen pushed and focused on first tick, "main menu" spoken; settings opened
+      via the game's own MainMenuController.OpenSettingsWindow: settings(10) pushed above
+      mainmenu(0), focused, "settings" spoken; closed via SettingsWindow.BackToMainMenuButton_Click:
+      popped, mainmenu refocused and re-announced; PushChild/RemoveChild moved focus both ways
+      with speech; live categories from the stack shown by /nav. Discovery: the main menu opens
+      Settings/LoadWindow as ADDITIVE scenes, not UIManager slots - see DECISIONS.md)
 - [ ] todo - Graph navigator port: KeyGraph, GraphBuilder, GraphAnnouncer, ControlId two-tier
       reconciliation, Tab-stops, regions, typeahead search
 - [x] verified - Localization layer for mod strings (enGB manifest); pass-through of game strings

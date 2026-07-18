@@ -1,7 +1,10 @@
 using System.Text;
 using BranteAccess.Core.Modularity;
+using BranteAccess.Module.Game;
 using BranteAccess.Module.Input;
 using BranteAccess.Module.Patches;
+using BranteAccess.Module.Screens;
+using BranteAccess.Module.Speech;
 using UnityEngine;
 
 namespace BranteAccess.Module
@@ -19,6 +22,13 @@ namespace BranteAccess.Module
             Mod.Host = host;
             Localization.LocalizationManager.Initialize();
             RegisterActions();
+            RegisterScreens();
+            InputManager.ActiveCategoriesProvider = ScreenManager.ProvideCategories;
+            InputManager.SuppressDispatch = () =>
+            {
+                var current = ScreenManager.Current;
+                return current != null && current.CapturesRawInput;
+            };
             FocusModePatches.Apply();
             // Generation is not logged here: the loader bumps it only after Load succeeds (so a
             // failed reload leaves the old module live), and it logs the real number itself.
@@ -28,6 +38,7 @@ namespace BranteAccess.Module
         public void Tick()
         {
             Localization.LocalizationManager.Tick();
+            ScreenManager.Tick();
             InputManager.Tick();
         }
 
@@ -37,12 +48,28 @@ namespace BranteAccess.Module
             Mod.Log("module disposed (generation " + Mod.Host.ModuleGeneration + ")");
         }
 
-        // Global actions live here; screens register their own categories' actions when the screen
-        // stack lands. Registration labels are fallbacks - DisplayLabel resolves lang/<code>/settings.txt.
+        // Global actions live here; screens register their own categories' actions as they land.
+        // Registration labels are fallbacks - DisplayLabel resolves lang/<code>/settings.txt.
         private static void RegisterActions()
         {
             InputManager.Register("focusmode", "Toggle focus mode", InputCategory.Global, FocusMode.Toggle)
                 .AddBinding(KeyCode.F10);
+        }
+
+        // The outer (poll-driven) screens. The window/popup/pause entries are silent generic
+        // scaffolding proving the stack against the game's real slots; Phase 3 replaces them with
+        // per-surface screens that speak and build graphs.
+        private static void RegisterScreens()
+        {
+            ScreenManager.Register(new PredicateScreen("mainmenu",
+                Message.Localized("ui", "screen.mainmenu"), 0, () => GameUi.SceneName == "MainMenu"));
+            // Settings/LoadWindow open as ADDITIVE scene loads (MainMenuController), not window slots.
+            ScreenManager.Register(new PredicateScreen("settings",
+                Message.Localized("ui", "screen.settings"), 10, () => GameUi.IsSceneLoaded("Settings")));
+            ScreenManager.Register(new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null));
+            ScreenManager.Register(new PredicateScreen("popup", null, 20, () => GameUi.OpenedPopup != null));
+            ScreenManager.Register(new PredicateScreen("pause", null, 24, () => GameUi.PauseOpen));
+            Mod.Log("ScreenManager: 5 outer screens registered");
         }
 
         // IDevDriver - probed by the host per request, so the newest generation always answers.
@@ -56,6 +83,18 @@ namespace BranteAccess.Module
             sb.Append("focus mode ").Append(FocusMode.Active ? "on" : "off")
               .Append("; language ").Append(Localization.LocalizationManager.Language)
               .Append("; navigator not built yet\n");
+            var focused = ScreenManager.Current;
+            sb.Append("stack:");
+            foreach (var s in ScreenManager.Stack)
+                for (var c = s; c != null; c = c.ActiveChild)
+                    sb.Append(' ').Append(c.Key).Append('(').Append(c.Layer).Append(')')
+                      .Append(ReferenceEquals(c, focused) ? "*" : "");
+            if (ScreenManager.Stack.Count == 0) sb.Append(" (empty)");
+            sb.Append('\n');
+            var cats = new System.Collections.Generic.List<InputCategory>();
+            ScreenManager.ProvideCategories(cats);
+            if (!cats.Contains(InputCategory.Global)) cats.Add(InputCategory.Global);
+            sb.Append("categories: ").Append(string.Join(", ", cats)).Append('\n');
             foreach (var a in InputManager.Actions)
                 sb.Append(a.Category).Append('.').Append(a.Key)
                   .Append(" [").Append(a.BindingsDisplay).Append("] ")

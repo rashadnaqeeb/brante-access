@@ -3,3 +3,6 @@
 
 focusmode.on = focus mode on
 focusmode.off = focus mode off
+
+screen.mainmenu = main menu
+screen.settings = settings
