@@ -464,8 +464,22 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
 - [ ] todo - Timeline (WindowLiveTimelineController / life timeline) readable
 - [ ] todo - Insurrection-day and other special scene variants (from scene census below)
-- [ ] todo - Scene census: enumerate atypical scenes (duel, province finals, variative finals -
-      grep decompile for their controllers), list each here as its own item, then verify each
+- [ ] in progress - Scene census: enumerate atypical scenes (duel, province finals, variative
+      finals - grep decompile for their controllers), list each here as its own item, then
+      verify each
+      (2026-07-18 decompile pass: no dedicated duel controller exists - DuelStatusesEnum is
+      save-model state and duels ride standard scenes; TextBlockSpecialSceneries is per-block
+      dressing (sfx/music/picture/poem/death-trigger) on the covered TextController flow.
+      Distinct surfaces found and listed as items below. Remaining census work: watch the
+      chapter 3+ driver runs for scenes whose probe reports an uncovered screen.)
+- [ ] todo - CaseForYearWindow (chapter 3+ case-selection window: PeaceCases/WarCases lists,
+      left/right pages, confirm popup; distinct from the verified CaseOfYear popup)
+- [ ] todo - TriggerScenePopupController (scene-trigger popup with vertical/horizontal
+      parameter/relation/status rows - check live whether GenericPopupScreen already covers
+      its prefab before writing anything)
+- [ ] todo - ChapterWindowManager sections (later-chapter final summary: Post, BigDeal, Duels,
+      Heir panels + work/family parameter sliders - check at the chapter 3 final whether the
+      ChapterFinalScreen sweep already reads them)
 
 ## Phase 7 - Whole-game text surfaces
 
