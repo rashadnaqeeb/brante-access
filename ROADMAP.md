@@ -93,8 +93,14 @@ go to DECISIONS.md, not to the user.
       pass-through translated a term from the game's 17552-term list; live language swap
       en->ru->en followed by the per-frame poll within 1s each way, and with no lang/ru dir the
       mod string fell back to English, not a raw key)
-- [ ] todo - uGUI adapter helpers: read TMP text under a node, invoke Button handlers, gate on
+- [x] verified - uGUI adapter helpers: read TMP text under a node, invoke Button handlers, gate on
       CanvasGroup/interactable visibility (the visibility-gate primitives)
+      (Game/UiWidgets: LabelText sweeps TMP then legacy Text, Visible walks the CanvasGroup
+      alpha chain, Interactable = Selectable.IsInteractable, Click = ExecuteEvents pointer-click.
+      Live via /eval: labels read "Back to Main Menu" off the Settings BackButton, Visible true
+      on shown buttons / false on the hidden pause window, Interactable false only on saveless
+      Continue, Click opened Settings through the game's pointer path with "settings" spoken.
+      MainMenuScreen refactored onto the helpers; sweep re-run green 14/14 through them)
 
 ## Phase 3 - Main menu and meta UI
 

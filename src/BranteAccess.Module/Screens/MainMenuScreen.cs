@@ -3,7 +3,6 @@ using BranteAccess.Module.Game;
 using BranteAccess.Module.Speech;
 using BranteAccess.Module.UI;
 using BranteAccess.Module.UI.Graph;
-using UnityEngine.UI;
 
 namespace BranteAccess.Module.Screens
 {
@@ -24,7 +23,7 @@ namespace BranteAccess.Module.Screens
         {
             foreach (var custom in MenuButtons())
             {
-                var button = custom.GetComponent<Button>();
+                var go = custom.gameObject;
                 b.AddItem(
                     ControlId.Referenced(custom, "mainmenu:" + custom.MainMenuButton),
                     new NodeVtable
@@ -34,17 +33,17 @@ namespace BranteAccess.Module.Screens
                         {
                             new NodeAnnouncement(LabelFor(custom), kind: AnnouncementKinds.Label),
                             new NodeAnnouncement(
-                                () => button.interactable ? null : Loc.T("state.unavailable"),
+                                () => UiWidgets.Interactable(go) ? null : Loc.T("state.unavailable"),
                                 live: true, kind: AnnouncementKinds.Enabled),
                         },
                         OnActivate = () =>
                         {
-                            if (!button.interactable)
+                            if (!UiWidgets.Interactable(go))
                             {
                                 Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
                                 return;
                             }
-                            button.onClick.Invoke();
+                            UiWidgets.Click(go);
                         },
                     });
             }
