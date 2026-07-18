@@ -97,6 +97,11 @@ NOT invoke `powershell.exe` from the Bash tool (the auto-mode classifier blocks 
 - Mute for unattended runs: `curl -s -X POST --data 'AudioListener.volume = 0f' .../eval`
   (global Unity master volume, session-only - never touches the user's saved settings; the
   game's SoundManager only fades individual music sources). Re-mute after every game restart.
+- Mute SPEECH whenever driving the game (user directive - dev speech must never reach the
+  user's screen reader): `curl -s -X POST --data 'on' http://127.0.0.1:8772/mute`. The dev tap
+  keeps capturing, so /speech verification is unaffected; `--data 'off'` restores speech and
+  MUST be sent before handing the game back to the user. State is in /health (`muted=`), off
+  by default, reset by a game restart - re-mute speech AND audio after every restart.
 - Steam `-applaunch` against an ALREADY RUNNING game is a silent no-op - you keep testing the
   old process with stale plugins. Kill first, check LogOutput.log's mtime is fresh if in doubt.
 

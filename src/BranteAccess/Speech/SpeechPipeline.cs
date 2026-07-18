@@ -27,6 +27,12 @@ namespace BranteAccess.Speech
         /// server; null in a normal run.</summary>
         public Action<string, bool> Observer;
 
+        /// <summary>Runtime backend mute: true stops utterances from reaching any backend (so
+        /// nothing reaches the user's screen reader) while the dev tap keeps capturing every
+        /// line. Toggled by the dev server's /mute endpoint so an agent can drive the game
+        /// without talking over the user; off by default, so normal play is unaffected.</summary>
+        public bool Muted;
+
         public SpeechPipeline(ConfigFile config)
         {
             _noSpeech = Environment.GetEnvironmentVariable("BRANTE_NO_SPEECH") == "1";
@@ -53,7 +59,7 @@ namespace BranteAccess.Speech
             text = TextUtil.StripRichText(text); // game labels are TMP rich text
             if (string.IsNullOrEmpty(text)) return;
             Observer?.Invoke(text, interrupt);
-            if (_noSpeech) return;
+            if (_noSpeech || Muted) return;
 
             var handler = Resolve();
             if (handler == null) return; // Resolve already logged the total failure
@@ -64,7 +70,7 @@ namespace BranteAccess.Speech
 
         public void Silence()
         {
-            if (_noSpeech) return;
+            if (_noSpeech || Muted) return;
             Resolve()?.Silence();
         }
 

@@ -175,8 +175,9 @@ namespace BranteAccess.Dev
                 case "/screenshot": return OnMainThread(Screenshot);
                 case "/reload": return Reload();
                 case "/module": return OnMainThread(() => ModuleInspector.Describe(_plugin.Loader));
+                case "/mute": return Mute(method, body);
                 default: return "[404] no route " + path + "; routes: /health /eval /input /nav /type"
-                    + " /wait /speech /log /gui /focus /typeinfo /screenshot /reload /module\n";
+                    + " /wait /speech /log /gui /focus /typeinfo /screenshot /reload /module /mute\n";
             }
         }
 
@@ -189,8 +190,28 @@ namespace BranteAccess.Dev
                 + " module=" + (module == null ? "NOT LOADED" : "generation " + _plugin.Loader.Generation)
                 + " enabled=" + _plugin.Enabled
                 + " frame=" + Interlocked.Read(ref _frame)
+                + " muted=" + _plugin.Speech.Muted
                 + " speechCursor=" + _speechLog.End
                 + " logCursor=" + _logLog.End + "\n";
+        }
+
+        /// <summary>POST /mute: body "on" stops speech from reaching the user's screen reader
+        /// while the dev tap keeps capturing (so /speech still verifies); "off" restores it.
+        /// GET reports the state. For driving the game while the user works elsewhere.</summary>
+        private string Mute(string method, string body)
+        {
+            if (method != "POST") return "muted=" + _plugin.Speech.Muted + "\n";
+            string want = (body ?? "").Trim().ToLowerInvariant();
+            if (want != "on" && want != "off") return "[bad body] POST 'on' or 'off'\n";
+            bool mute = want == "on";
+            return OnMainThread(() =>
+            {
+                // Cut off anything mid-utterance before muting (Silence no-ops once Muted is set).
+                if (mute && !_plugin.Speech.Muted) _plugin.Speech.Silence();
+                _plugin.Speech.Muted = mute;
+                HostLog.Info("[dev] speech backends " + (mute ? "muted" : "unmuted"));
+                return "muted=" + mute + "\n";
+            });
         }
 
         /// <summary>POST /eval: run C# on the main thread, then wait (off-thread) until speech the
