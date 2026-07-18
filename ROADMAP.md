@@ -367,7 +367,14 @@ go to DECISIONS.md, not to the user.
       (chapter 3+ СемьяРаспалась objective) coded - same parameter sweep plus the collapse
       objective with Space reading Readouts.ObjectiveDetails - deferred confirmation: needs a
       save where the family has broken.)
-- [ ] todo - Map window
+- [x] verified - Map window
+      (2026-07-18: MapWindowScreen - the window's only readable content is the 15 province
+      and city name labels (MapAreaItemBehaviour is hover-highlight only, no click action in
+      the decompile; every TMP in the window belongs to an area item - verified by live dump).
+      One text row per visible area in prefab layout order, typeahead-searchable. Verified
+      live in chapter 2 scene 1: entry "Map of the Empire" (HUD.Map), "Pragos, 1 of 15",
+      Down walked Siltrum and Montis, End reached "Orta, 15 of 15", Escape back to the
+      scene.)
 - [x] verified - Destiny window (+ objective earned shine → spoken notification)
       (2026-07-18: DestinyWindowScreen - chapter tabs as a tab row (locked tabs announce and
       refuse with the unavailable word - the game gives them only a gray), then the active

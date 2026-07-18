@@ -130,6 +130,7 @@ namespace BranteAccess.Module
                 new HomeWindowScreen(),
                 new RelationsWindowScreen(),
                 new EmpireWindowScreen(),
+                new MapWindowScreen(),
                 new GenericPopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);
