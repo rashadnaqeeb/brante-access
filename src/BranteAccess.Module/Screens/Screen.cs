@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using BranteAccess.Module.Input;
 using BranteAccess.Module.Speech;
+using BranteAccess.Module.UI;
+using BranteAccess.Module.UI.Graph;
 
 namespace BranteAccess.Module.Screens
 {
@@ -63,6 +65,43 @@ namespace BranteAccess.Module.Screens
 
         /// <summary>Per-frame update for the FOCUSED screen, dispatched by ScreenManager.</summary>
         public virtual void OnUpdate() { }
+
+        // ---- graph declaration (consumed by the navigator) ----
+
+        /// <summary>Declare this screen's navigable content into the builder, fresh from live game
+        /// state (immediate mode - called per operation and per frame; never cache). The default is
+        /// empty: the screen has no navigable content yet and arrows/Tab fall through.</summary>
+        public virtual void Build(GraphBuilder b) { }
+
+        /// <summary>Where focus lands when the screen first gains content: the stop with this key
+        /// (its remembered/selected/first node). Null = the graph's start node.</summary>
+        public virtual object InitialFocusStop => null;
+
+        /// <summary>Tab past the last stop wraps to the first (and vice versa). Default false: Tab
+        /// stops at the ends (or blurs, on a StartUnfocused screen).</summary>
+        public virtual bool Wrap => false;
+
+        /// <summary>When true the screen starts with NOTHING focused (exploration state - the game's
+        /// own keys work); Tab enters the graph, Tab off the end leaves it again. Default false:
+        /// focus seats itself as soon as the screen has content.</summary>
+        public virtual bool StartUnfocused => false;
+
+        /// <summary>Type-ahead search is available on this screen. Default true; screens whose stops
+        /// are log-like text may keep it, screens where letters mean something else opt out.</summary>
+        public virtual bool AllowsTypeahead => true;
+
+        /// <summary>Screen-level actions dispatched by id - the navigator maps Escape to
+        /// <see cref="ActionIds.Back"/>. Default: none.</summary>
+        public virtual IEnumerable<ElementAction> GetActions() { yield break; }
+
+        /// <summary>Run the screen action with this id. False when the screen doesn't declare it
+        /// (the navigator lets the key fall through).</summary>
+        public bool InvokeAction(string id)
+        {
+            foreach (var a in GetActions())
+                if (a.Id == id) { a.Execute(); return true; }
+            return false;
+        }
 
         // ---- child screen tree (mod-driven sub-screens within a screen) ----
         // A screen can host a single ActiveChild (which can host its own child, forming a chain) -

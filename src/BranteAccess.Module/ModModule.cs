@@ -5,6 +5,8 @@ using BranteAccess.Module.Input;
 using BranteAccess.Module.Patches;
 using BranteAccess.Module.Screens;
 using BranteAccess.Module.Speech;
+using BranteAccess.Module.UI;
+using BranteAccess.Module.UI.Graph;
 using UnityEngine;
 
 namespace BranteAccess.Module
@@ -29,6 +31,14 @@ namespace BranteAccess.Module
                 var current = ScreenManager.Current;
                 return current != null && current.CapturesRawInput;
             };
+            InputManager.UiDispatcher = Navigation.DispatchJustPressed;
+            ScreenManager.NavigatorAttach = Navigation.Attach;
+            ScreenManager.NavigatorScreenClosed = Navigation.ScreenClosed;
+            ScreenManager.NavigatorEnsureFocus = Navigation.EnsureFocus;
+            GraphAnnouncer.PositionText = (index, count) =>
+                Loc.T("nav.position", new { index, count });
+            GraphAnnouncer.ExpandedStateText = expanded =>
+                Loc.T(expanded ? "nav.expanded" : "nav.collapsed");
             FocusModePatches.Apply();
             // Generation is not logged here: the loader bumps it only after Load succeeds (so a
             // failed reload leaves the old module live), and it logs the real number itself.
@@ -40,6 +50,7 @@ namespace BranteAccess.Module
             Localization.LocalizationManager.Tick();
             ScreenManager.Tick();
             InputManager.Tick();
+            Navigation.TickTypeahead();
         }
 
         public void Dispose()
@@ -54,6 +65,37 @@ namespace BranteAccess.Module
         {
             InputManager.Register("focusmode", "Toggle focus mode", InputCategory.Global, FocusMode.Toggle)
                 .AddBinding(KeyCode.F10);
+
+            // The UI navigation set (routed to the navigator via UiDispatcher; live only while a
+            // screen declares the UI category and focus mode is on).
+            InputManager.Register("ui.up", "Navigate up", InputCategory.UI)
+                .AddBinding(KeyCode.UpArrow).Repeating();
+            InputManager.Register("ui.down", "Navigate down", InputCategory.UI)
+                .AddBinding(KeyCode.DownArrow).Repeating();
+            InputManager.Register("ui.left", "Navigate left", InputCategory.UI)
+                .AddBinding(KeyCode.LeftArrow).Repeating();
+            InputManager.Register("ui.right", "Navigate right", InputCategory.UI)
+                .AddBinding(KeyCode.RightArrow).Repeating();
+            InputManager.Register("ui.next", "Next control group", InputCategory.UI)
+                .AddBinding(KeyCode.Tab).Repeating();
+            InputManager.Register("ui.prev", "Previous control group", InputCategory.UI)
+                .AddBinding(KeyCode.Tab, shift: true).Repeating();
+            InputManager.Register("ui.activate", "Activate", InputCategory.UI)
+                .AddBinding(KeyCode.Return).AddBinding(KeyCode.KeypadEnter);
+            InputManager.Register("ui.secondary", "Secondary action", InputCategory.UI)
+                .AddBinding(KeyCode.Backspace);
+            InputManager.Register("ui.back", "Back", InputCategory.UI)
+                .AddBinding(KeyCode.Escape);
+            InputManager.Register("ui.tooltip", "Read tooltip", InputCategory.UI)
+                .AddBinding(KeyCode.Space).AddBinding(KeyCode.F1);
+            InputManager.Register("ui.home", "First item", InputCategory.UI)
+                .AddBinding(KeyCode.Home);
+            InputManager.Register("ui.end", "Last item", InputCategory.UI)
+                .AddBinding(KeyCode.End);
+            InputManager.Register("ui.regionPrev", "Previous region", InputCategory.UI)
+                .AddBinding(KeyCode.UpArrow, ctrl: true).Repeating();
+            InputManager.Register("ui.regionNext", "Next region", InputCategory.UI)
+                .AddBinding(KeyCode.DownArrow, ctrl: true).Repeating();
         }
 
         // The outer (poll-driven) screens. The window/popup/pause entries are silent generic
@@ -61,8 +103,7 @@ namespace BranteAccess.Module
         // per-surface screens that speak and build graphs.
         private static void RegisterScreens()
         {
-            ScreenManager.Register(new PredicateScreen("mainmenu",
-                Message.Localized("ui", "screen.mainmenu"), 0, () => GameUi.SceneName == "MainMenu"));
+            ScreenManager.Register(new MainMenuScreen());
             // Settings/LoadWindow open as ADDITIVE scene loads (MainMenuController), not window slots.
             ScreenManager.Register(new PredicateScreen("settings",
                 Message.Localized("ui", "screen.settings"), 10, () => GameUi.IsSceneLoaded("Settings")));
@@ -81,8 +122,22 @@ namespace BranteAccess.Module
         {
             var sb = new StringBuilder();
             sb.Append("focus mode ").Append(FocusMode.Active ? "on" : "off")
-              .Append("; language ").Append(Localization.LocalizationManager.Language)
-              .Append("; navigator not built yet\n");
+              .Append("; language ").Append(Localization.LocalizationManager.Language).Append('\n');
+            var nav = Navigation.Active as GraphNavigator;
+            var render = nav?.CurrentRender;
+            var focusedNode = nav?.FocusedNode;
+            sb.Append("focused node: ").Append(focusedNode != null
+                ? focusedNode.Id + " stop=" + focusedNode.StopKey
+                    + (focusedNode.RegionKey != null ? " region=" + focusedNode.RegionKey : "")
+                : "(none)").Append('\n');
+            if (render != null)
+            {
+                sb.Append("graph (").Append(render.Order.Count).Append(" nodes):\n");
+                foreach (var n in render.Order)
+                    sb.Append(ReferenceEquals(n, focusedNode) ? "* " : "  ")
+                      .Append(n.Id).Append(" stop=").Append(n.StopKey)
+                      .Append(" \"").Append(GraphAnnouncer.LeafText(n)).Append("\"\n");
+            }
             var focused = ScreenManager.Current;
             sb.Append("stack:");
             foreach (var s in ScreenManager.Stack)

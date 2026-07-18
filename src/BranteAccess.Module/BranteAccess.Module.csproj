@@ -61,6 +61,12 @@
                 Exclude="$(OutputPath)$(AssemblyName).dll;$(OutputPath)$(AssemblyName).pdb" />
     </ItemGroup>
     <Delete Files="@(StaleGen)" />
+    <!-- Locale manifest: the MODULE reads lang/ fresh on every load, so lang edits must deploy
+         with module builds (the host csproj also copies it, for host-only builds). -->
+    <ItemGroup>
+      <ModLang Include="$(MSBuildProjectDirectory)\..\..\lang\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ModLang)" DestinationFiles="@(ModLang->'$(GameDir)\BepInEx\plugins\BranteAccess\lang\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Text="Deployed $(AssemblyName) to $(ModuleDeployDir)\BranteAccess.Module.dll" Importance="high" />
   </Target>
 

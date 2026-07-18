@@ -74,8 +74,18 @@ go to DECISIONS.md, not to the user.
       popped, mainmenu refocused and re-announced; PushChild/RemoveChild moved focus both ways
       with speech; live categories from the stack shown by /nav. Discovery: the main menu opens
       Settings/LoadWindow as ADDITIVE scenes, not UIManager slots - see DECISIONS.md)
-- [ ] todo - Graph navigator port: KeyGraph, GraphBuilder, GraphAnnouncer, ControlId two-tier
+- [x] verified - Graph navigator port: KeyGraph, GraphBuilder, GraphAnnouncer, ControlId two-tier
       reconciliation, Tab-stops, regions, typeahead search
+      (full wotr port + GraphNavigator glue, Screen graph members, ui.* action set, seams wired;
+      main menu got a real Build() over live CustomMainMenuButton components as the smoke surface.
+      Live via /input + /speech: arrow moves spoke with interrupt ("New game, button, 2 of 5"),
+      End/Home jumped with one announcement, down-at-edge consumed silently, Tab on a single stop
+      consumed, Space spoke "no tooltip", Enter on unavailable Continue spoke "unavailable" without
+      activating, Enter on Settings ran the game's own onClick (scene loaded, stack flipped,
+      "settings" queued), closing Settings restored focus with "main menu" + "Settings, button,
+      3 of 5", live watch spoke "unavailable" when the game flipped interactable under focus.
+      Typeahead + physical key repeat read hardware input (Input.inputString/GetKey) and cannot be
+      injected over HTTP - they ride the Phase 8 keyboard-only playthrough)
 - [x] verified - Localization layer for mod strings (enGB manifest); pass-through of game strings
       via I2 LocalizationManager
       (done together with the input item - labels/announcements need it, see DECISIONS.md.

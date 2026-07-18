@@ -6,3 +6,30 @@ focusmode.off = focus mode off
 
 screen.mainmenu = main menu
 screen.settings = settings
+
+# Navigator feedback
+nav.position = {index} of {count}
+nav.expanded = expanded
+nav.collapsed = collapsed
+nav.no_tooltip = no tooltip
+nav.no_details = no details
+search.no_match = no match {text}
+search.cleared = search cleared
+
+# Control role words
+role.button = button
+role.toggle = toggle
+role.slider = slider
+role.radiobutton = radio button
+role.combobox = combo box
+role.tab = tab
+
+# Control states
+state.unavailable = unavailable
+
+# Main menu buttons (the game's labels are localized sprites - no game string exists)
+mainmenu.continue = Continue
+mainmenu.newgame = New game
+mainmenu.credits = Credits
+mainmenu.settings = Settings
+mainmenu.quit = Quit

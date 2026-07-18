@@ -5,6 +5,25 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Navigator port judgment calls (2026-07-18, Phase 2)
+
+- **Main-menu button labels are mod-authored** (`mainmenu.*` in ui.txt): the game renders those
+  buttons as per-language SPRITES (LocalizationResources.ContinueSprite etc.) - no game string
+  exists to reuse, so authoring is the rule-sanctioned fallback. If a matching I2 term surfaces
+  later (the pause menu may share wording), swap to it and drop the keys.
+- **Main-menu Build() covers the five CustomMainMenuButton entries only.** The scene's extra
+  wishlist/Discord/publisher URL buttons are plain Buttons without that component; they join in
+  the Phase 3 main-menu item (the "no unspoken interactive element" bar applies there). A button
+  whose enum value the mapping doesn't know announces its GameObject name - audible, so the gap
+  is discoverable, never silent.
+- **Ported empty `catch {}` blocks became logged catches** (Mod.Warn) - wotr tolerated silent
+  probe failures; CLAUDE.md's no-silent-failures rule is binding here.
+- **lang/ deploys with MODULE builds too** (both csprojs copy it): the module re-reads lang on
+  every reload, and a lang edit + /reload must not require a host build (found live: new keys
+  spoke as raw key names until the deployed copy caught up).
+- **Enter on an unavailable (non-interactable) button speaks "unavailable" and does NOT invoke
+  onClick** - Button.onClick.Invoke() ignores interactable, so the gate is ours.
+
 ## Framework judgment calls (2026-07-18, Phase 2)
 
 - **Localization layer built with the input manager** (roadmap items 1 and 4 landed together):
