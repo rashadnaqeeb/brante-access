@@ -6,6 +6,8 @@ using BranteAccess.Module.UI.Graph;
 using UnityEngine;
 using UnityEngine.UI;
 using WindowPause = _Scripts.AMVCC.Views.Windows.WindowPause;
+using Tooltip = _Scripts.AMVCC.Views.TooltipWithTitleBehavior;
+using GameLoc = I2.Loc.LocalizationManager;
 
 namespace BranteAccess.Module.Screens
 {
@@ -110,6 +112,10 @@ namespace BranteAccess.Module.Screens
 
         private static void AddToggle(GraphBuilder b, TMPro.TMP_Text caption, Toggle toggle, string id)
         {
+            // The toggle's Background child carries the hover tooltip with the game's
+            // what-this-setting-does description (ConsequenceToggle.Description /
+            // IsPictureAnimatedToggle.Desription - game typo).
+            var tip = toggle.GetComponentInChildren<Tooltip>(true);
             b.AddItem(ControlId.Referenced(toggle, "pause:" + id), new NodeVtable
             {
                 ControlType = ControlTypes.Toggle,
@@ -121,6 +127,9 @@ namespace BranteAccess.Module.Screens
                 },
                 OnActivate = () => UiWidgets.Click(toggle.gameObject),
                 StateText = () => Loc.T(toggle.isOn ? "state.on" : "state.off"),
+                OnTooltip = tip == null || string.IsNullOrEmpty(tip.TitleMainText)
+                    ? (System.Action)null
+                    : () => Mod.Speech.Speak(GameLoc.GetTranslation(tip.TitleMainText)),
             });
         }
 
