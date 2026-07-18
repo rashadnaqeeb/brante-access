@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using ParameterButtonChanger = _Scripts.AMVCC.Views.ParameterButtonChanger;
 using SceneConsequenceGenerator = _Scripts.AMVCC.Views.Windows.SceneConsequenceGenerator;
 using Objective = _Scripts.AMVCC.Views.Windows.Destiny.Objective;
+using ObjectiveCondition = _Scripts.AMVCC.Views.Windows.Destiny.ObjectiveCondition;
+using ObjectiveInitializer = _Scripts.AMVCC.Views.Windows.Destiny.ObjectiveInitializer;
 using ObjectiveEnum = _Scripts.AMVCC.Views.Windows.ObjectiveEnum;
+using KeyParams = _Scripts.AMVCC.Models.Static.KeyChapterParametersController;
 using Parameter = _Scripts.AMVCC.Models.Static.Parameter;
 using ParametersList = _Scripts.AMVCC.Models.Static.ParametersList;
 using GameLoc = I2.Loc.LocalizationManager;
@@ -243,6 +246,75 @@ namespace BranteAccess.Module.Game
             };
             parts.RemoveAll(string.IsNullOrEmpty);
             return string.Join(". ", parts.ToArray());
+        }
+
+        /// <summary>A destiny objective's detail: its already-localized description plus the
+        /// condition rows, composed the way the game's own earn-popup renders them (operands
+        /// through I2 with the el substitution, or-flagged rows as one any-of group). The
+        /// hover panel in the Destiny window shows the raw serialized keys instead - the
+        /// popup path is the authored one, so speech follows it.</summary>
+        public static string ObjectiveDetails(ObjectiveInitializer oi)
+        {
+            var rows = new List<string>();
+            var orRows = new List<string>();
+            foreach (var c in oi.Objective.Condition)
+                (c.OrCondition ? orRows : rows).Add(ObjectiveConditionRow(c));
+            if (orRows.Count > 0)
+                rows.Add(Loc.T("choice.cond.any",
+                    new { rows = string.Join(", ", orRows.ToArray()) }));
+            // The game text carries its own final period; the join supplies it.
+            var parts = new List<string> { (oi.ObjectiveDescription ?? "").TrimEnd('.') };
+            if (rows.Count > 0) parts.Add(string.Join(", ", rows.ToArray()));
+            parts.RemoveAll(string.IsNullOrEmpty);
+            return string.Join(". ", parts.ToArray());
+        }
+
+        // One serialized condition, rendered like the game's earn-popup: a translate-flagged
+        // row is a key-parameter pair ("Post: Judge", "≠" when negated); a bare or
+        // "!="-with-empty-value row is an event that must (not) have happened; anything else
+        // is a parameter comparison with the symbol spoken as the op word.
+        private static string ObjectiveConditionRow(ObjectiveCondition c)
+        {
+            var name = ElText(GameLoc.GetTranslation(c.Operand1));
+            if (string.IsNullOrEmpty(name)) name = c.Operand1;
+            if (c.NeedOperandTranslate)
+            {
+                var value = ElText(GameLoc.GetTranslation(c.Operand2));
+                if (string.IsNullOrEmpty(value)) value = c.Operand2;
+                var row = Loc.T("choice.req.status", new { name, status = value });
+                return c.Operator == "=" ? row : Loc.T("choice.req.not", new { req = row });
+            }
+            if (string.IsNullOrEmpty(c.Operator)) return name;
+            if (c.Operator == "!=" && string.IsNullOrEmpty(c.Operand2))
+                return Loc.T("choice.req.not", new { req = name });
+            return Loc.T("choice.req.param",
+                new { name, op = SymbolOpWord(c.Operator), value = c.Operand2 });
+        }
+
+        // Objective conditions serialize the operator as a bare symbol; readers voice those
+        // unreliably, so they map onto the same op words the choice requirements use.
+        private static string SymbolOpWord(string symbol)
+        {
+            switch (symbol)
+            {
+                case "≥": return Loc.T("choice.op.moreequal");
+                case "≤": return Loc.T("choice.op.lessequal");
+                case ">": return Loc.T("choice.op.more");
+                case "<": return Loc.T("choice.op.less");
+                case "=": return Loc.T("choice.op.equal");
+                case "!=": return Loc.T("choice.op.not");
+                default: return symbol;
+            }
+        }
+
+        /// <summary>The game's own el-placeholder substitution, as its popup inlines it: the
+        /// sword-noble particle when earned, else removed.</summary>
+        public static string ElText(string text)
+        {
+            if (text == null) return null;
+            return KeyParams.Initiate.GetNobleSwordStatus()
+                ? text.Replace("<el>", GameLoc.GetTranslation("SwordNobleEl"))
+                : text.Replace("<el>", string.Empty).Replace("  ", " ");
         }
 
         private static string ObjectiveTitle(Objective obj)

@@ -5,6 +5,31 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Destiny window judgment calls (2026-07-18, Phase 5)
+
+- **Objective conditions speak the earn-popup's rendering, not the hover panel's**: the
+  window's own hover panel prints raw serialized keys ("TrainWithDad", "Activity"), while
+  the earn-popup translates operands through I2 with the el substitution ("Train with
+  Father", "Determination"). The popup path is the authored one; Readouts.ObjectiveDetails
+  follows it, with or-flagged rows folded into one any-of group. Operator symbols (the
+  serialized "≥"/"≤"/...) map onto the existing choice.op words - same reasoning as choice
+  requirements: readers voice bare symbols unreliably.
+- **Achieved state is a mod word** ("achieved"): the game marks an earned objective only by
+  black-vs-gray name color, no string exists. Unachieved is the common state and stays
+  silent.
+- **Locked chapter tabs refuse with the plain unavailable word**: the game attaches no
+  reason string to them (gray only); inventing "reach chapter N" wording would be
+  re-authoring game text.
+- **UiWidgets.LocalizedLabel guards the TextMeshProLocalization race**: that game component
+  localizes its label in Start(), one frame after a window prefab instantiates, so entry
+  announcements read the serialized Russian. The helper resolves the component's own I2
+  keys (the same composition its handler applies) instead of the raced TMP text - use it
+  for any label carrying that component.
+- **The Destiny timeline pane is dead code** in the shipped game: its
+  DestinyWindowLoadCompleteEvent handler is empty and nothing else instantiates timeline
+  rows, so the screen reads nothing there. The interlude timeline is a separate controller
+  and a separate ROADMAP item.
+
 ## Family window judgment calls (2026-07-18, Phase 5)
 
 - **The per-character info panel folds onto the member rows** instead of mirroring the game's

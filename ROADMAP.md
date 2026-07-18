@@ -335,7 +335,22 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Work window
 - [ ] todo - Home window
 - [ ] todo - Map window
-- [ ] todo - Destiny window (+ objective earned shine → spoken notification)
+- [x] verified - Destiny window (+ objective earned shine → spoken notification)
+      (2026-07-18: DestinyWindowScreen - chapter tabs as a tab row (locked tabs announce and
+      refuse with the unavailable word - the game gives them only a gray), then the active
+      chapter's objectives grouped under the game's category headers, achieved marked by the
+      mod's achieved word (game shows only black-vs-gray), Space reads description +
+      requirement rows composed the earn-popup way (translated operands, symbols as op
+      words). Verified live in chapter 1 by keys only: entry "Destiny" + "chapter I, tab,
+      selected, 1 of 5"; chapter II tab "unavailable" + Enter refused; Down spoke "Personal
+      Life, The Fencing Lesson, 1 of 4"; all four Space readouts spoke description +
+      conditions ("Determination at least 4, Train with Father" etc.); Escape returned to
+      the scene. Fixed live: tab labels raced TextMeshProLocalization.Start (entry spoke
+      Russian) - new UiWidgets.LocalizedLabel resolves the component's own I2 keys. Confirm
+      in later chapters: tab-switch delivery (all tabs locked in ch1), an achieved
+      objective's row word, an or-group's any-of wording. The timeline pane is dead code in
+      the shipped game (empty load handler) - nothing to read. The earned-shine notification
+      rides the objective popup (generic popup family), not this window.)
 - [ ] todo - Insurrection window (+ InsurrectionSidePopup/tooltip)
 - [ ] todo - War window (WindowsList.WarWindow - confirm where it appears)
 - [x] built - Chapter start window (keyboarded page turner)

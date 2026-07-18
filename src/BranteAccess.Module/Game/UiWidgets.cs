@@ -33,6 +33,26 @@ namespace BranteAccess.Module.Game
             return null;
         }
 
+        /// <summary>A label that is safe against the game's one-beat localization race: a
+        /// TextMeshProLocalization label resolves through its own I2 keys (the same
+        /// composition its Start() applies - a freshly instantiated prefab still shows the
+        /// serialized text of the authoring language until then). Falls back to
+        /// <see cref="LabelText"/> for plain labels.</summary>
+        public static string LocalizedLabel(GameObject go)
+        {
+            if (go == null) return null;
+            var tl = go.GetComponentInChildren<_Scripts.Localization.TextMeshProLocalization>(false);
+            if (tl != null)
+            {
+                var text = tl.ItsKeysCombination
+                    ? I2.Loc.LocalizationManager.GetTranslation(tl.Keys[0]) + " "
+                        + I2.Loc.LocalizationManager.GetTranslation(tl.Keys[1])
+                    : I2.Loc.LocalizationManager.GetTranslation(tl.Key);
+                if (!string.IsNullOrEmpty(text) && text.Trim().Length > 0) return text;
+            }
+            return LabelText(go);
+        }
+
         /// <summary>Is this object actually shown - active in hierarchy AND not hidden by any
         /// ancestor CanvasGroup faded to zero (the game hides windows by alpha during
         /// transitions; hidden is not closed - never activate through it).</summary>

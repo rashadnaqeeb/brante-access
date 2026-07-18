@@ -108,6 +108,9 @@ character.deaths = {label}, {value} of {max}
 # Family window (member names are the game's live tile texts)
 family.selected = {name} selected
 
+# Destiny window (the game marks an achieved objective only by color)
+destiny.achieved = achieved
+
 # Main menu buttons (the game's labels are localized sprites - no game string exists)
 mainmenu.continue = Continue
 mainmenu.newgame = New game
