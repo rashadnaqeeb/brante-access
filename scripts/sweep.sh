@@ -150,6 +150,36 @@ if [[ "$NAV" == *"scene:choice:"* ]]; then
   check "choice speaks with position" " of " "$(speech "$C")"
 fi
 
+# --- 5c2. HUD windows: each covered window opens by its real HUD button, announces the
+# game's own term for it, and Escape returns to the scene. Buttons the current chapter has
+# not unlocked are skipped (the save decides). The click eval mirrors the game's button path
+# (UiWidgets.Click on the real GameObject) so ShowBackButtonEvent wiring stays exercised. ---
+for PAIR in \
+  "WindowCharacterButton_Click|HUD.Character" \
+  "WindowFamilyButton_Click|HUD.Family" \
+  "WindowDestinyButton_Click|HUD.Destiny" \
+  "WindowHomeButton_Click|HUD.Home" \
+  "WindowRelationsButton_Click|HUD.Relation" \
+  "WindowEmpireButton_Click|HUD.Empire" \
+  "WindowMapButton_Click|HUD.Map" \
+; do
+  HANDLER="${PAIR%%|*}"; TERM_KEY="${PAIR##*|}"
+  EXPECTED=$(evalcs "I2.Loc.LocalizationManager.GetTranslation(\"$TERM_KEY\")" | sed -E 's/^=> //; s/^"//; s/"$//')
+  C=$(cursor)
+  CLICK=$(evalcs "var hud = UnityEngine.Object.FindObjectOfType<_Scripts.AMVCC.Views.HudController>(); var result = \"notfound\"; foreach (var btn in hud.GetComponentsInChildren<UnityEngine.UI.Button>(true)) { for (int i = 0; i < btn.onClick.GetPersistentEventCount(); i++) if (btn.onClick.GetPersistentMethodName(i) == \"$HANDLER\") { if (!btn.gameObject.activeInHierarchy || !btn.interactable) { result = \"inactive\"; } else { BranteAccess.Module.Game.UiWidgets.Click(btn.gameObject); result = \"clicked\"; } } } result;")
+  if [[ "$CLICK" == *inactive* ]]; then
+    echo "SKIP window $TERM_KEY (button not unlocked in this chapter)"
+    continue
+  fi
+  check "window $TERM_KEY button clicked" "clicked" "$CLICK"
+  sleep 1.5
+  check "window $TERM_KEY announced" "$EXPECTED" "$(speech "$C")"
+  C=$(cursor)
+  press ui.back
+  sleep 1.2
+  check_nonempty "window $TERM_KEY escape returns to scene" "$(speech "$C")"
+done
+
 # --- 5d. Pause menu in-game + exit confirmation (ends back at the main menu) ---
 C=$(cursor)
 evalcs '_Scripts.Managers.UIManager.Initiate.ShowPauseMenu(); "opened"' > /dev/null

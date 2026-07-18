@@ -470,7 +470,13 @@ go to DECISIONS.md, not to the user.
       save → load → quit. Run after every ~4 verified items; keep it green.
       (first run green 14/14: health, mainmenu graph, End/Home speech, tooltip fallback,
       Settings activation + refocus, focus-mode toggle both ways, zero mod error log lines.
-      Last run: 2026-07-18 (after HUD bar, Character, Soul, Family windows), green 38/38.
+      Last run: 2026-07-18 (after Home, chapter start/final, Relations, Empire, Map), green
+      59/59 - new 5c2 section opens every covered HUD window by its real button (click eval
+      by persistent handler name), asserts the entry announcement against the game's own I2
+      term fetched at runtime (chapter-proof), Escape back to the scene each time; buttons
+      the loaded save's chapter has not unlocked are skipped. Ran against the chapter 2 save;
+      all seven windows present, zero skips.
+      Prior green run (after HUD bar, Character, Soul, Family windows), 38/38.
       Gotcha reconfirmed: the sweep's precondition is the MAIN MENU - a mid-scene start
       fails the menu sections and its keypresses page the live scene. Quit to menu first.
       Prior run (after death flow, tooltips, animation gating), green 38/38 -
