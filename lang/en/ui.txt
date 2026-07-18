@@ -5,7 +5,6 @@ focusmode.on = focus mode on
 focusmode.off = focus mode off
 
 screen.mainmenu = main menu
-screen.settings = settings
 
 # Navigator feedback
 nav.position = {index} of {count}
@@ -28,6 +27,12 @@ role.edit = edit
 # Control states
 state.unavailable = unavailable
 state.selected = selected
+state.on = on
+state.off = off
+
+# Settings window (value/reason strings the game renders only visually)
+settings.percent = {value} percent
+settings.resolution_unavailable = unavailable, windowed screen format only
 
 # Text entry (edit fields; a hint is allowed - modal editing is an unusual control)
 edit.start = editing, Enter to accept

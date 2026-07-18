@@ -109,9 +109,7 @@ namespace BranteAccess.Module
                 new NameRequestScreen(),
                 new DisclaimerScreen(),
                 new CutsceneScreen(),
-                // Settings/LoadWindow open as ADDITIVE scene loads (MainMenuController), not window slots.
-                new PredicateScreen("settings",
-                    Message.Localized("ui", "screen.settings"), 10, () => GameUi.IsSceneLoaded("Settings")),
+                new SettingsScreen(),
                 new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null),
                 new PredicateScreen("popup", null, 20, () => GameUi.OpenedPopup != null),
                 new PredicateScreen("pause", null, 24, () => GameUi.PauseOpen),

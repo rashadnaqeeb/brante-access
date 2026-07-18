@@ -128,8 +128,19 @@ go to DECISIONS.md, not to the user.
       menu drops from the stack the frame RUNNING flips: speech went Start -> disclaimer text
       with no stale menu refocus. Chapter start window first exists at Chapter 1, unreachable
       until the prologue is playable - rides its dedicated Phase 5 item, see DECISIONS.md)
-- [ ] todo - Settings window (sliders, toggles, language dropdown) - includes muting game audio
+- [x] verified - Settings window (sliders, toggles, language dropdown) - includes muting game audio
       by keyboard
+      (2026-07-18: 9-row form graph in the game's visual order, captions/values all game text.
+      Live: Music slider left/left/right spoke "40/30/40 percent" with the game's stored volume
+      tracking (music max is 0.6 - percent is normalized slider position, matching the visual);
+      Sound slid to "0 percent" = keyboard audio mute (GameSettings.SoundVolume 0) and back;
+      VSync Enter toggled "on"/"off" with the setting flipping; Screen format spinner cycled
+      Fullscreen -> Borderless Window -> Window and back via the game's arrow buttons, with the
+      Resolution row's gate following live (locked: "unavailable, windowed screen format only";
+      in Window mode the reason disappears and the dropdown adjusts); language spinner
+      English -> Русский -> English with the mod locale following each way; Escape ran the game's
+      BackToMainMenuButton_Click (SaveSettings + unload), mainmenu refocused. sweep.sh 18/18
+      including a new Settings section driving slider + Escape-close through the game path)
 - [ ] todo - Save/load windows incl. chapter-select page, delete confirmation popup
 - [ ] todo - Pause/Escape menu + exit confirmation popup
 - [ ] todo - Credits window (skippable)

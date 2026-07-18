@@ -58,16 +58,23 @@ C=$(cursor)
 press ui.tooltip
 check "no-tooltip fallback" "no tooltip" "$(speech "$C")"
 
-# --- 5. activation runs the game's own handler: open Settings, then unload it ---
+# --- 5. Settings: activation, form graph, slider adjust, Escape-close (game's back path) ---
 press ui.down   # New game
 press ui.down   # Settings
 C=$(cursor)
 press ui.activate
 sleep 1.5
-check "settings announced" "settings" "$(speech "$C")"
-check "settings focused" "settings(10)*" "$(curl -s -m 5 "$BASE/nav")"
+check "settings announced" "Settings" "$(speech "$C")"
+NAV=$(curl -s -m 5 "$BASE/nav")
+check "settings focused" "settings(10)*" "$NAV"
+check "settings graph built" "graph (9 nodes)" "$NAV"
+press ui.down; press ui.down; press ui.down   # language -> ... -> Music slider
 C=$(cursor)
-evalcs 'UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Settings");' > /dev/null
+press ui.left
+check "slider adjust speaks percent" "percent" "$(speech "$C")"
+press ui.right  # restore original volume
+C=$(cursor)
+press ui.back
 sleep 1.5
 S=$(speech "$C")
 check "mainmenu refocus announced" "main menu" "$S"

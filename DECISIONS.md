@@ -5,6 +5,25 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Settings window judgment calls (2026-07-18, Phase 3)
+
+- **Slider values announce as normalized percent** (position within the slider's own min..max),
+  not the raw value: the game caps music at 0.6 raw, and the visual slider shows position - a
+  half-full slider is "50 percent" to sighted and blind players alike.
+- **The left/right cycler rows (Language, Screen format) use the combo box role** and adjust on
+  Left/Right through the game's own arrow-button click handlers - to a screen-reader user an
+  arrow-adjustable value picker IS a combo box; inventing a "spinner" role word would violate
+  the no-per-screen-synonyms rule.
+- **Resolution's unavailability reason is mod-authored** ("windowed screen format only"): the
+  game's only signal is dimming the dropdown; the rule that unavailable controls announce their
+  failed requirement needs a string and none exists in the game.
+- **Settings row detection keys off SettingsWindow's own serialized references** (w.Sound,
+  w.PictureAnimation, ...) matched to container rows, not name/heuristic scans - the game's own
+  wiring is the ground truth for which control is which. Captions are TMP, found live (the
+  CLAUDE.md both-text-types gotcha, hit in practice: legacy-Text-only scan built 1 node of 9).
+- **The screen name is the game's own window title** ("Settings" TMP text), replacing the
+  mod-authored screen.settings key - reuse beats authoring.
+
 ## New-game flow judgment calls (2026-07-18, Phase 3)
 
 - **Cutscene Update bodies are UN-patched** (CutsceneIntro, ChapterCutscene removed from
