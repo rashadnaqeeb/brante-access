@@ -470,8 +470,17 @@ go to DECISIONS.md, not to the user.
       alone. All 7 pages traversed over HTTP, one delivery per page swap, adult skills revealed
       one per page, last page's Continue (game's own click) closed into the chapter III start
       book. Zero mod errors logged.)
-- [ ] todo - Death windows: standard death, fourth-death continue flow, GameOverWindow +
+- [ ] in progress - Death windows: standard death, fourth-death continue flow, GameOverWindow +
       restart/continue popup
+      (2026-07-19 fourth-death trial VERIFIED end to end over HTTP: FourthDeath_* scenes loop
+      by same-frame scene reload (no pop frame - destroyed-pager detection via ReferenceEquals
+      delivers each new scene's page with silent re-seat), judgment questions delivered and
+      answered through the game's own buttons (the trial wires SceneButton_Click on the
+      answer Buttons - activation now clicks the Button instead of calling OnButton_Click
+      directly, which had forked into an unreachable NRE path), final Continue exits to the
+      relive chapter select, rewind popup ("Rewind to Chapter Youth" + description) confirmed,
+      Youth interlude + chapter start reached. Standard death verified earlier (line 245
+      item). Remaining: GameOverWindow + its restart/continue popup.)
 - [x] verified - Chapter title splash (StartPictureHelper, "ChildhoodPicture" et al - the
       click-anywhere picture between chapter select and the chapter start book)
       (2026-07-18: ChapterPictureScreen - one node, game's localized title + "Enter continues"
