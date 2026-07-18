@@ -516,6 +516,12 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - ChapterWindowManager sections (later-chapter final summary: Post, BigDeal, Duels,
       Heir panels + work/family parameter sliders - check at the chapter 3 final whether the
       ChapterFinalScreen sweep already reads them)
+      (2026-07-19 chapter III final checked live: NO ChapterWindowManager component exists
+      there (FindObjectOfType null) - it is a chapter IV/V surface only; verify at the
+      chapter IV final. Chapter III final itself: 4 pages traversed over HTTP - Destiny
+      timeline (8 events with category + year), Personality x2, page 4 renders empty in the
+      game itself (title/description/Continue only, panels carry no text) and the sweep
+      faithfully delivers "4 of 4" + Continue. Zero mod errors.)
 
 ## Phase 7 - Whole-game text surfaces
 
