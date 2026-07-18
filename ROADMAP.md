@@ -330,7 +330,14 @@ go to DECISIONS.md, not to the user.
       name row, the game's own redirect); Escape returned to the scene. Entry gated on the
       hero tile's Start()-written name. Status skipped when CharacterStatus.Good - the game
       renders a bare dash and placeholder detail there.)
-- [ ] todo - Relations window (+ RelationPopup, relation tooltips)
+- [ ] built - Relations window (+ RelationPopup, relation tooltips)
+      (2026-07-18: RelationsWindowScreen written on the Family-window pattern - tile rows with
+      role/estate/relation/status folded on via new shared Readouts character helpers
+      (CharacterEstate/RelationPair/StatusWord/Detail, Family window refactored onto them),
+      selection delivery, placeholder row for the no-acquaintances case. NOT yet driven live:
+      the window needs a chapter 2+ save (chapter 1 has no Relations HUD button). Prefab name
+      "Window_Relations" and ScreenName key "HUD.Relations" are unconfirmed guesses to check
+      first. RelationPopup still unexamined.)
 - [ ] todo - Empire window
 - [ ] todo - Work window
 - [x] verified - Home window
@@ -435,8 +442,14 @@ go to DECISIONS.md, not to the user.
       includes the event-scene section: transcript row focused on load, safe re-reads leave
       the pager alone, End+Enter driver reaches choices/continue without ever activating a
       choice, choice speaks with position.)
-- [ ] todo - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
+- [ ] in progress - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
       spot-checks deep into the game
+      (2026-07-18: scripts/advance.sh - story-advance driver that pushes the live game forward
+      through the mod's navigator, verifying speech per action (rotating choice picks, silence
+      and /log-error aborts, stops on chapterstart/unknown screens). The game writes a save per
+      chapter reached - those are the jump points. First long run under way on the Testname
+      save; pulled forward from Phase 8 because every remaining Phase 5 window needs a later
+      chapter.)
 - [ ] todo - Full keyboard-only playthrough of the prologue + chapter 1 via dev server, zero
       mouse, no unspoken interactive element encountered (log any gap as a new roadmap item)
 - [ ] todo - Sampled sweep across later chapters (3+ scenes per chapter incl. one special

@@ -127,6 +127,7 @@ namespace BranteAccess.Module
                 new FamilyWindowScreen(),
                 new DestinyWindowScreen(),
                 new HomeWindowScreen(),
+                new RelationsWindowScreen(),
                 new GenericPopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);

@@ -7,9 +7,7 @@ using FamilyWindow = _Scripts.AMVCC.Views.Windows.Family.FamilyWindowController;
 using FamilyTile = _Scripts.AMVCC.Views.Windows.Family.StatusRelationGetSet;
 using RelationTile = _Scripts.AMVCC.Views.Windows.Components.RelationCharacterComponent;
 using CharacterList = _Scripts.AMVCC.Models.Static.CharacterList;
-using Estates = _Scripts.AMVCC.Models.Static.Estates;
 using ParametersManager = _Scripts.Managers.ParametersManager;
-using SerializeHelper = _Scripts.Helpers.CharacterParametersSerializeHelper;
 using GameLoc = I2.Loc.LocalizationManager;
 
 namespace BranteAccess.Module.Screens
@@ -69,8 +67,8 @@ namespace BranteAccess.Module.Screens
             if (selected == _spokenSelected) return;
             _spokenSelected = selected;
             if (selected != null)
-                Mod.Speech.Speak(Loc.T("family.selected",
-                    new { name = Collapse(Tile(selected).Name.text) }));
+                Mod.Speech.Speak(Loc.T("member.selected",
+                    new { name = Readouts.Collapse(Tile(selected).Name.text) }));
         }
 
         public override void Build(GraphBuilder b)
@@ -105,7 +103,7 @@ namespace BranteAccess.Module.Screens
                         },
                         SearchText = () => Tile(tile).Name.text,
                         OnTooltip = isHero ? (System.Action)null
-                            : () => Mod.Speech.Speak(MemberDetail(tile)),
+                            : () => Mod.Speech.Speak(Readouts.CharacterDetail(tile.CharacterObject)),
                         OnActivate = () => UiWidgets.Click(tile.gameObject),
                     });
             }
@@ -131,53 +129,18 @@ namespace BranteAccess.Module.Screens
         private static string MemberLabel(FamilyTile member)
         {
             var tile = Tile(member);
-            var parts = new List<string> { Collapse(tile.Name.text) };
+            var parts = new List<string> { Readouts.Collapse(tile.Name.text) };
             if (tile.WhoIs != null) parts.Add(tile.WhoIs.text);
             if (member.CharacterObject.Name != CharacterList.Hero)
             {
-                var pm = ParametersManager.Instance;
-                var chars = SerializeHelper.Initiate.Characters;
                 var co = member.CharacterObject;
-                parts.Add(GameLoc.GetTranslation(System.Enum.GetName(typeof(Estates),
-                    SerializeHelper.Initiate.GetCharacterEstate(co))));
-                var rel = pm.GetCharacterRelation(co, chars);
-                parts.Add(Loc.T("hud.pair", new
-                {
-                    label = GameLoc.GetTranslation("HUD.Relation"),
-                    value = (rel > 0 ? "+" : "") + rel + " (" + pm.CheckParameterValue(rel) + ")",
-                }));
-                var status = pm.GetCharacterStatus(co, chars);
-                if (status != CharacterStatus.Good)
-                    parts.Add(GameLoc.GetTranslation(pm.GetCharacterStatusKey(co, status)));
+                parts.Add(Readouts.CharacterEstate(co));
+                parts.Add(Readouts.CharacterRelationPair(co));
+                var status = Readouts.CharacterStatusWord(co);
+                if (status != null) parts.Add(status);
             }
             return string.Join(", ", parts.ToArray());
         }
-
-        // The description paragraph, plus the status title + detail the game renders as the
-        // help-icon tooltip when a status is set.
-        private static string MemberDetail(FamilyTile member)
-        {
-            var pm = ParametersManager.Instance;
-            var chars = SerializeHelper.Initiate.Characters;
-            var co = member.CharacterObject;
-            var text = GameLoc.GetTranslation(pm.GetCharacterDescription(co, chars));
-            var status = pm.GetCharacterStatus(co, chars);
-            if (status != CharacterStatus.Good)
-            {
-                var key = pm.GetCharacterStatusKey(co, status);
-                text += "\n" + Loc.T("tooltip.section", new
-                {
-                    title = GameLoc.GetTranslation(key),
-                    rows = GameLoc.GetTranslation(key + ".Description"),
-                });
-            }
-            return text;
-        }
-
-        // Tile names wrap over two lines ("Testname\n Brante") - one spoken line.
-        private static string Collapse(string text)
-            => string.Join(" ", text.Split(
-                new[] { ' ', '\n', '\r', '\t' }, System.StringSplitOptions.RemoveEmptyEntries));
 
         public override IEnumerable<ElementAction> GetActions()
         {

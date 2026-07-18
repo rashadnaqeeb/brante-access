@@ -307,6 +307,62 @@ namespace BranteAccess.Module.Game
             }
         }
 
+        /// <summary>The estate word for a character, as the game's info panels translate it.</summary>
+        public static string CharacterEstate(_Scripts.AMVCC.Models.Static.Character co)
+            => GameLoc.GetTranslation(System.Enum.GetName(
+                typeof(_Scripts.AMVCC.Models.Static.Estates),
+                _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.GetCharacterEstate(co)));
+
+        /// <summary>The relation readout the game's info panels render: the Relations label with
+        /// the signed value and the game's relation word ("Relations -1 (Indifference)").</summary>
+        public static string CharacterRelationPair(_Scripts.AMVCC.Models.Static.Character co)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var rel = pm.GetCharacterRelation(co,
+                _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+            return Loc.T("hud.pair", new
+            {
+                label = GameLoc.GetTranslation("HUD.Relation"),
+                value = (rel > 0 ? "+" : "") + rel + " (" + pm.CheckParameterValue(rel) + ")",
+            });
+        }
+
+        /// <summary>The character's status word when one is set - null for CharacterStatus.Good,
+        /// where the game shows a bare dash and hides its status help icon.</summary>
+        public static string CharacterStatusWord(_Scripts.AMVCC.Models.Static.Character co)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var status = pm.GetCharacterStatus(co,
+                _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+            return status == CharacterStatus.Good ? null
+                : GameLoc.GetTranslation(pm.GetCharacterStatusKey(co, status));
+        }
+
+        /// <summary>The character's description paragraph plus the status title and detail the
+        /// game renders behind its help-icon tooltip when a status is set.</summary>
+        public static string CharacterDetail(_Scripts.AMVCC.Models.Static.Character co)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var chars = _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters;
+            var text = GameLoc.GetTranslation(pm.GetCharacterDescription(co, chars));
+            var status = pm.GetCharacterStatus(co, chars);
+            if (status != CharacterStatus.Good)
+            {
+                var key = pm.GetCharacterStatusKey(co, status);
+                text += "\n" + Loc.T("tooltip.section", new
+                {
+                    title = GameLoc.GetTranslation(key),
+                    rows = GameLoc.GetTranslation(key + ".Description"),
+                });
+            }
+            return text;
+        }
+
+        /// <summary>One spoken line from a label that wraps over multiple lines on screen.</summary>
+        public static string Collapse(string text)
+            => string.Join(" ", text.Split(
+                new[] { ' ', '\n', '\r', '\t' }, System.StringSplitOptions.RemoveEmptyEntries));
+
         /// <summary>The game's own el-placeholder substitution, as its popup inlines it: the
         /// sword-noble particle when earned, else removed.</summary>
         public static string ElText(string text)
