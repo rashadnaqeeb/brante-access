@@ -175,8 +175,21 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 4 - The event scene (the heart of the game)
 
-- [ ] todo - Scene screen: transcript of passage pages, spoken on delivery (SceneStateMachine +
+- [x] verified - Scene screen: transcript of passage pages, spoken on delivery (SceneStateMachine +
       Messenger driven, once per new page), arrow re-read, silent re-home
+      (SceneScreen: pages as text rows in one silent-positions stop, labels resolved at speech
+      time from the pager's serialized I2 keys through the game's own InsertCharacterName helper
+      (hero name/el substitution) with the block's character name prefixed when a portrait shows.
+      Delivery is poll-and-diff on the pager's own _pageIndex: once per new page, queued, silent
+      re-home to the new row; on screen entry the navigator's seat announcement is the speech
+      (no double). Enter on the newest row advances via the game's NextPage gated on the game's
+      NextButton.interactable; older rows re-read only. Escape = ShowPauseMenu. Verified live in
+      the Intro scene: entry spoke "At The End of Time" + page 1 once; six pages each delivered
+      once via Enter; Up re-read without position chatter; Enter on an old row does not advance;
+      Enter on the last page no-ops (next disabled); Escape to pause and back re-announced the
+      focused row. Page-row ids are Structural, not Referenced - all rows share the pager
+      component and reference-tier reconciliation snapped focus back to row 1 on every rebuild,
+      caught live.)
 - [ ] todo - Scene title + year/date announcements (ChangeSceneTitleEvent, DayTimePopup)
 - [ ] todo - Speaker attribution: portrait character name prefixed to spoken line when present
 - [ ] todo - Choice list: all ParameterButtonChanger nodes with availability state; unavailable

@@ -117,6 +117,7 @@ namespace BranteAccess.Module
                 new PauseScreen(),
                 new ExitConfirmScreen(),
                 new CreditsScreen(),
+                new SceneScreen(),
                 new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null),
                 new PredicateScreen("popup", null, 20, () => GameUi.OpenedPopup != null),
             };

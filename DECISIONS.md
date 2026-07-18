@@ -5,6 +5,25 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Scene transcript judgment calls (2026-07-18, Phase 4)
+
+- **Transcript rows use Structural ids, not Referenced.** Every page row shares the single
+  TextController as its backing component, and reference-tier focus reconciliation matches the
+  first node with that reference - focus snapped back to page 1 on every rebuild (caught live:
+  End bounced straight back). Rule of thumb recorded: Referenced ids need a DISTINCT component
+  per node; rows carved out of one component's data are Structural.
+- **Only the newest page row advances on Enter** (through the game's NextPage, gated on the
+  game's own NextButton.interactable). Older rows are read-only history: re-reading must never
+  mutate game state, and the game's own PreviousPage re-pages the shared panel, so it is not
+  used for review at all. This is strictly better than the game's keyboard, which can only
+  re-page.
+- **The scene screen claims Escape for ShowPauseMenu** - the game's own Escape read (in
+  UIManager.Update) is focus-suppressed while a screen is active; this fulfils the handoff
+  noted in the pause-menu entry.
+- **Speaker prefix rides the page row** ("Name: text", from the block's Character through the
+  game's GetCharacterTrueName) - built now, pending live verification when a portrait line is
+  reached (the Intro has none); the speaker-attribution ROADMAP item stays open for that.
+
 ## Credits judgment calls (2026-07-18, Phase 3)
 
 - **Skip is Escape only, not the game's Escape/Space/Enter trio.** In mod screens Space is
