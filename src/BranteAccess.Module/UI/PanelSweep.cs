@@ -1,26 +1,33 @@
+using System.Collections.Generic;
 using BranteAccess.Module.Game;
 using BranteAccess.Module.Speech;
 using BranteAccess.Module.UI.Graph;
 using UnityEngine;
+using ParameterComponent = _Scripts.AMVCC.Views.Windows.ParameterComponent;
+using ParameterGetSet = _Scripts.AMVCC.Views.Windows.ParameterGetSet;
 
 namespace BranteAccess.Module.UI
 {
     /// <summary>
     /// Generic panel reader for game-composed surfaces with no dedicated model adapter (the
-    /// PopupsEnum popup family, generated stat panels): visible texts become rows in hierarchy
-    /// order, visible buttons become activatable nodes. The rendered text IS the game's own
-    /// localized output for these surfaces, so reading the live components is the model read.
-    /// Sweeps TMP and legacy uGUI Text both (the game mixes them).
+    /// PopupsEnum popup family, generated stat panels, the chapter-transition conversion
+    /// panel): visible texts become rows in hierarchy order, visible buttons become
+    /// activatable nodes. The rendered text IS the game's own localized output for these
+    /// surfaces, so reading the live components is the model read. Sweeps TMP and legacy
+    /// uGUI Text both (the game mixes them). A ParameterComponent's name/value/segment
+    /// texts fold onto one row with the scale breakdown on Space - one stop per stat.
     /// </summary>
     public static class PanelSweep
     {
         public static void Build(GraphBuilder b, GameObject root, string idPrefix)
         {
+            var fold = FoldMap(root);
+            var folded = new HashSet<ParameterComponent>();
             b.PushContext("", role: null, positions: false);
             foreach (var tmp in root.GetComponentsInChildren<TMPro.TMP_Text>())
-                AddText(b, tmp, tmp.text, idPrefix);
+                AddText(b, tmp, tmp.text, idPrefix, fold, folded);
             foreach (var legacy in root.GetComponentsInChildren<UnityEngine.UI.Text>())
-                AddText(b, legacy, legacy.text, idPrefix);
+                AddText(b, legacy, legacy.text, idPrefix, fold, folded);
             b.PopContext();
 
             foreach (var btn in root.GetComponentsInChildren<UnityEngine.UI.Button>())
@@ -33,7 +40,7 @@ namespace BranteAccess.Module.UI
                         ControlType = ControlTypes.Button,
                         Announcements = new[]
                         {
-                            new NodeAnnouncement(() => UiWidgets.LabelText(bt.gameObject),
+                            new NodeAnnouncement(() => ButtonLabel(bt.gameObject),
                                 kind: AnnouncementKinds.Label),
                             new NodeAnnouncement(
                                 () => UiWidgets.Interactable(bt.gameObject)
@@ -57,12 +64,27 @@ namespace BranteAccess.Module.UI
         // excluded) - the delivery announcement for panels that appear or swap under the player.
         public static string JoinVisible(GameObject root)
         {
-            var parts = new System.Collections.Generic.List<string>();
+            var fold = FoldMap(root);
+            var folded = new HashSet<ParameterComponent>();
+            var parts = new List<string>();
             foreach (var tmp in root.GetComponentsInChildren<TMPro.TMP_Text>())
-                if (IsRow(tmp, tmp.text)) parts.Add(Spoken(tmp.text));
+                JoinText(parts, tmp, tmp.text, fold, folded);
             foreach (var legacy in root.GetComponentsInChildren<UnityEngine.UI.Text>())
-                if (IsRow(legacy, legacy.text)) parts.Add(Spoken(legacy.text));
+                JoinText(parts, legacy, legacy.text, fold, folded);
             return string.Join(", ", parts.ToArray());
+        }
+
+        private static void JoinText(List<string> parts, Component text, string value,
+            Dictionary<Component, ParameterComponent> fold, HashSet<ParameterComponent> folded)
+        {
+            if (!IsRow(text, value)) return;
+            ParameterComponent pc;
+            if (fold.TryGetValue(text, out pc))
+            {
+                if (folded.Add(pc)) parts.Add(ParameterLabel(pc));
+                return;
+            }
+            parts.Add(Spoken(value));
         }
 
         // The id of the first row Build would create - for silently re-seating focus before a
@@ -70,13 +92,57 @@ namespace BranteAccess.Module.UI
         // built Referenced node).
         public static ControlId FirstTextId(GameObject root, string idPrefix)
         {
+            var fold = FoldMap(root);
             foreach (var tmp in root.GetComponentsInChildren<TMPro.TMP_Text>())
                 if (IsRow(tmp, tmp.text))
-                    return ControlId.Structural(idPrefix + ":text:" + tmp.GetInstanceID());
+                    return RowId(tmp, idPrefix, fold);
             foreach (var legacy in root.GetComponentsInChildren<UnityEngine.UI.Text>())
                 if (IsRow(legacy, legacy.text))
-                    return ControlId.Structural(idPrefix + ":text:" + legacy.GetInstanceID());
+                    return RowId(legacy, idPrefix, fold);
             return null;
+        }
+
+        private static ControlId RowId(Component text, string idPrefix,
+            Dictionary<Component, ParameterComponent> fold)
+        {
+            ParameterComponent pc;
+            return fold.TryGetValue(text, out pc)
+                ? ControlId.Structural(idPrefix + ":param:" + pc.GetInstanceID())
+                : ControlId.Structural(idPrefix + ":text:" + text.GetInstanceID());
+        }
+
+        // Some rows carry no numeric value (the chapter final's Deaths row), so the name-value
+        // pair trims before the segment joins on.
+        internal static string ParameterLabel(ParameterComponent pc)
+        {
+            var head = (pc.Name.text + " " + pc.TextValue.text).TrimEnd();
+            return string.IsNullOrEmpty(pc.Descr.text) ? head : head + ", " + pc.Descr.text;
+        }
+
+        // A stat row renders as three sibling texts under one ParameterComponent; each maps to
+        // its component so the sweep can speak them as a single row. Texts under the component
+        // that are not the name/value/segment trio still sweep as their own rows.
+        private static Dictionary<Component, ParameterComponent> FoldMap(GameObject root)
+        {
+            var map = new Dictionary<Component, ParameterComponent>();
+            foreach (var pc in root.GetComponentsInChildren<ParameterComponent>())
+            {
+                if (pc.Name != null) map[pc.Name] = pc;
+                if (pc.TextValue != null) map[pc.TextValue] = pc;
+                if (pc.Descr != null) map[pc.Descr] = pc;
+            }
+            return map;
+        }
+
+        // Image-only pager arrows carry no text anywhere in the game's prefabs; the prefab
+        // object names are stable structure, the spoken words come from the mod's table.
+        private static string ButtonLabel(GameObject go)
+        {
+            var label = UiWidgets.LabelText(go);
+            if (!string.IsNullOrEmpty(label)) return label;
+            if (go.name == "LeftArrow") return Loc.T("pager.prev");
+            if (go.name == "RightArrow") return Loc.T("pager.next");
+            return label;
         }
 
         // The game renders a bare dash as a row's whole value where a status has cleared -
@@ -94,14 +160,35 @@ namespace BranteAccess.Module.UI
             && !string.IsNullOrEmpty(value) && value.Trim().Length != 0
             && text.GetComponentInParent<UnityEngine.UI.Button>() == null;
 
-        private static void AddText(GraphBuilder b, Component text, string value, string idPrefix)
+        private static void AddText(GraphBuilder b, Component text, string value, string idPrefix,
+            Dictionary<Component, ParameterComponent> fold, HashSet<ParameterComponent> folded)
         {
             if (!IsRow(text, value)) return;
+            ParameterComponent pc;
+            if (fold.TryGetValue(text, out pc))
+            {
+                if (!folded.Add(pc)) return;
+                var p = pc;
+                var scales = p.GetComponent<ParameterGetSet>();
+                b.AddItem(ControlId.Referenced(p, idPrefix + ":param:" + p.GetInstanceID()),
+                    new NodeVtable
+                    {
+                        ControlType = ControlTypes.Text,
+                        Announcements = new[]
+                        {
+                            new NodeAnnouncement(() => ParameterLabel(p),
+                                kind: AnnouncementKinds.Label),
+                        },
+                        OnTooltip = scales == null ? (System.Action)null
+                            : () => Mod.Speech.Speak(Readouts.ParameterScales(scales.Parameter)),
+                    });
+                return;
+            }
             var t = text;
-            // Stat rows carry the game's ParameterGetSet - Space reads the same scale detail
-            // the game's ParameterValueTooltip shows on hover, composed from the parameter
-            // asset at speech time.
-            var pgs = t.GetComponentInParent<_Scripts.AMVCC.Views.Windows.ParameterGetSet>();
+            // Space on a plain stat text still reads the same scale detail the game's
+            // ParameterValueTooltip shows on hover, composed from the parameter asset at
+            // speech time.
+            var pgs = t.GetComponentInParent<ParameterGetSet>();
             b.AddItem(ControlId.Referenced(t, idPrefix + ":text:" + t.GetInstanceID()),
                 new NodeVtable
                 {

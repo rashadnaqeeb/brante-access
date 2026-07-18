@@ -457,7 +457,19 @@ go to DECISIONS.md, not to the user.
       "= 0 (Indifference)") with per-panel Continue chaining to the next panel and out; the
       year-increment "Childhood / 4 Years" and CaseOfYear "Brother and Sister's Sacrament /
       Year 1122" popups spoken via the generic popup sweep and dismissed by Enter.)
-- [ ] todo - Parameters conversion panel (chapter transition stat conversion)
+- [x] verified - Parameters conversion panel (chapter transition stat conversion)
+      (2026-07-18: reached live at the chapter II to III transition (EnableConvertationParams
+      interlude "Leaving Home"). Covered by the InterludeScreen post-close PanelSweep with
+      three fixes found and verified this run: ParameterComponent name/value/segment texts
+      fold onto one row ("Perception 5, Inquisitive") with the game's scale detail on Space
+      ("now" marker in the right segment); the image-only LeftArrow/RightArrow pagers speak
+      pager.prev/pager.next with unavailable at the edges; deliveries wait for a 0.45s settle
+      window (the panel activates with prefab placeholder text one frame before Start
+      localizes - pre-fix this spoke Russian plus "dfsdfsfsdfsdf" gibberish, speech 98) and a
+      panel that merely grew speaks only the new tail ("Theology 6, Neophyte") with focus left
+      alone. All 7 pages traversed over HTTP, one delivery per page swap, adult skills revealed
+      one per page, last page's Continue (game's own click) closed into the chapter III start
+      book. Zero mod errors logged.)
 - [ ] todo - Death windows: standard death, fourth-death continue flow, GameOverWindow +
       restart/continue popup
 - [x] verified - Chapter title splash (StartPictureHelper, "ChildhoodPicture" et al - the

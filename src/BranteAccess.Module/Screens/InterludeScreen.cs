@@ -51,6 +51,15 @@ namespace BranteAccess.Module.Screens
         private InterludePopup _watched;
         private int _spokenPage;
         private string _spokenStatsSig;
+        private string _pendingStatsSig;
+        private float _pendingStatsSince;
+
+        // Post-close panels build over several frames: the conversion panel activates with
+        // prefab placeholder text one frame before its Start localizes it, and stat rows
+        // populate one by one while values animate. The panel is delivered once its content
+        // has held still this long, so the placeholder frame and half-filled states are
+        // never spoken.
+        private const float StatsSettleSeconds = 0.45f;
 
         private static InterludePopup Popup() => Object.FindObjectOfType<InterludePopup>();
 
@@ -74,6 +83,7 @@ namespace BranteAccess.Module.Screens
         {
             _watched = null;
             _spokenStatsSig = null;
+            _pendingStatsSig = null;
         }
 
         public override void OnUpdate()
@@ -87,11 +97,33 @@ namespace BranteAccess.Module.Screens
                 // it sat on is gone from the graph - without this the re-seat would double-speak
                 // the first row on top of the delivery).
                 var sig = PanelSweep.JoinVisible(p.gameObject);
-                if (sig.Length == 0 || sig == _spokenStatsSig) return;
+                if (sig.Length == 0 || sig == _spokenStatsSig)
+                {
+                    _pendingStatsSig = null;
+                    return;
+                }
+                if (sig != _pendingStatsSig)
+                {
+                    _pendingStatsSig = sig;
+                    _pendingStatsSince = Time.unscaledTime;
+                    return;
+                }
+                if (Time.unscaledTime - _pendingStatsSince < StatsSettleSeconds) return;
+                // Rows stagger in slower than the settle window: when the panel merely GREW,
+                // only the new tail is spoken (no repeat of what the player already heard),
+                // and focus stays put. A changed or swapped panel is delivered whole with the
+                // silent re-seat.
+                var grew = _spokenStatsSig != null && sig.StartsWith(_spokenStatsSig);
+                var delivery = grew
+                    ? sig.Substring(_spokenStatsSig.Length).TrimStart(',', ' ')
+                    : sig;
                 _spokenStatsSig = sig;
-                Navigation.FocusNode(PanelSweep.FirstTextId(p.gameObject, "interlude"),
-                    announce: false);
-                Mod.Speech.Speak(sig);
+                _pendingStatsSig = null;
+                if (delivery.Length == 0) return;
+                if (!grew)
+                    Navigation.FocusNode(PanelSweep.FirstTextId(p.gameObject, "interlude"),
+                        announce: false);
+                Mod.Speech.Speak(delivery);
                 return;
             }
             _spokenStatsSig = null;

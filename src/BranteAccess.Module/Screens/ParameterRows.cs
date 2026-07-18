@@ -27,21 +27,13 @@ namespace BranteAccess.Module.Screens
                         ControlType = ControlTypes.Text,
                         Announcements = new[]
                         {
-                            new NodeAnnouncement(() => Label(pc),
+                            new NodeAnnouncement(() => PanelSweep.ParameterLabel(pc),
                                 kind: AnnouncementKinds.Label),
                         },
                         OnTooltip = pgs == null ? (System.Action)null
                             : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
                     });
             }
-        }
-
-        // Some rows carry no numeric value (the chapter final's Deaths row), so the name-value
-        // pair trims before the segment joins on.
-        private static string Label(ParameterComponent pc)
-        {
-            var head = (pc.Name.text + " " + pc.TextValue.text).TrimEnd();
-            return string.IsNullOrEmpty(pc.Descr.text) ? head : head + ", " + pc.Descr.text;
         }
     }
 }

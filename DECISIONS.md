@@ -5,6 +5,29 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Conversion panel and panel-sweep judgment calls (2026-07-18, Phase 6)
+
+- **Panel-swap deliveries repeat the panel's static title and description**: the conversion
+  panel keeps one title/description across its 7 pages, so each page swap re-reads them
+  before the changed rows. A row-level diff would trim the repeat but also drop rows that
+  legitimately reappear on the new page (Perception is listed on several pages) - lost
+  information for saved words. Kept whole; the navigator's interrupt-on-focus-move already
+  lets an expert user cut a delivery short by paging on.
+- **Growth-only deliveries speak just the new tail**: when a settling panel's swept content
+  merely grows (rows stagger in slower than the 0.45s settle window), the already-spoken
+  prefix is not repeated and focus stays put. Detected by string-prefix match on the sweep
+  signature - a changed panel never prefix-matches because its row text differs, so it gets
+  the full delivery plus silent re-seat.
+- **Pager arrows are labeled by prefab object name** (LeftArrow/RightArrow to pager.prev/
+  pager.next): the game's pager buttons are image-only everywhere, and the prefab names are
+  stable structure like the transform.Find paths used elsewhere. The spoken words come from
+  the mod's table, so the no-hardcoded-game-text rule is untouched.
+- **ParameterComponent fold lives in PanelSweep, not per-screen**: every swept surface with
+  stat rows (conversion panel, generated stat panels, popup family) gets one stop per stat
+  with scales on Space, matching the dedicated windows' ParameterRows behavior. Texts under
+  the component that are not the name/value/segment trio still sweep as their own rows, so
+  composite rows (relation panels' character names) lose nothing.
+
 ## Map window judgment calls (2026-07-18, Phase 7)
 
 - **Province rows carry a mod-authored "province" word (map.province template)**: the game
