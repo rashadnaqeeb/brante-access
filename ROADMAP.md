@@ -163,7 +163,15 @@ go to DECISIONS.md, not to the user.
       Focus-mode suppression re-gated on ScreenManager.Current != null: with an empty stack the
       game's own keys (Escape to pause, A/D paging) work stock - verified by invoking the live
       Harmony prefix (False with mainmenu active, True in-game stack-empty). sweep.sh 28/28)
-- [ ] todo - Credits window (skippable)
+- [x] verified - Credits window (skippable)
+      (CreditsScreen: 22 credit blocks as text rows in reading order (sibling order under the
+      Credits container - world y is unlaid-out on the build frame and produced reversed rows,
+      caught live), labels read live from scene TMPs, markup stripped at the speech boundary.
+      Escape skips via the game's own paths (LoadMainMenu(); ItsGameOver keyboard branch
+      mirrored for the ending variant - that variant pends live verification until an ending
+      save exists). Verified live: fresh entry announces "credits" + block 1 "1 of 22", End
+      reaches "22 of 22", Escape returns with "main menu" spoken; the roll also auto-returns
+      by itself when finished (game-side) and the stack pops cleanly. sweep.sh 32/32)
 
 ## Phase 4 - The event scene (the heart of the game)
 

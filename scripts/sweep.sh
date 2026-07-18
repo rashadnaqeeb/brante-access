@@ -136,6 +136,23 @@ press ui.activate
 sleep 3
 check "quit confirm returns to main menu" "main menu" "$(speech "$C")"
 
+# --- 5d. Credits roll: text rows in reading order, Escape skips back to the menu ---
+press ui.end
+press ui.up      # Credits button
+C=$(cursor)
+press ui.activate
+sleep 2.5
+S=$(speech "$C")
+check "credits announced" "credits" "$S"
+check "credits first row is block 1" "Game Concept and Setting" "$S"
+C=$(cursor)
+press ui.end
+check "credits last row" "22 of 22" "$(speech "$C")"
+C=$(cursor)
+press ui.back
+sleep 2.5
+check "credits skip returns to main menu" "main menu" "$(speech "$C")"
+
 # --- 6. focus mode toggles both ways ---
 C=$(cursor)
 press focusmode

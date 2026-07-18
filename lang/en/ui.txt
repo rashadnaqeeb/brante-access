@@ -47,6 +47,9 @@ namerequest.start_unavailable = unavailable, name needs at least 2 letters
 cutscene.intro = cutscene, spoken narration, any key skips
 cutscene.chapter = cutscene, spoken narration, Enter skips
 
+# Credits roll (no on-screen title; the menu button label is not an I2 term either)
+screen.credits = credits
+
 # Chapter select page (shown after picking a save; the page has no on-screen title)
 screen.chapterselect = chapter select
 chapterselect.locked = unavailable, not reached

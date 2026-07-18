@@ -5,6 +5,24 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Credits judgment calls (2026-07-18, Phase 3)
+
+- **Skip is Escape only, not the game's Escape/Space/Enter trio.** In mod screens Space is
+  tooltip and Enter is activate; Escape is the house back key everywhere. Splitting the trio
+  would make credits the one screen where Enter closes instead of activating. The skip invokes
+  the game's own handlers (LoadMainMenu(), or the ItsGameOver keyboard branch mirrored from the
+  suppressed Update body); the ending-credits variant is code-mirrored but pends live
+  verification until an ending save exists.
+- **Screen name is a mod key ("credits")**: the scene has no title text and the menu button's
+  label is not an I2 term (checked the full terms list for an English "Credits" match - none).
+- **Rows are ordered by sibling index, not world y.** The graph builds on the scene's first
+  frame, before the layout group positions the blocks; a y-sort captured pre-layout garbage and
+  read the roll backwards (caught live - fresh entry announced the final THANK YOU block as row
+  1). Sibling order under the Credits container is the reading order and is stable from frame
+  one.
+- **The full roll auto-returns to the menu on its own** (game-side, not the controller - likely
+  the scroll animation's end). The screen just pops with the scene; no mod handling needed.
+
 ## Pause menu judgment calls (2026-07-18, Phase 3)
 
 - **Focus-mode suppression now requires an active mod screen** (prefix skips game Update bodies
