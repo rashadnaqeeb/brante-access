@@ -54,10 +54,19 @@ while [ "$STEP" -lt "$MAX" ]; do
   fi
   LOGC=$(logcur)
 
-  NAVOUT=$(curl -s -m 5 "$BASE/nav")
-  if ! echo "$NAVOUT" | grep -q '^stack:'; then
-    echo "ABORT step $STEP: no /nav response (dev server gone or module not loaded)"; exit 1
-  fi
+  # Scene loads block the game's main thread past the probe timeout (seen live after the
+  # fourth-death trial's final Continue), so one failed probe is not a dead server: retry
+  # before giving up.
+  NAVTRY=0
+  while :; do
+    NAVOUT=$(curl -s -m 10 "$BASE/nav")
+    echo "$NAVOUT" | grep -q '^stack:' && break
+    NAVTRY=$((NAVTRY + 1))
+    if [ "$NAVTRY" -ge 6 ]; then
+      echo "ABORT step $STEP: no /nav response after $NAVTRY probes (dev server gone or module not loaded)"; exit 1
+    fi
+    sleep 5
+  done
   ACTIVE=$(echo "$NAVOUT" | sed -n 's/^stack:.* \([a-z]*\)([0-9]*)\*.*$/\1/p')
   [ -z "$ACTIVE" ] && ACTIVE=none
   CHOICE_IDS=""
