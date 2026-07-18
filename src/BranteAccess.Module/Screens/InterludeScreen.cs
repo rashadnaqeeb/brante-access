@@ -50,6 +50,7 @@ namespace BranteAccess.Module.Screens
         // Live component reference for delivery bookkeeping only; text re-reads at speech time.
         private InterludePopup _watched;
         private int _spokenPage;
+        private string _spokenStatsSig;
 
         private static InterludePopup Popup() => Object.FindObjectOfType<InterludePopup>();
 
@@ -72,12 +73,28 @@ namespace BranteAccess.Module.Screens
         public override void OnPop()
         {
             _watched = null;
+            _spokenStatsSig = null;
         }
 
         public override void OnUpdate()
         {
             var p = Popup();
-            if (p == null || !p.MainInterludePanel.activeSelf) return;
+            if (p == null) return;
+            if (!p.MainInterludePanel.activeSelf)
+            {
+                // Post-close stat panels: a new or swapped panel is delivered whole, once, off
+                // the rendered content; focus re-seats silently on its first row (the page row
+                // it sat on is gone from the graph - without this the re-seat would double-speak
+                // the first row on top of the delivery).
+                var sig = PanelSweep.JoinVisible(p.gameObject);
+                if (sig.Length == 0 || sig == _spokenStatsSig) return;
+                _spokenStatsSig = sig;
+                Navigation.FocusNode(PanelSweep.FirstTextId(p.gameObject, "interlude"),
+                    announce: false);
+                Mod.Speech.Speak(sig);
+                return;
+            }
+            _spokenStatsSig = null;
             int page = PageIndex(p);
             if (p != _watched)
             {

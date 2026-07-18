@@ -226,8 +226,17 @@ go to DECISIONS.md, not to the user.
       Intro and three Childhood scenes: consequence pages deliver once each via Enter, the
       ConsequenceControlPanel's Continue appears as a node when the game shows it, activating it
       leaves the scene and the next scene's title + page 0 deliver on arrival.)
-- [ ] todo - Willpower/parameter changes spoken when shown (ShowParameterInformationEvent,
-      ShowCharacterInformationEvent, ParameterSlider/ConsequenceComponent surfaces)
+- [x] verified - Willpower/parameter changes spoken when shown (SceneConsequenceGenerator's
+      post-choice stat panels; ShowParameterInformationEvent only retitles consequence scenes)
+      (2026-07-18: each panel the game shows or swaps is delivered whole, once, off its
+      rendered rows (the game's own localized composition), with rows + the chaining Continue
+      swept into the graph for re-reading; the dedicated Continue node yields when the game's
+      button lives inside the generator. Verified live in 01.05.01 choice 3: relation panel
+      "Nathan Brante, Relations +1, = +2 (Sympathy)" delivered, re-delivered when the game's
+      animation settled the status row to GRATEFUL, then the parameter panel "Willpower,
+      -5 (= 0), Ready for Action" - chained by Enter into the year popup and next scene. Same
+      whole-panel delivery added to the interlude's post-close panels (silent re-seat replaces
+      the old first-row-only seat announcement); to confirm at the next stat interlude.)
 - [ ] todo - Death trigger flow in text blocks (BlockTextPanel → death window → resume)
 - [ ] todo - In-scene tooltips reachable by keyboard: condition tooltip (requirements),
       consequence tooltip, parameter value tooltip

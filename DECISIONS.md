@@ -5,6 +5,19 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Stat-change delivery judgment calls (2026-07-18, Phase 4)
+
+- **Stat panels are delivered whole** (all visible rows joined), not row-by-row via focus: the
+  panel appears under a player whose focus sits on the Continue button, so a seat announcement
+  would read one row or nothing. The joined rendered text is the game's own localized
+  composition; the swept rows stay in the graph for re-reading.
+- **A panel is re-delivered when the game's own animation rewrites a row** (status "—" settling
+  to GRATEFUL re-spoke the panel). Tolerated: the final state is what the player must hear, and
+  suppressing it would require guessing which row changes are cosmetic.
+- **The scene's dedicated Continue node yields to the sweep's button node** when the game's
+  Continue lives inside the stat generator - two nodes sharing one backing button would
+  double-list it and confuse reference-tier focus reconciliation.
+
 ## Chapter-flow and choice judgment calls (2026-07-18, Phases 4-6)
 
 - **One click on a choice applies it - there is no confirm step in this build.** The game's

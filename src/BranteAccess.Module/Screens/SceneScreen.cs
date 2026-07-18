@@ -8,6 +8,7 @@ using UnityEngine;
 using TextController = _Scripts.AMVCC.Controllers.TextController;
 using SceneController = _Scripts.AMVCC.Controllers.SceneController;
 using ParameterButtonChanger = _Scripts.AMVCC.Views.ParameterButtonChanger;
+using SceneConsequenceGenerator = _Scripts.AMVCC.Views.Windows.SceneConsequenceGenerator;
 
 namespace BranteAccess.Module.Screens
 {
@@ -56,6 +57,7 @@ namespace BranteAccess.Module.Screens
         private TextController _watched;
         private int _spokenPage;
         private bool _entryPending;
+        private string _spokenStatsSig;
 
         // The consequence pager only activates after a choice resolves - while it is active it IS
         // the story surface (the game hides the setup pager), so it wins.
@@ -104,10 +106,12 @@ namespace BranteAccess.Module.Screens
         public override void OnPop()
         {
             _watched = null;
+            _spokenStatsSig = null;
         }
 
         public override void OnUpdate()
         {
+            DeliverStatPanels();
             var tc = Pager();
             if (tc == null) return;
             int page = PageIndex(tc);
@@ -135,6 +139,22 @@ namespace BranteAccess.Module.Screens
             _spokenPage = page;
             Navigation.FocusNode(PageId(tc, page), announce: false);
             Mod.Speech.Speak(PageText(tc, page));
+        }
+
+        // The post-choice stat panels (SceneConsequenceGenerator: relation/status panels per
+        // character, then parameter rows by category, chained by the game's own Continue). Each
+        // panel's rendered rows ARE the game's localized composition ("+1 (Become 3)", segment
+        // names) - a new or swapped panel is delivered whole, once, off the rendered content.
+        // Focus needs no re-seat: it sits on the Continue button, which survives the rebuild.
+        private void DeliverStatPanels()
+        {
+            var gen = Object.FindObjectOfType<SceneConsequenceGenerator>();
+            if (gen == null) { _spokenStatsSig = null; return; }
+            var sig = PanelSweep.JoinVisible(gen.gameObject);
+            if (sig.Length == 0) { _spokenStatsSig = null; return; }
+            if (sig == _spokenStatsSig) return;
+            _spokenStatsSig = sig;
+            Mod.Speech.Speak(sig);
         }
 
         public override void Build(GraphBuilder b)
@@ -168,13 +188,19 @@ namespace BranteAccess.Module.Screens
             b.SetStart(PageId(tc, pages));
             b.PopContext();
 
+            // The post-choice stat panels: rows + the chaining button as nodes, so the player can
+            // re-read what the delivery spoke. Swept before the Continue node - if the game's
+            // Continue lives inside the generator, the sweep's button node covers it.
+            var gen = Object.FindObjectOfType<SceneConsequenceGenerator>();
+            if (gen != null) PanelSweep.Build(b, gen.gameObject, "scene:stats");
+
             // The consequence's Continue button (the game shows its control panel after the last
             // consequence page) - the way onward to the next scene.
             if (tc.ItsConsequence && tc.ConsequenceControlPanel != null
                 && tc.ConsequenceControlPanel.activeInHierarchy)
             {
                 var cont = tc.ConsequenceControlPanel.GetComponentInChildren<UnityEngine.UI.Button>();
-                if (cont != null)
+                if (cont != null && (gen == null || !cont.transform.IsChildOf(gen.transform)))
                     b.AddItem(ControlId.Referenced(cont, "scene:continue"), new NodeVtable
                     {
                         ControlType = ControlTypes.Button,
