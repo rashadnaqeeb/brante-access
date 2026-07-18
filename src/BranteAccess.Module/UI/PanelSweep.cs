@@ -134,15 +134,33 @@ namespace BranteAccess.Module.UI
             return map;
         }
 
+        // Buttons already logged as unlabeled - once per hierarchy path per module
+        // generation keeps the log readable while every new offender still surfaces.
+        private static readonly HashSet<string> _unlabeledLogged = new HashSet<string>();
+
         // Image-only pager arrows carry no text anywhere in the game's prefabs; the prefab
         // object names are stable structure, the spoken words come from the mod's table.
+        // Any other textless button is a coverage gap: it still activates but speaks a bare
+        // role word, so it logs its path for identification (heard live as "button" on a
+        // between-scenes popup, 2026-07-18, before this log existed).
         private static string ButtonLabel(GameObject go)
         {
             var label = UiWidgets.LabelText(go);
             if (!string.IsNullOrEmpty(label)) return label;
             if (go.name == "LeftArrow") return Loc.T("pager.prev");
             if (go.name == "RightArrow") return Loc.T("pager.next");
+            var path = HierarchyPath(go);
+            if (_unlabeledLogged.Add(path))
+                Mod.Log("[panelsweep] unlabeled button swept: " + path);
             return label;
+        }
+
+        private static string HierarchyPath(GameObject go)
+        {
+            var path = go.name;
+            for (var t = go.transform.parent; t != null; t = t.parent)
+                path = t.name + "/" + path;
+            return path;
         }
 
         // The game renders a bare dash as a row's whole value where a status has cleared -
