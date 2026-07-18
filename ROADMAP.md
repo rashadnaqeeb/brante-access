@@ -237,6 +237,10 @@ go to DECISIONS.md, not to the user.
       -5 (= 0), Ready for Action" - chained by Enter into the year popup and next scene. Same
       whole-panel delivery added to the interlude's post-close panels (silent re-seat replaces
       the old first-row-only seat announcement); to confirm at the next stat interlude.)
+- [ ] todo - Status-row dash wording: the game renders a bare em-dash as a status panel's
+      value when a character's status clears (driver heard "Sophia, Status, [em-dash]" in
+      chapter 2 - readers voice the dash). Substitute a mod Loc word (state.none) for a
+      standalone dash at the status-row read, never touching dashes inside game prose.
 - [x] verified - Death trigger flow in text blocks (BlockTextPanel → death window → resume)
       (2026-07-18: DeathScreen (layer 21, popup slot) on the book pattern - one live page row,
       Enter turns via the game's RightButton_Click, arrow buttons with mod labels and
