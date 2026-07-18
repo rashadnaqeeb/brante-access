@@ -95,9 +95,17 @@ while [ "$STEP" -lt "$MAX" ]; do
     "screen death"|"screen interlude"|"screen popup"|"screen chapterpicture")
       ACTION="endenter" ;;
     "screen chapterselect")
-      # Between-chapters loading screen: Continue is the start node (End would land on a
-      # locked chapter station and refuse).
-      ACTION="homeenter" ;;
+      # Two surfaces share this screen. The between-chapters loading screen: Continue is
+      # the start node (End would land on a locked chapter station and refuse), so
+      # Home+Enter. The relive selection (after the fourth death): the age text is the
+      # start node, chapter stations follow - walk to the LAST available chapter so the
+      # run resumes at the furthest reached content.
+      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g{n++; if ($0 ~ /chapterselect:chapter:/ && $0 !~ /, unavailable/) last=n} END{if (last) print last}')
+      if [ -n "$TARGET" ]; then
+        ACTION="walk $TARGET"
+      else
+        ACTION="homeenter"
+      fi ;;
     "screen cutscene")
       echo "note step $STEP: cutscene - waiting"; sleep 5; continue ;;
     "screen none")
@@ -127,6 +135,13 @@ while [ "$STEP" -lt "$MAX" ]; do
     press ui.end; sleep 0.3; press ui.activate
   elif [ "$ACTION" = "homeenter" ]; then
     press ui.home; sleep 0.3; press ui.activate
+  elif [ "${ACTION%% *}" = "walk" ]; then
+    # Walk to the Nth graph node by position: Home seats node 1, Down steps forward.
+    DOWNS=$(( ${ACTION#walk } - 1 ))
+    press ui.home
+    WI=0
+    while [ "$WI" -lt "$DOWNS" ]; do press ui.down; sleep 0.15; WI=$((WI + 1)); done
+    sleep 0.3; press ui.activate
   else
     # Reach the picked choice by keys alone: choices are the last nodes of the transcript
     # stop, so End lands on the last choice and Up walks back to the target (unavailable
