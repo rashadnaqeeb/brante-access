@@ -228,7 +228,11 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Label),
                         },
                         SearchText = () => ChoiceText(choice),
-                        OnActivate = () => choice.OnButton_Click(),
+                        // Through the game's own Button: standard death windows wire
+                        // OnButton_Click (select + show resolve) but the fourth-death
+                        // trial wires SceneButton_Click (advance to the next trial
+                        // scene) on the same prefab family - the wiring is the truth.
+                        OnActivate = () => UiWidgets.Click(choice.gameObject),
                     });
             }
             b.PopContext();

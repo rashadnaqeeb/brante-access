@@ -17,10 +17,11 @@ stream of questions.
   for a few frames before the game populates it, and it was heard live (speech 470). Page
   turns stay immediate - the game sets their text synchronously in the click handler.
 - **The story driver only aborts on mod errors; the game's own logged errors are noted and
-  driving continues**: the fourth-death Continue path fires a UIManager.SetAchievementInfo
-  NullReferenceException inside the GAME for the game's own mouse path too (our activation
-  invokes the same Button_Click). The game demonstrably survives it; aborting on it would
-  block coverage of everything past the fourth death. Mod errors still abort hard.
+  driving continues**: game-code exceptions can fire on paths the game survives, and
+  aborting on them would block coverage past the surface that logged them. Mod errors
+  still abort hard. (The fourth-death NREs first noted here later proved to be reachable
+  only through a mod-side activation bug - see the next entry - but the driver policy
+  stands: note, continue, and investigate after the run.)
 - **The fourth-death trial's scene-reload is same-frame, and the mod must survive it**: the
   trial loops FourthDeath_* scenes (one per judgment question) by reloading the scene
   synchronously from a Bolt "Click" trigger - the death screen never observes an inactive
@@ -29,14 +30,19 @@ stream of questions.
   navigator seat announcement speaks) from destroyed (same-screen swap, deliver the new
   page after settle) with ReferenceEquals. Heard live: reload spoke only "next page,
   button, 2 of 2" before the fix; title + full page after.
-- **A wedge caused by the game's own NRE cascade is unwedged by firing the un-run tail of
-  the game's handler, not by mod code**: FourthDeath_3's ContinueButton carried a NULL
-  serialized DeathObjective, so ShowObjectivePopupEvent, the popup's Start, and
-  DisactivePopup all NREd; the popup hid but never broadcast CloseTrueDeathPopupEvent, set
-  GoToFinals, or triggered the TalismanFlowMachine Bolt "Click" - the game was stuck with a
-  self-disabled Continue. One dev /eval replayed exactly those remaining game steps and the
-  flow advanced cleanly (zero new errors). Nothing mod-side changed: a real player on this
-  path hits the same wedge, and the mod cannot fix game data.
+- **Death choices activate through the game's Button, never a hand-picked method**: the
+  first DeathScreen build called DeathChoiceButtonBehaviour.OnButton_Click() directly. In
+  standard death windows that IS the button's onClick, but the fourth-death trial wires
+  SceneButton_Click (broadcast GoToNextDeathSceneEvent, straight to the next trial scene)
+  on the same prefab family. The direct call forked the game into prefab-leftover resolves
+  and a Continue that is unreachable in real play - its Button_Click opens the broken
+  AchievementPopup path (NULL DeathObjective, prefab fields unassigned), producing a
+  three-NRE cascade (SetAchievementInfo, popup Start, DisactivePopup) and a self-disabled
+  dead Continue every trial iteration. A mouse player never sees any of this. Activation
+  is now UiWidgets.Click(choice.gameObject) so whatever handler the scene actually wires
+  runs; wedged states were cleared by replaying the un-run tail of the game's own handler
+  from the dev server (Bolt "Click" on TalismanFlowMachine / GoToNextDeathSceneEvent),
+  which advanced cleanly with zero new errors.
 
 ## Conversion panel and panel-sweep judgment calls (2026-07-18, Phase 6)
 
