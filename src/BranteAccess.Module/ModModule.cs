@@ -122,7 +122,7 @@ namespace BranteAccess.Module
                 new DeathScreen(),
                 new InterludeScreen(),
                 new SceneScreen(),
-                new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null),
+                new WindowShellScreen(),
                 new GenericPopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);

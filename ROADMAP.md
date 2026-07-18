@@ -279,9 +279,21 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 5 - HUD and service windows
 
-- [ ] todo - HUD bar: year, chapter, window buttons with unlock state (Tab-stop reachable from
-      the scene; arrows + Enter open windows - no per-window hotkeys, per DECISIONS.md); back
-      button
+- [x] verified - HUD bar: year, chapter, window buttons with unlock state (Tab-stop reachable
+      from the scene; arrows + Enter open windows - no per-window hotkeys, per DECISIONS.md);
+      back button
+      (2026-07-18: HudBar builds the bar as a Tab-stop (info row + one button row, geometry
+      order) on SceneScreen and on the new WindowShellScreen that replaced the silent window
+      placeholder. Verified live in The Intrusion: Tab "HUD, year 1124, chapter I", Shift+Tab
+      back to the passage; ten buttons with the game's own terms (name = I2 key, the tooltip's
+      lookup); locked ones inline "Will unlock in Chapter II Adolescence" and refuse Enter with
+      the same reason; Enter on Family opened Window_Family through the game's handler (delivery
+      "Family", seat "HUD, Family, button, selected, 1 of 11" - selected is the game's own
+      pressed marker and the Tab landing); arrows+Enter switched to Personality with the swap
+      delivered off the opened-window slot; "Back to Scene" node (game's HUD.Back term, 11 of
+      11) and Escape both returned to the scene; IsButtonsBlocked smoke test: BlockHudButtons on
+      = Enter silent no-op, off = window opened. Build guard closes the one-frame close race
+      that spoke a reconcile line over the scene return.)
 - [ ] todo - Character window (parameters, scales/segments)
 - [ ] todo - Soul window (willpower, death mechanics)
 - [ ] todo - Family window

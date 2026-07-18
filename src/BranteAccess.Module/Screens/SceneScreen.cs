@@ -254,6 +254,9 @@ namespace BranteAccess.Module.Screens
                     });
             }
             b.PopContext();
+
+            // The HUD bar as its own Tab-stop (year/chapter, window buttons, back button).
+            HudBar.Build(b);
         }
 
         private static List<ParameterButtonChanger> Choices()

@@ -5,6 +5,32 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## HUD bar judgment calls (2026-07-18, Phase 5)
+
+- **Bar labels come from the game's own tooltip lookup**: a HUD button's GameObject name IS its
+  I2 term (SimpleTooltipPointerEnterHandler translates sender.name), so the bar speaks the
+  exact localized window names the game shows on hover, including "Back to Scene" (HUD.Back).
+  A locked button's inline reason and its Enter refusal are the game's own HUD.WillOpen{n}
+  tooltip string.
+- **The pressed-window marker is the bar's selected state.** HudButtonBehavior._isButtonClicked
+  is the game's own record of which window's button is pressed; it drives the "selected" word,
+  the Tab landing on the open window's button, and the spoken window name on open/switch.
+  Read live via reflection - never mirrored.
+- **Window shell screen replaces the silent window placeholder**: while a game window has no
+  dedicated screen yet, the HUD bar is its whole graph - so any window can be opened, switched
+  (delivery keyed off the game's one opened-window slot), and left (back node or Escape, both
+  running the game's own back button). Dedicated window screens will take over per window;
+  the shell stays as the fallback for the rest.
+- **IsButtonsBlocked is honored by construction**: bar activation goes through Button.onClick
+  into the game's own Window*_Click handlers, which all check the flag themselves. A blocked
+  Enter is the same silent no-op the sighted player's click is (verified live both ways).
+- **Enter on the selected button closes its window** - that is the game's own toggle in
+  UIManager.Show (same-name window destroys and returns to the scene). Kept as-is: it matches
+  the mouse behavior and gives a second way home.
+- **Home/End are vertical by design** (first/last along the column axis); on the one-row bar
+  they jump between the info row and the buttons, and the ends of the row are reached with
+  arrows. Not worth a per-screen override.
+
 ## Animation gating judgment calls (2026-07-18, Phase 4)
 
 - **Keyboard activation honors blocksRaycasts.** The game blocks input during scene animations

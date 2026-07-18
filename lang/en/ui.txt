@@ -96,6 +96,11 @@ screen.chapterselect = chapter select
 chapterselect.locked = unavailable, not reached
 chapterselect.ironman = unavailable, Iron Man mode
 
+# HUD bar (year/chapter texts, window-button names, and lock reasons are all the game's own
+# strings; only the region word and the label-value glue are mod-authored)
+hud.region = HUD
+hud.pair = {label} {value}
+
 # Main menu buttons (the game's labels are localized sprites - no game string exists)
 mainmenu.continue = Continue
 mainmenu.newgame = New game
