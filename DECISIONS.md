@@ -5,6 +5,22 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Soul window judgment calls (2026-07-18, Phase 5)
+
+- **No dedicated screen - the Soul window is cut content.** Nothing in the shipped game
+  reaches it: no HUD button exists for it, a live sweep of every Button's persistent onClick
+  wiring found no caller, and the only code path (HudController.WindowSoulButton_Click) is
+  itself never called. Its localization is abandoned too - Window_Soul.Title is empty and its
+  three parameters (Volition, Rule, Love) have no name or segment terms, so the game itself
+  would render blank rows; a dedicated screen could only speak naked numbers. The
+  WindowShellScreen covers it generically (verified live by force-opening through the game's
+  own handler: HUD bar + back button present, Escape returned to the scene). If a game update
+  ever wires it in, the shell announces it and the folded-parameter-row pattern from the
+  Character window drops in.
+- **The ROADMAP item's stated content (willpower, death mechanics) lives elsewhere**:
+  willpower is an ordinary Character-window parameter row and deaths are the Character
+  window's skull-strip row, both already verified there.
+
 ## Character window judgment calls (2026-07-18, Phase 5)
 
 - **Dedicated window screens stand the shell down by name**: WindowShellScreen keeps a Covered

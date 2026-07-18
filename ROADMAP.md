@@ -306,7 +306,17 @@ go to DECISIONS.md, not to the user.
       game's Start() has written the hero name (the seat spoke Russian prefab placeholders
       before the gate - caught live). Teen/Youth panels and the chapter 4+ work block render
       through the same folded rows - confirm wording when a later chapter is reached.)
-- [ ] todo - Soul window (willpower, death mechanics)
+- [x] verified - Soul window (willpower, death mechanics)
+      (2026-07-18: investigated live - cut content, unreachable in the shipped game. No HUD
+      button or onClick anywhere wires it (swept every Button's persistent calls live); the
+      only code path is HudController.WindowSoulButton_Click, which nothing calls; its I2
+      terms are empty (no title, no names/segments for its Volition/Rule/Love parameters -
+      only Window_Soul.Description has text), so the game itself would render it blank. No
+      dedicated screen built. Coverage verified live by force-opening via the game's own
+      WindowSoulButton_Click from /eval: WindowShellScreen took it (full HUD bar, back
+      button 11 of 11), Escape returned cleanly to the scene ("The Intrusion" + passage).
+      The item's real content - willpower and deaths - lives in the Character window,
+      already verified.)
 - [ ] todo - Family window
 - [ ] todo - Relations window (+ RelationPopup, relation tooltips)
 - [ ] todo - Empire window
