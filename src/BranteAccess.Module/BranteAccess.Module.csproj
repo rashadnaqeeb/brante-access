@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The reloadable MODULE: all feature code (input, screens, graph navigator, localization,
+       announcements). Day-to-day work goes here - it hot-reloads via POST /reload or F6 with the
+       game running. The host reads this dll's BYTES (never loads from path), so the deploy copy
+       below succeeds while the game runs. -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <!-- Unique ASSEMBLY NAME per Debug build: this Mono (Unity 2018) dedupes Assembly.Load(byte[])
+         by simple assembly name and returns the already-loaded image - a hot reload with a fixed
+         name silently re-executes OLD code (verified live 2026-07-18; a differing version/MVID does
+         not help). The deployed FILE name stays BranteAccess.Module.dll (see DeployModule); only
+         the internal identity varies. The REPL collapses these generations to the newest
+         (CSharpEvaluator). -->
+    <AssemblyName>BranteAccess.Module</AssemblyName>
+    <AssemblyName Condition="'$(Configuration)' == 'Debug'">BranteAccess.Module.g$([System.DateTime]::UtcNow.ToString(yyyyMMddHHmmss))</AssemblyName>
+    <RootNamespace>BranteAccess.Module</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GameDir>C:\Program Files (x86)\Steam\steamapps\common\The Life and Suffering of Sir Brante</GameDir>
+    <ManagedDir>$(GameDir)\The Life and Suffering of Sir Brante_Data\Managed</ManagedDir>
+    <BepInExCoreDir>$(GameDir)\BepInEx\core</BepInExCoreDir>
+    <ModuleDeployDir>$(GameDir)\BepInEx\plugins\BranteAccess\module</ModuleDeployDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BranteAccess.Core\BranteAccess.Core.csproj"><Private>false</Private></ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony"><HintPath>$(BepInExCoreDir)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <!-- Game assemblies. I2.Loc lives inside Assembly-CSharp. -->
+    <Reference Include="Assembly-CSharp"><HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(ManagedDir)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputModule"><HintPath>$(ManagedDir)\UnityEngine.InputModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(ManagedDir)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(ManagedDir)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AudioModule"><HintPath>$(ManagedDir)\UnityEngine.AudioModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(ManagedDir)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!-- Deploy the module beside the host under module/. Safe with the game running: the host never
+       file-locks this dll. -->
+  <Target Name="DeployModule" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <MakeDir Directories="$(ModuleDeployDir)" />
+    <!-- Fixed destination file name regardless of the per-build assembly name: the host watches
+         one path. Portable pdbs are matched by embedded GUID, so the rename is harmless. -->
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFiles="$(ModuleDeployDir)\BranteAccess.Module.dll" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFiles="$(ModuleDeployDir)\BranteAccess.Module.pdb" />
+    <!-- Every build has a new output name, so old generations pile up in bin - sweep them. -->
+    <ItemGroup>
+      <StaleGen Include="$(OutputPath)BranteAccess.Module.g*.dll;$(OutputPath)BranteAccess.Module.g*.pdb"
+                Exclude="$(OutputPath)$(AssemblyName).dll;$(OutputPath)$(AssemblyName).pdb" />
+    </ItemGroup>
+    <Delete Files="@(StaleGen)" />
+    <Message Text="Deployed $(AssemblyName) to $(ModuleDeployDir)\BranteAccess.Module.dll" Importance="high" />
+  </Target>
+
+</Project>

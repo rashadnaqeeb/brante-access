@@ -16,22 +16,43 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 1 - Bring-up (dev server before features)
 
-- [ ] todo - Install vendored BepInEx (third_party/bepinex, 5.4.23.5 win x64 Mono) into the
+- [x] verified - Install vendored BepInEx (third_party/bepinex, 5.4.23.5 win x64 Mono) into the
       game folder; game still boots clean with an empty plugin
-- [ ] todo - Solution + plugin skeleton (net48, BranteAccess), BepInEx logging with prefix,
-      auto-deploy on Debug build; document exact build/deploy in CLAUDE.md
-- [ ] todo - Per-frame pump (host MonoBehaviour), master enable flag
-- [ ] todo - Speech pipeline ported from wotr-access: Prism primary, manual-COM SAPI fallback,
+      (LogOutput.log: "Chainloader startup complete"; later loads our plugin)
+- [x] verified - Solution + three-project split ported from Non-Visual Calculus (user directive,
+      see DECISIONS.md): permanent Host plugin + Core contracts + reloadable Module (net472),
+      BepInEx logging with prefix, auto-deploy on Debug build; document layout in CLAUDE.md
+      (all three build+deploy; /health: "module=generation 1"; log lines prefixed Brante Access)
+- [x] verified - Per-frame pump (host MonoBehaviour) driving Module.Tick, master enable flag
+      (/health frame counter advances; /eval jobs execute on main thread; Tick gated on Enabled)
+- [x] verified - Speech pipeline ported from wotr-access: Prism primary, manual-COM SAPI fallback,
       clipboard last resort; Tts facade with rich-text strip + never-interrupt default;
       BRANTE_NO_SPEECH headless mode
-- [ ] todo - Dev HTTP server on 127.0.0.1:8772: /health, /eval (Mono.CSharp REPL, persistent
+      (prism acquired JAWS backend live and spoke; /speech captured it; SAPI/clipboard code
+      ported but not exercised - prism loads first on this machine)
+- [x] verified - Dev HTTP server on 127.0.0.1:8772: /health, /eval (Mono.CSharp REPL, persistent
       state), /speech ring buffer + cursor + wait
-- [ ] todo - Dev server round 2: /input, /wait, /gui, /focus, /typeinfo, /log, /screenshot,
+      (/eval "1+1" => 2; eval Speak returned "[speech] 0: dev server smoke test" in-band;
+      /speech?since= cursors verified)
+- [x] verified - Hot reload proven end to end: edit Module code while the game runs, dotnet build
+      (module dll read from bytes, never file-locked), POST /reload (and F6), changed behavior
+      observable with NO game restart; failed reload keeps the old module running
+      (edited DescribeNav string, module-only build with game running, /reload -> new text live;
+      corrupt dll reload kept generation + old module answering, failure spoken and logged;
+      needed the unique-assembly-name fix, see DECISIONS.md and CLAUDE.md gotchas. F6 rides the
+      identical ReloadModule path; not separately exercised - no keyboard injection yet)
+- [x] verified - Dev server round 2: /input, /wait, /gui, /focus, /typeinfo, /log, /screenshot,
       eval speech-settle capture; runInBackground forced
-- [ ] todo - Game launch/kill from CLI proven (record working commands + appid in CLAUDE.md);
+      (all answered live: /wait true+timeout paths, /gui dumped canvases with TMP text, /typeinfo
+      found SceneStateMachine, /log?grep= filters, /screenshot wrote png; whole session ran with
+      the game window unfocused)
+- [x] verified - Game launch/kill from CLI proven (record working commands + appid in CLAUDE.md);
       full loop demonstrated: build → launch → /health → /eval speaks → kill
-- [ ] todo - Game audio mute mechanism for unattended runs (settings or SoundManager), recorded
-      in CLAUDE.md
+      (steam.exe -applaunch 1272160 + taskkill used repeatedly this session, commands already in
+      CLAUDE.md; full loop ran twice including a cold restart)
+- [x] verified - Game audio mute mechanism for unattended runs (settings or SoundManager), recorded
+      in CLAUDE.md (/eval AudioListener.volume=0 read back 0; session-only, never touches the
+      user's real settings)
 
 ## Phase 2 - Core framework (ported from wotr-access, adapted to uGUI)
 

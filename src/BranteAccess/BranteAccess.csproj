@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The permanent HOST: BepInEx entry point, speech backends (native handles), module loader,
+       per-frame pump, dev server (Debug). Changing this project needs a game restart - day-to-day
+       feature work belongs in BranteAccess.Module, which hot-reloads. -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>BranteAccess</AssemblyName>
+    <RootNamespace>BranteAccess</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Game/BepInEx assemblies are referenced in place, never copied beside our dll. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!-- Paths. Override GameDir on the command line if the install differs:
+       dotnet build -p:GameDir="D:\...\The Life and Suffering of Sir Brante" -->
+  <PropertyGroup>
+    <ModName>BranteAccess</ModName>
+    <GameDir>C:\Program Files (x86)\Steam\steamapps\common\The Life and Suffering of Sir Brante</GameDir>
+    <ManagedDir>$(GameDir)\The Life and Suffering of Sir Brante_Data\Managed</ManagedDir>
+    <BepInExCoreDir>$(GameDir)\BepInEx\core</BepInExCoreDir>
+    <PluginDeployDir>$(GameDir)\BepInEx\plugins\$(ModName)</PluginDeployDir>
+    <ThirdPartyDir>$(MSBuildProjectDirectory)\..\..\third_party</ThirdPartyDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BranteAccess.Core\BranteAccess.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- BepInEx loader + its bundled HarmonyX (2.x API). -->
+    <Reference Include="BepInEx"><HintPath>$(BepInExCoreDir)\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepInExCoreDir)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(ManagedDir)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputModule"><HintPath>$(ManagedDir)\UnityEngine.InputModule.dll</HintPath><Private>false</Private></Reference>
+    <!-- GUIUtility.systemCopyBuffer (clipboard speech fallback). -->
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(ManagedDir)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!-- Debug-only dev tooling: Mono.CSharp REPL behind /eval, ScreenCapture behind /screenshot.
+       All dev-server code is #if DEBUG, so Release neither compiles against nor ships these. -->
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Reference Include="Mono.CSharp"><HintPath>$(ThirdPartyDir)\Mono.CSharp.dll</HintPath><Private>false</Private></Reference>
+    <!-- uGUI + EventSystems + Canvas, for the /gui and /focus inspectors only. -->
+    <Reference Include="UnityEngine.UI"><HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(ManagedDir)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(ManagedDir)\UnityEngine.ScreenCaptureModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(ManagedDir)\UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!-- Deploy after a Debug build. Close the game before changing HOST or CORE (their dlls are
+       loaded from disk and locked while the game runs); the MODULE dll is loaded from bytes and
+       deploys fine with the game running - that is the hot-reload path. -->
+  <Target Name="DeployMod" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <MakeDir Directories="$(PluginDeployDir)" />
+    <Copy SourceFiles="$(OutputPath)$(ModName).dll;$(OutputPath)$(ModName).pdb;$(OutputPath)BranteAccess.Core.dll;$(OutputPath)BranteAccess.Core.pdb" DestinationFolder="$(PluginDeployDir)" ContinueOnError="false" />
+    <!-- Mono.CSharp beside the plugin: BepInEx resolves plugin-folder dlls at first use. -->
+    <Copy SourceFiles="$(ThirdPartyDir)\Mono.CSharp.dll" DestinationFolder="$(PluginDeployDir)" />
+    <!-- Locale manifest (mod-authored strings; read by the Module at load). -->
+    <ItemGroup>
+      <ModLang Include="$(MSBuildProjectDirectory)\..\..\lang\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ModLang)" DestinationFiles="@(ModLang->'$(PluginDeployDir)\lang\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <!-- Native speech lib beside the game exe so P/Invoke resolves it. -->
+    <Copy SourceFiles="$(ThirdPartyDir)\prism\prism.dll" DestinationFolder="$(GameDir)" />
+    <Message Text="Deployed $(ModName) host to $(PluginDeployDir)" Importance="high" />
+  </Target>
+
+</Project>

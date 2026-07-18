@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Shared contracts between the permanent Host and the reloadable Module. Loaded once by the
+       host, never reloaded - a change here needs a full game restart, so keep this project small
+       and stable. Pure BCL: no BepInEx, no Unity, no game references. -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>BranteAccess.Core</AssemblyName>
+    <RootNamespace>BranteAccess.Core</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+</Project>

@@ -68,11 +68,23 @@ patch only where no event/state exists. Activation = invoking the game's own han
 
 ## Build & deploy
 
-`dotnet build` from the repo root builds the plugin and (Debug only) deploys to
-`<Game>\BepInEx\plugins\BranteAccess\` + `prism.dll` beside the exe. **Close the game first**
-or the copy fails silently on locked DLLs - then you test a stale build. `-c Release`
-compiles without deploying. (Exact project layout is created in the bring-up phase; keep this
-section updated as it lands.)
+Solution `BranteAccess.slnx`, three projects (hot-reload split ported from Non-Visual Calculus):
+- `src/BranteAccess.Core` - contracts only (IModModule, IModHost+ISpeech, IDevDriver, TextUtil).
+  Pure BCL, no Unity/game refs. Loaded once; stable type identity across module reloads.
+- `src/BranteAccess` - the permanent HOST plugin: BepInEx entry, speech backends (Prism/SAPI/
+  clipboard), ModuleLoader, HostPump, dev server (Debug-only, `#if DEBUG`). Changing it (or Core)
+  needs a game restart - their dlls are file-locked while the game runs.
+- `src/BranteAccess.Module` - ALL feature code; the reloadable dll. Loaded from BYTES so the file
+  is never locked: `dotnet build src/BranteAccess.Module/BranteAccess.Module.csproj` with the
+  game RUNNING, then `curl -X POST http://127.0.0.1:8772/reload` (or F6 in-game) - new behavior
+  is live in ~2s, no restart. A failed reload keeps the old module running and speaks + logs
+  the failure.
+
+`dotnet build` from the repo root builds everything and (Debug only) deploys to
+`<Game>\BepInEx\plugins\BranteAccess\` (host+Core+Mono.CSharp; module under `module\`) +
+`prism.dll` beside the exe. **Close the game first for host/Core builds** or the copy fails on
+locked DLLs - then you test a stale build. Module-only builds deploy fine with the game running.
+`-c Release` compiles without deploying.
 
 Game control (game window does NOT need focus once the dev server forces runInBackground).
 Steam **appid 1272160** (verified from appmanifest). Carried gotcha from the Disco project: do
@@ -82,8 +94,11 @@ NOT invoke `powershell.exe` from the Bash tool (the auto-mode classifier blocks 
 - Kill: `MSYS_NO_PATHCONV=1 taskkill.exe /F /IM "The Life and Suffering of Sir Brante.exe"`
   (plain `taskkill` from Bash mangles `/F` into a path)
 - If direct exe launch works without Steam DRM complaints, prefer it and record that here.
-- Mute game audio via Settings volume sliders once reachable, or the SoundManager from the REPL,
-  so unattended runs stay quiet. Record the chosen mechanism here.
+- Mute for unattended runs: `curl -s -X POST --data 'AudioListener.volume = 0f' .../eval`
+  (global Unity master volume, session-only - never touches the user's saved settings; the
+  game's SoundManager only fades individual music sources). Re-mute after every game restart.
+- Steam `-applaunch` against an ALREADY RUNNING game is a silent no-op - you keep testing the
+  old process with stale plugins. Kill first, check LogOutput.log's mtime is fresh if in doubt.
 
 ## Dev driver (build FIRST, before any features)
 
@@ -175,6 +190,14 @@ smoke-tested by calling the patched method from /eval and expecting the announce
   build. Treat "file in use" build warnings as a failed deploy, never ignorable.
 - Sweep BOTH `TMP_Text`/`TextMeshProUGUI` and legacy `UnityEngine.UI.Text` when reading a
   screen - don't assume all labels are TMP until verified per screen.
+- This Mono (Unity 2018) dedupes `Assembly.Load(byte[])` by SIMPLE assembly name: loading fresh
+  bytes under an already-loaded name silently returns the OLD image (differing version and MVID
+  do not help - verified live). Hence the module csproj stamps a unique AssemblyName per Debug
+  build (`BranteAccess.Module.g<utc-stamp>`); the deployed FILE name stays fixed. The REPL
+  collapses generations to the newest (CSharpEvaluator). Never "simplify" either side away.
+- In /eval, Mono.CSharp's InteractiveBase shadows `Time` (helper method) and Assembly-CSharp
+  defines its own `Console` - write `UnityEngine.Time.*` and `System.Console.*` fully qualified,
+  or build a result string and return it instead of printing.
 
 ## Autonomous run protocol
 

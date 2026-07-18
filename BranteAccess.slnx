@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BranteAccess.Core/BranteAccess.Core.csproj" />
+    <Project Path="src/BranteAccess.Module/BranteAccess.Module.csproj" />
+    <Project Path="src/BranteAccess/BranteAccess.csproj" />
+  </Folder>
+</Solution>
