@@ -19,6 +19,7 @@ namespace BranteAccess.Module.Screens
         private static readonly HashSet<string> Covered = new HashSet<string>
         {
             "Window_Character",
+            "Window_Family",
         };
 
         public override string Key => "window";

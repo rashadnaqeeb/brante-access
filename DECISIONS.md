@@ -5,6 +5,29 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Family window judgment calls (2026-07-18, Phase 5)
+
+- **The per-character info panel folds onto the member rows** instead of mirroring the game's
+  select-then-read flow: each row re-runs the same ParametersManager calls the game's own
+  select handler makes (relation, status, estate) at speech time, and Space reads the
+  description plus the status tooltip. Selection still works (Enter runs the tile's button)
+  but is never required to hear anything.
+- **Status is skipped when CharacterStatus.Good**: the game renders a bare emdash for the
+  status value and placeholder junk ("Status description") for its detail, and hides its
+  help icon. Non-Good statuses speak the game's status term and description verbatim.
+- **Hero row reads name and role only, no model calls**: the game itself never queries
+  relation/status/description for the Hero (its select handler redirects to the Character
+  window instead - GetCharacterStatusKey would throw on the Hero, who is absent from the
+  characters list). Enter on the hero tile follows the game's redirect.
+- **Tile selection is announced as a model-watched delivery** ("{name} selected"): selecting
+  changes no focus, so the row's Selected-state word alone would never be heard. OnUpdate
+  watches which tile the game disabled (SelectCharacter's own marker) and speaks once per
+  change; seeded on focus so entering a window with a pre-existing selection stays quiet.
+- **Member names come from the live tile texts, not GetCharacterTrueName**: the game's own
+  tiles are already populated with the true names (including the sword-noble and Gloria
+  status variants), and KeyChapterParametersController.GetCharacterTrueName NREs for
+  characters outside the master list. Two-line tile names collapse to one spoken line.
+
 ## Soul window judgment calls (2026-07-18, Phase 5)
 
 - **No dedicated screen - the Soul window is cut content.** Nothing in the shipped game

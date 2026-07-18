@@ -317,7 +317,19 @@ go to DECISIONS.md, not to the user.
       button 11 of 11), Escape returned cleanly to the scene ("The Intrusion" + passage).
       The item's real content - willpower and deaths - lives in the Character window,
       already verified.)
-- [ ] todo - Family window
+- [x] verified - Family window
+      (2026-07-18: FamilyWindowScreen - one row per member with the game's whole info panel
+      folded on (tile name/role, estate, relation value with the game's relation word, set
+      status), Space reads the description plus the status detail behind the game's help
+      icon, Enter runs the tile's own button. Verified live in chapter 1 by keys only: entry
+      "Family" then "Gregor Brante, Grandfather, Nobleman of the Mantle, Relations -1
+      (Indifference), 1 of 8"; all 8 rows spoke with correct estates/relations; Amalia's row
+      carried "TRUE DEATH" and her Space added the status paragraph; Enter on Nathan
+      delivered "Nathan Brante selected" (model-watched, spoken once per change, seeded
+      quiet on entry); Enter on the hero tile opened the Character window ("Personality" +
+      name row, the game's own redirect); Escape returned to the scene. Entry gated on the
+      hero tile's Start()-written name. Status skipped when CharacterStatus.Good - the game
+      renders a bare dash and placeholder detail there.)
 - [ ] todo - Relations window (+ RelationPopup, relation tooltips)
 - [ ] todo - Empire window
 - [ ] todo - Work window
