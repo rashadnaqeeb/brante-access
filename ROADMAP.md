@@ -168,9 +168,13 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 8 - Verification sweeps (standing + final)
 
-- [ ] R1 standing - Regression sweep script (scripts/sweep.ps1 driving the dev server): main
-      menu → new game → first scene → a choice → consequence → each HUD window → save → load →
-      quit; asserts on /speech content. Run after every ~4 verified items; keep it green.
+- [x] R1 standing - Regression sweep script (scripts/sweep.sh driving the dev server; bash not
+      ps1, see DECISIONS.md): asserts on /speech content; scope grows with each verified surface
+      toward main menu → new game → first scene → a choice → consequence → each HUD window →
+      save → load → quit. Run after every ~4 verified items; keep it green.
+      (first run green 14/14: health, mainmenu graph, End/Home speech, tooltip fallback,
+      Settings activation + refocus, focus-mode toggle both ways, zero mod error log lines.
+      Last run: 2026-07-18, green)
 - [ ] todo - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
       spot-checks deep into the game
 - [ ] todo - Full keyboard-only playthrough of the prologue + chapter 1 via dev server, zero

@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Regression sweep (ROADMAP Phase 8, R1) - drives the live game through the dev server and
+# asserts on spoken output. Run after every ~4 verified items; keep it green.
+#
+# Precondition: game running with the mod, sitting on the MAIN MENU, dev server up.
+# Scope grows with the mod - each verified surface adds a numbered section here.
+# (Bash, not ps1: the agent's shell tool cannot invoke powershell.exe - see DECISIONS.md.)
+
+set -u
+PORT="${BRANTE_DEV_PORT:-8772}"
+BASE="http://127.0.0.1:$PORT"
+PASS=0
+FAIL=0
+
+check() { # name, expected substring, haystack
+  if [[ "$3" == *"$2"* ]]; then
+    PASS=$((PASS + 1)); echo "PASS $1"
+  else
+    FAIL=$((FAIL + 1)); echo "FAIL $1 - wanted '$2' in: $3"
+  fi
+}
+
+cursor()  { curl -s -m 5 "$BASE/health" | sed -E 's/.*speechCursor=([0-9]+).*/\1/'; }
+speech()  { curl -s -m 5 "$BASE/speech?since=$1"; }
+press()   { curl -s -m 5 -X POST "$BASE/input" -d "$1" > /dev/null; sleep 0.6; }
+evalcs()  { curl -s -m 10 -X POST "$BASE/eval" -d "$1"; }
+
+# --- 1. server + module alive ---
+H=$(curl -s -m 5 "$BASE/health")
+check "health" "ok Brante Access" "$H"
+
+# --- 2. main menu screen + graph ---
+NAV=$(curl -s -m 5 "$BASE/nav")
+check "stack has mainmenu" "mainmenu(0)" "$NAV"
+check "mainmenu graph built" "graph (5 nodes)" "$NAV"
+check "ui category live" "categories: UI, Global" "$NAV"
+
+# --- 3. navigator moves speak (End then Home guarantees at least one real move each way) ---
+press ui.home
+C=$(cursor)
+press ui.end
+check "End speaks Quit" "Quit, button, 5 of 5" "$(speech "$C")"
+C=$(cursor)
+press ui.home
+check "Home speaks Continue" "Continue, button" "$(speech "$C")"
+
+# --- 4. tooltip fallback ---
+C=$(cursor)
+press ui.tooltip
+check "no-tooltip fallback" "no tooltip" "$(speech "$C")"
+
+# --- 5. activation runs the game's own handler: open Settings, then unload it ---
+press ui.down   # New game
+press ui.down   # Settings
+C=$(cursor)
+press ui.activate
+sleep 1.5
+check "settings announced" "settings" "$(speech "$C")"
+check "settings focused" "settings(10)*" "$(curl -s -m 5 "$BASE/nav")"
+C=$(cursor)
+evalcs 'UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Settings");' > /dev/null
+sleep 1.5
+S=$(speech "$C")
+check "mainmenu refocus announced" "main menu" "$S"
+check "focus restored to Settings button" "Settings, button" "$S"
+
+# --- 6. focus mode toggles both ways ---
+C=$(cursor)
+press focusmode
+check "focus mode off spoken" "focus mode off" "$(speech "$C")"
+C=$(cursor)
+press focusmode
+check "focus mode on spoken" "focus mode on" "$(speech "$C")"
+
+# --- 7. no mod errors in the log ---
+ERRS=$(curl -s -m 5 "$BASE/log?since=0&grep=Error%3ABrante" | grep -c "Brante" || true)
+check "no mod error log lines" "0" "$ERRS"
+
+echo
+echo "sweep: $PASS passed, $FAIL failed"
+exit $((FAIL > 0 ? 1 : 0))

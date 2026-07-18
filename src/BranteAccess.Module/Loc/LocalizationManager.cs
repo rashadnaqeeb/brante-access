@@ -31,6 +31,11 @@ namespace BranteAccess.Module.Localization
 
         private static string _language = Fallback;
 
+        // Missing keys already warned about: announcement parts resolve every frame, so an
+        // unthrottled warning floods the log within seconds (seen live). Once per key per
+        // generation is still loud, and stays readable.
+        private static readonly HashSet<string> _warnedMissing = new HashSet<string>();
+
         public static string Language => _language;
 
         private static string Root => Path.Combine(Mod.Host.ModDir, "lang");
@@ -51,6 +56,7 @@ namespace BranteAccess.Module.Localization
             if (lang == _language) return;
             _language = lang;
             _tables.Clear();
+            _warnedMissing.Clear(); // a language swap changes which keys are missing
             if (lang != Fallback) LoadLanguage(lang, _tables);
             Mod.Log("[loc] language changed to " + lang);
         }
@@ -64,7 +70,8 @@ namespace BranteAccess.Module.Localization
                 return v;
             if (_fallbackTables.TryGetValue(table, out var ft) && ft.TryGetValue(key, out var fv))
                 return fv;
-            Mod.Warn("[loc] missing string: " + table + "." + key);
+            if (_warnedMissing.Add(table + "." + key))
+                Mod.Warn("[loc] missing string: " + table + "." + key);
             return null;
         }
 

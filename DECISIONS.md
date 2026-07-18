@@ -7,6 +7,14 @@ stream of questions.
 
 ## Navigator port judgment calls (2026-07-18, Phase 2)
 
+- **Regression sweep is scripts/sweep.sh (bash), not the roadmap's sweep.ps1**: the agent's
+  shell tool cannot invoke powershell.exe (auto-mode classifier, CLAUDE.md gotcha), and a sweep
+  the agent can't run itself is dead weight in an autonomous loop. curl + string asserts need
+  nothing PowerShell offers.
+- **Missing-locale warnings log once per key per generation** (and reset on language swap):
+  announcement parts resolve every frame, so the unthrottled version flooded thousands of
+  identical lines in seconds (seen live when a key shipped before its lang file deployed).
+
 - **Main-menu button labels are mod-authored** (`mainmenu.*` in ui.txt): the game renders those
   buttons as per-language SPRITES (LocalizationResources.ContinueSprite etc.) - no game string
   exists to reuse, so authoring is the rule-sanctioned fallback. If a matching I2 term surfaces
