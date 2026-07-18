@@ -52,6 +52,7 @@ SILENT=0
 NONE_COUNT=0
 LAST_TITLE=""
 TITLE_COUNT=0
+LAST_SPOKEN=""
 LOGC=$(logcur)
 
 while [ "$STEP" -lt "$MAX" ]; do
@@ -69,9 +70,11 @@ while [ "$STEP" -lt "$MAX" ]; do
   TITLE=${DIRECTIVE#*|}
   if [ "$KIND" != "screen none" ]; then NONE_COUNT=0; fi
 
+  # Stuck means same scene AND no new speech: long scenes legitimately run past 40 pages
+  # (The Girl from Your Past is 41+), so the counter resets on any fresh spoken line below.
   if [ "$TITLE" = "$LAST_TITLE" ]; then TITLE_COUNT=$((TITLE_COUNT + 1)); else TITLE_COUNT=0; LAST_TITLE="$TITLE"; fi
   if [ "$TITLE_COUNT" -gt 40 ]; then
-    echo "ABORT step $STEP: stuck in scene '$TITLE' for $TITLE_COUNT steps"; exit 1
+    echo "ABORT step $STEP: stuck in scene '$TITLE' for $TITLE_COUNT steps with no new speech"; exit 1
   fi
 
   case "$KIND" in
@@ -130,6 +133,7 @@ while [ "$STEP" -lt "$MAX" ]; do
     sleep 2; continue
   fi
   SILENT=0
+  if [ "$SPOKEN" != "$LAST_SPOKEN" ]; then TITLE_COUNT=0; LAST_SPOKEN="$SPOKEN"; fi
   echo "step $STEP [$KIND -> $ACTION] $(echo "$SPOKEN" | head -2 | cut -c1-140)"
 done
 echo "STOP: max steps ($MAX) reached"
