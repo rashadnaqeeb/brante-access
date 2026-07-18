@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/NonVisualCalculus.Core/NonVisualCalculus.Core.csproj" />
-    <Project Path="src/NonVisualCalculus.Module/NonVisualCalculus.Module.csproj" />
-    <Project Path="src/NonVisualCalculus.Tests/NonVisualCalculus.Tests.csproj" />
-    <Project Path="src/NonVisualCalculus/NonVisualCalculus.csproj" />
-  </Folder>
-</Solution>

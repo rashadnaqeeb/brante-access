@@ -5,16 +5,14 @@ speech and keyboard only - no mouse interaction required anywhere. Speech is the
 interface: a silent failure or stale announcement is invisible to the player, so log
 loudly and verify by driving the live game, never by assuming.
 
-Reference projects, vendored in-repo (read these before inventing anything - most problems
-here are already solved there). Copies exclude .git, build output, and for disco-elysium its
-decompiled/tools/releases/installer trees; the originals live in `C:\Users\rasha\Documents\`
-if something excluded is ever needed:
-- `reference/wotr-access` - Wrath of the Righteous mod. Same runtime family
+Reference projects (read these before inventing anything - most problems here are already
+solved there):
+- `C:\Users\rasha\Documents\wotr-access` - Wrath of the Righteous mod. Same runtime family
   (Unity/Mono/net4x). Port from here: speech backends (Prism/SAPI/clipboard), input manager +
   OS-matched key repeat, screen stack (poll-and-diff), graph navigator (KeyGraph/GraphBuilder/
   GraphAnnouncer, two-tier ControlId focus reconciliation), typeahead, localization layer,
   Mono.CSharp dev REPL.
-- `reference/disco-elysium` - Non-Visual Calculus (IL2CPP, BepInEx 6). Port the
+- `C:\Users\rasha\Documents\Disco Elysium` - Non-Visual Calculus (IL2CPP, BepInEx 6). Port the
   dev-server ENDPOINT SET from here (/eval speech-settle capture, /input verbs, /wait per-frame
   predicates, /gui, /log in-band, /screenshot), but implement on the Mono/net48 stack like
   wotr-access (Mono.CSharp REPL, not Roslyn). Its CLAUDE.md documents the act-then-listen
