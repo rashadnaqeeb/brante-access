@@ -22,15 +22,37 @@ namespace BranteAccess.Module.Screens
         public override int Layer => 0;
         // The PREGAME gate drops this screen the instant a game starts (SetCharacterName and save
         // load flip RUNNING before the menu scene unloads) - otherwise the popup closing would
-        // refocus the menu and speak stale lines over the scene transition.
+        // refocus the menu and speak stale lines over the scene transition. The handoff gate
+        // covers the load flow: LoadGameButton_Click disables Continue and ONLY the load window's
+        // back button re-enables it (UpdateButtonsState), so "saves exist but Continue is dead"
+        // is the game's own "menu handed off" flag - without it the menu re-announces itself in
+        // the frames between LoadWindow, GameLoadingScreen, and the loaded scene.
         public override bool IsActive()
-            => GameUi.SceneName == "MainMenu" && GameUi.State == GameState.PREGAME;
+            => GameUi.SceneName == "MainMenu" && GameUi.State == GameState.PREGAME
+               && !LoadFlowHandoff();
+
+        private static bool LoadFlowHandoff()
+        {
+            if (!SavesExist()) return false;
+            foreach (var custom in UnityEngine.Object.FindObjectsOfType<CustomMainMenuButton>())
+                if (custom.MainMenuButton == MainMenuButtonsEnum.Continue)
+                    return !custom.GetComponent<Button>().interactable;
+            return false;
+        }
 
         public override void Build(GraphBuilder b)
         {
             foreach (var custom in MenuButtons())
             {
                 var go = custom.gameObject;
+                // Availability keys off the MODEL (saves on disk - only Continue has a real
+                // unavailable state), never Button.interactable: the game also disables these
+                // buttons as post-click guards (Continue while its window opens, New Game for 1s
+                // after click), and the live watch read that guard as a bogus "unavailable" the
+                // moment a window opened over the focused button. Non-live: saves can't change
+                // while the menu itself is focused. A click during a guard is the game's own
+                // silent no-op, same as the dimmed button a sighted player sees.
+                bool isContinue = custom.MainMenuButton == MainMenuButtonsEnum.Continue;
                 b.AddItem(
                     ControlId.Referenced(custom, "mainmenu:" + custom.MainMenuButton),
                     new NodeVtable
@@ -40,12 +62,12 @@ namespace BranteAccess.Module.Screens
                         {
                             new NodeAnnouncement(LabelFor(custom), kind: AnnouncementKinds.Label),
                             new NodeAnnouncement(
-                                () => UiWidgets.Interactable(go) ? null : Loc.T("state.unavailable"),
-                                live: true, kind: AnnouncementKinds.Enabled),
+                                () => !isContinue || SavesExist() ? null : Loc.T("state.unavailable"),
+                                kind: AnnouncementKinds.Enabled),
                         },
                         OnActivate = () =>
                         {
-                            if (!UiWidgets.Interactable(go))
+                            if (isContinue && !SavesExist())
                             {
                                 Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
                                 return;
@@ -77,6 +99,8 @@ namespace BranteAccess.Module.Screens
                     });
             }
         }
+
+        private static bool SavesExist() => _Scripts.Managers.SaveLoadManager.Instance.SavesExist();
 
         // Visible MainMenu-scene buttons that are not sprite menu buttons, in visual order.
         // Scene-scoped: FindObjectsOfType sees ADDITIVELY loaded scenes too (Settings/LoadWindow),

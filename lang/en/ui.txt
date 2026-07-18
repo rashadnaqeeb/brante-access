@@ -47,6 +47,11 @@ namerequest.start_unavailable = unavailable, name needs at least 2 letters
 cutscene.intro = cutscene, spoken narration, any key skips
 cutscene.chapter = cutscene, spoken narration, Enter skips
 
+# Chapter select page (shown after picking a save; the page has no on-screen title)
+screen.chapterselect = chapter select
+chapterselect.locked = unavailable, not reached
+chapterselect.ironman = unavailable, Iron Man mode
+
 # Main menu buttons (the game's labels are localized sprites - no game string exists)
 mainmenu.continue = Continue
 mainmenu.newgame = New game

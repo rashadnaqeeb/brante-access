@@ -141,7 +141,17 @@ go to DECISIONS.md, not to the user.
       English -> Русский -> English with the mod locale following each way; Escape ran the game's
       BackToMainMenuButton_Click (SaveSettings + unload), mainmenu refocused. sweep.sh 18/18
       including a new Settings section driving slider + Escape-close through the game path)
-- [ ] todo - Save/load windows incl. chapter-select page, delete confirmation popup
+- [x] verified - Save/load windows incl. chapter-select page, delete confirmation popup
+      (2026-07-18: LoadWindow - slots as single rows (game slot text + date), Enter loads,
+      Backspace = game's delete confirm popup (description start node, Delete/Cancel; Escape
+      cancels; confirmed Delete removed the slot live, list refreshed "1 of 2" with silent
+      re-home). Chapter select (GameLoadingScreen) - Continue start node folding the age text,
+      5 chapter items with model lock state ("unavailable, not reached" spoken on Enter),
+      Space reads the game's restart help, restart confirm popup (title "Rewind to Chapter
+      Childhood", Escape cancels), Quit to Main Menu returns clean. Full resume chain live:
+      Continue -> slot -> chapter select -> Continue -> Intro scene RUNNING with no stale
+      menu chatter (menu gated on the game's Continue-disabled handoff flag). sweep.sh 24/24
+      with new save/load section)
 - [ ] todo - Pause/Escape menu + exit confirmation popup
 - [ ] todo - Credits window (skippable)
 

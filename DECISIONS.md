@@ -5,6 +5,39 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Save/load and chapter select judgment calls (2026-07-18, Phase 3)
+
+- **Save slot control ids carry the game's SlotId** ("loadwindow:slot:0"): every slot clone's
+  SaveSlot component sits on a GameObject named "Body", so reference-based ids alone collide as
+  duplicates. The SlotId is the game's own stable slot identity.
+- **A save slot is ONE row**: the game's slot text (hero, chapter, year, scene title) folded
+  with its date, Enter loads, Backspace opens the game's delete confirmation
+  (ShowSaveDeleteConfirmPopup). Delete as the secondary action instead of a separate stop
+  follows the fold-detail-onto-the-item rule.
+- **Main menu button availability keys off the model, not Button.interactable**: the game
+  disables menu buttons as post-click guards (Continue while its window opens, New Game for 1s
+  after click), and the live interactable watch spoke a bogus "unavailable" the moment a window
+  opened over the focused button. Only Continue has a real unavailable state (no saves on
+  disk); a click landing during a guard is the game's own silent no-op, same as the dimmed
+  button sighted players see.
+- **"Saves exist but Continue is disabled" gates the whole main menu screen off**: only
+  LoadGameButton_Click leaves Continue disabled (until the load window's back button broadcasts
+  UpdateButtonsState), so that state is the game's own "menu handed off to the load flow" flag.
+  Without it the menu re-announced itself in the frames between LoadWindow, GameLoadingScreen,
+  and the loaded scene.
+- **Chapter select (GameLoadingScreen scene)**: lock state reads the item model
+  (LoadChapterItemBehavior.Interactable + GameManager.IronManMode) - Button.interactable there
+  is hover animation, not availability. Locked reasons are mod-authored ("not reached" /
+  "Iron Man mode"); the game's only signals are sprite swaps. The age text (what the slider
+  position shows) folds onto the Continue label; if the game withholds Continue (pending
+  restart choice), the age becomes a plain text node instead. The game's restart help line is
+  the Space tooltip on chapter items. Escape is deliberately dead on this page - the game
+  blocks its own Esc there and Quit to Main Menu is an explicit button; auto-quitting on
+  Escape would discard the loaded save silently.
+- **Restart confirmation popup reads its four serialized TMP fields by reflection**
+  (LoadPreviousChapterConfirmPopup._title etc., buttons = the TMPs' parent Buttons): no
+  hierarchy names assumed, so a prefab relayout doesn't silently break it.
+
 ## Settings window judgment calls (2026-07-18, Phase 3)
 
 - **Slider values announce as normalized percent** (position within the slider's own min..max),

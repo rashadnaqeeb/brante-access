@@ -80,6 +80,32 @@ S=$(speech "$C")
 check "mainmenu refocus announced" "main menu" "$S"
 check "focus restored to Settings button" "Settings, button" "$S"
 
+# --- 5b. Save/load: load window, delete confirm (cancel only - never deletes), chapter select ---
+press ui.home   # back to Continue
+C=$(cursor)
+press ui.activate
+sleep 1.2
+check "load window announced" "Continue Game" "$(speech "$C")"
+C=$(cursor)
+press ui.secondary
+sleep 1
+check "delete confirm announced" "Delete Save Slot" "$(speech "$C")"
+C=$(cursor)
+press ui.back
+sleep 1
+check "delete cancel restores load window" "Continue Game" "$(speech "$C")"
+C=$(cursor)
+press ui.activate
+sleep 3
+S=$(speech "$C")
+check "chapter select announced" "chapter select" "$S"
+check "chapter select starts on Continue" "Continue," "$S"
+C=$(cursor)
+press ui.end
+press ui.activate
+sleep 2.5
+check "quit to main menu returns" "main menu" "$(speech "$C")"
+
 # --- 6. focus mode toggles both ways ---
 C=$(cursor)
 press focusmode
