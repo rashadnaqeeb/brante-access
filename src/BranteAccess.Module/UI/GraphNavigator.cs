@@ -398,13 +398,15 @@ namespace BranteAccess.Module.UI
             if (KeyGraph.InTree(focusNode))
             {
                 var sib = _graph.MoveToSiblingEdge(first);
-                if (sib.Moved) AnnounceMove(sib);
+                if (sib.Moved) AnnounceMove(sib); else AnnounceCurrent();
                 return true;
             }
 
-            // First/last along the vertical axis of the current structure.
+            // First/last along the vertical axis of the current structure. Already at the
+            // edge: Home/End double as the re-read gesture, so speak the node again in full
+            // rather than staying silent.
             var move = _graph.MoveToEdge(first ? GraphDir.Up : GraphDir.Down);
-            if (move.Moved) AnnounceMove(move);
+            if (move.Moved) AnnounceMove(move); else AnnounceCurrent();
             return true;
         }
 

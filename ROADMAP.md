@@ -572,7 +572,20 @@ go to DECISIONS.md, not to the user.
       save → load → quit. Run after every ~4 verified items; keep it green.
       (first run green 14/14: health, mainmenu graph, End/Home speech, tooltip fallback,
       Settings activation + refocus, focus-mode toggle both ways, zero mod error log lines.
-      Last run: 2026-07-18 (after Home, chapter start/final, Relations, Empire, Map), green
+      Last run: 2026-07-18 (after Destiny locked tabs, window-close crash fix, Map detail,
+      window help, pause toggle descriptions), green 58/58, advance-loop outcome scene-ended.
+      Sweep hardened this run after a state-dependent 50/58: on the chapter-ending save
+      (02.12.01 The Last Night, no choices) the 5c advance loop finished the scene into
+      TeenFinishScreen, where HUD windows cannot open - all 7 window announces failed. Fixes:
+      window section (5c2) now runs BEFORE the advance loop; the loop accepts scene-end as a
+      valid outcome; speech() strips the "next: N" protocol trailer (check_nonempty could
+      never fail on raw output); window escape checks assert scene(0)* refocus via /nav
+      instead of nonempty speech. The honest empty-check exposed a real mod gap: Home/End on
+      an already-edge-focused node was silent - GraphNavigator.JumpEdge now re-announces the
+      current node in full (AnnounceCurrent) as the re-read gesture; verified live (second
+      Home at main menu re-speaks "Continue, button, 1 of 5") plus the transcript re-read
+      check now passes on real speech.
+      Prior run: 2026-07-18 (after Home, chapter start/final, Relations, Empire, Map), green
       59/59 - new 5c2 section opens every covered HUD window by its real button (click eval
       by persistent handler name), asserts the entry announcement against the game's own I2
       term fetched at runtime (chapter-proof), Escape back to the scene each time; buttons

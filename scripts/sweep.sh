@@ -29,7 +29,9 @@ check_nonempty() { # name, haystack (content varies with save state; presence is
 }
 
 cursor()  { curl -s -m 5 "$BASE/health" | sed -E 's/.*speechCursor=([0-9]+).*/\1/'; }
-speech()  { curl -s -m 5 "$BASE/speech?since=$1"; }
+# The trailer line "next: N" is protocol, not speech - stripped so an empty capture is
+# actually empty (check_nonempty on raw output can never fail).
+speech()  { curl -s -m 5 "$BASE/speech?since=$1" | grep -v '^next: '; }
 press()   { curl -s -m 5 -X POST "$BASE/input" -d "$1" > /dev/null; sleep 0.6; }
 evalcs()  { curl -s -m 10 -X POST "$BASE/eval" -d "$1"; }
 
@@ -132,28 +134,12 @@ NAV2=$(curl -s -m 5 "$BASE/nav")
 LASTPAGE=$(echo "$NAV" | grep -o 'scene:page:[0-9]*' | sort -t: -k3 -n | tail -1)
 LASTPAGE2=$(echo "$NAV2" | grep -o 'scene:page:[0-9]*' | sort -t: -k3 -n | tail -1)
 check "re-read left pager alone" "$LASTPAGE" "$LASTPAGE2"
-# Advance with the universal driver (End + Enter on the newest row, gated on the game's own
-# next-button) until the scene offers choices or a consequence Continue. The loop inspects
-# the graph BEFORE each press, so it can never activate a choice (which would alter the save).
-FOUND=""
-for i in $(seq 1 20); do
-  NAV=$(curl -s -m 5 "$BASE/nav")
-  if [[ "$NAV" == *"scene:choice:"* || "$NAV" == *"scene:continue"* ]]; then FOUND=yes; break; fi
-  press ui.end
-  press ui.activate
-  sleep 0.8
-done
-check_nonempty "choices or continue reached" "$FOUND"
-if [[ "$NAV" == *"scene:choice:"* ]]; then
-  C=$(cursor)
-  press ui.end   # last node is a choice; choices are a positioned list
-  check "choice speaks with position" " of " "$(speech "$C")"
-fi
-
 # --- 5c2. HUD windows: each covered window opens by its real HUD button, announces the
 # game's own term for it, and Escape returns to the scene. Buttons the current chapter has
 # not unlocked are skipped (the save decides). The click eval mirrors the game's button path
-# (UiWidgets.Click on the real GameObject) so ShowBackButtonEvent wiring stays exercised. ---
+# (UiWidgets.Click on the real GameObject) so ShowBackButtonEvent wiring stays exercised.
+# Runs BEFORE the scene-advance loop: on a chapter-ending save the loop finishes the scene
+# and lands on the chapter final screen, where HUD windows do not open. ---
 for PAIR in \
   "WindowCharacterButton_Click|HUD.Character" \
   "WindowFamilyButton_Click|HUD.Family" \
@@ -174,11 +160,32 @@ for PAIR in \
   check "window $TERM_KEY button clicked" "clicked" "$CLICK"
   sleep 1.5
   check "window $TERM_KEY announced" "$EXPECTED" "$(speech "$C")"
-  C=$(cursor)
   press ui.back
   sleep 1.2
-  check_nonempty "window $TERM_KEY escape returns to scene" "$(speech "$C")"
+  check "window $TERM_KEY escape returns to scene" "scene(0)*" "$(curl -s -m 5 "$BASE/nav")"
 done
+
+# --- 5c3. Scene advance: the universal driver (End + Enter on the newest row, gated on the
+# game's own next-button) until the scene offers choices, a consequence Continue, or ends
+# outright (a chapter-ending save transitions to the chapter final screen instead). The loop
+# inspects the graph BEFORE each press, so it can never activate a choice (which would alter
+# the save). ---
+FOUND=""
+for i in $(seq 1 20); do
+  NAV=$(curl -s -m 5 "$BASE/nav")
+  if [[ "$NAV" == *"scene:choice:"* || "$NAV" == *"scene:continue"* ]]; then FOUND=choices; break; fi
+  if [[ "$NAV" != *"scene(0)*"* ]]; then FOUND=scene-ended; break; fi
+  press ui.end
+  press ui.activate
+  sleep 0.8
+done
+check_nonempty "choices, continue, or scene end reached" "$FOUND"
+echo "     (advance loop outcome: ${FOUND:-none})"
+if [[ "$NAV" == *"scene:choice:"* ]]; then
+  C=$(cursor)
+  press ui.end   # last node is a choice; choices are a positioned list
+  check "choice speaks with position" " of " "$(speech "$C")"
+fi
 
 # --- 5d. Pause menu in-game + exit confirmation (ends back at the main menu) ---
 C=$(cursor)
