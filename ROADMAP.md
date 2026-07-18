@@ -237,7 +237,19 @@ go to DECISIONS.md, not to the user.
       -5 (= 0), Ready for Action" - chained by Enter into the year popup and next scene. Same
       whole-panel delivery added to the interlude's post-close panels (silent re-seat replaces
       the old first-row-only seat announcement); to confirm at the next stat interlude.)
-- [ ] todo - Death trigger flow in text blocks (BlockTextPanel → death window → resume)
+- [x] verified - Death trigger flow in text blocks (BlockTextPanel → death window → resume)
+      (2026-07-18: DeathScreen (layer 21, popup slot) on the book pattern - one live page row,
+      Enter turns via the game's RightButton_Click, arrow buttons with mod labels and
+      unavailable refusals. Smoke-tested by firing DeathScenesLoader.LoadFirstDeathScene from
+      /eval (death param +1 first; restored after with -delta and WasTriggered reset - it is a
+      public bool FIELD on DeathEventInfo, not a property). Full loop over HTTP: setup pages
+      one per Enter, six death choices in left-column-then-right reading order
+      (ButtonDescription1..6, geometry sort x asc then y desc) with hover-only descriptions
+      folded on, "Remain silent" activation, resolve pager swap delivered with silent re-home,
+      resolve pages, Continue "3 of 3" back to the resumed scene ("Toy Soldiers" + page
+      re-seat). The prefab shows placeholder title/text ("New Text" + Russian block) that the
+      game rewrites a beat after ShowDeathPopup; title and current-page rewrites re-deliver,
+      verified: "First Death" then the English page 0 spoken after the placeholders.)
 - [ ] todo - In-scene tooltips reachable by keyboard: condition tooltip (requirements),
       consequence tooltip, parameter value tooltip
 - [ ] todo - Scene-phase gating: no activation during page-turn/show/hide animations

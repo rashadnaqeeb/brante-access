@@ -119,6 +119,7 @@ namespace BranteAccess.Module
                 new CreditsScreen(),
                 new ChapterPictureScreen(),
                 new ChapterStartScreen(),
+                new DeathScreen(),
                 new InterludeScreen(),
                 new SceneScreen(),
                 new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null),

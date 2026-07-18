@@ -5,6 +5,28 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Death window judgment calls (2026-07-18, Phase 4)
+
+- **DeathScreen sits at layer 21** for the same popup-slot reason as the interlude: the death
+  prefab lands in UIManager's one popup slot, so the specific screen must outrank the generic
+  popup sweep (20); the slot guarantees they never coexist.
+- **Death choices read in column-major order** (left page column top to bottom, then right):
+  the six buttons live under two parents (LeftButtons, RightPage) and FindObjectsOfType
+  returns reverse-instantiation order, so the sort is geometric - x ascending then y
+  descending - which reproduces the game's own ButtonDescription1..6 numbering. Sibling index
+  alone interleaves the columns.
+- **Placeholder rewrites re-deliver.** The death prefab shows its serialized placeholder title
+  and page text ("New Text", an untranslated block) for a beat after ShowDeathPopup before the
+  game writes the real content; entry announcements catch the placeholder. Title and
+  current-page text are signature-diffed each tick and re-spoken on rewrite - same tolerance
+  as stat-panel re-delivery: the player must hear the final state, and the mod cannot know
+  which rewrite is the last.
+- **Death flow is smoke-tested by firing the game's own loader from /eval** (death parameter
+  +1, DeathScenesLoader.LoadFirstDeathScene()), since reaching a real death organically takes
+  chapters. Restoration afterward: SetParameterValue with the negative delta (the API is
+  additive) and WasTriggered = false on the fired DeathEventInfo (a public field). The real
+  trigger path (TextController's IsDeathTrigger block) calls the identical loader entry.
+
 ## Stat-change delivery judgment calls (2026-07-18, Phase 4)
 
 - **Stat panels are delivered whole** (all visible rows joined), not row-by-row via focus: the
