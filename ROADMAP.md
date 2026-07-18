@@ -152,7 +152,17 @@ go to DECISIONS.md, not to the user.
       Continue -> slot -> chapter select -> Continue -> Intro scene RUNNING with no stale
       menu chatter (menu gated on the game's Continue-disabled handoff flag). sweep.sh 24/24
       with new save/load section)
-- [ ] todo - Pause/Escape menu + exit confirmation popup
+- [x] verified - Pause/Escape menu + exit confirmation popup
+      (2026-07-18: PauseScreen off WindowPause's serialized refs - Music/Sound sliders (left
+      spoke "40 percent", game volume applied), Hidden Consequences + Animated Illustrations
+      toggles ("on"/"off" through the game's click handlers), Quit to Main Menu, Resume; window
+      title is the game's own "Settings" text; language row and save/load buttons ship inactive
+      and are skipped. Escape closes via the game's ShowPauseMenu toggle; Enter on Resume closes
+      too. Exit confirm (shared ConfirmPopupScreen base with chapter restart) spoke "QUIT GAME"
+      + autosave description, Escape cancelled, Quit returned to main menu PREGAME cleanly.
+      Focus-mode suppression re-gated on ScreenManager.Current != null: with an empty stack the
+      game's own keys (Escape to pause, A/D paging) work stock - verified by invoking the live
+      Harmony prefix (False with mainmenu active, True in-game stack-empty). sweep.sh 28/28)
 - [ ] todo - Credits window (skippable)
 
 ## Phase 4 - The event scene (the heart of the game)

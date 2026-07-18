@@ -5,6 +5,29 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Pause menu judgment calls (2026-07-18, Phase 3)
+
+- **Focus-mode suppression now requires an active mod screen** (prefix skips game Update bodies
+  only while FocusMode.Active AND ScreenManager.Current != null): with an empty stack - a
+  surface the mod has no screen for yet - the game's own keys (Escape opens pause, A/D page
+  text) are the only working keyboard, and dead keys are strictly worse than stock keys. Once
+  the Phase 4 scene screen exists it will claim the surface and own Escape itself.
+- **The pause screen announces the game's own window title, which is "Settings"** - same word
+  as the main-menu Settings scene. Both are the game's labels; inventing a different word would
+  break the label-with-the-game's-header rule. The two screens' contents differ audibly from
+  the first node on.
+- **Pause rows ship partly dead in this build**: the language cycler row and the Save/Load
+  buttons are inactive GameObjects (Russian leftover text on the buttons). Inactive rows are
+  skipped by the visible gate; the spinner code path stays for a future game update that
+  re-enables the row.
+- **Exit and chapter-restart confirmations share one ConfirmPopupScreen base**: both game
+  popups carry identical serialized fields (_title/_description/_confirmButtonText/
+  _cancelButtonText, read by reflection - no hierarchy names assumed). The exit popup never
+  occupies UIManager's popup slot, so the generic popup PredicateScreen cannot mask it.
+- **Escape on the pause screen runs UIManager.ShowPauseMenu** (the exact handler the game's
+  suppressed Escape read calls), not the Resume button's animator-parameterized CloseWindow -
+  same result, stock path.
+
 ## Save/load and chapter select judgment calls (2026-07-18, Phase 3)
 
 - **Save slot control ids carry the game's SlotId** ("loadwindow:slot:0"): every slot clone's

@@ -106,6 +106,36 @@ press ui.activate
 sleep 2.5
 check "quit to main menu returns" "main menu" "$(speech "$C")"
 
+# --- 5c. Pause menu in-game + exit confirmation (ends back at the main menu) ---
+press ui.activate   # Continue -> load window
+sleep 1
+press ui.activate   # first slot -> chapter select
+sleep 2
+press ui.activate   # Continue -> into the game
+sleep 4
+C=$(cursor)
+evalcs '_Scripts.Managers.UIManager.Initiate.ShowPauseMenu(); "opened"' > /dev/null
+sleep 1.2
+check "pause menu announced" "Music, slider" "$(speech "$C")"
+C=$(cursor)
+press ui.back
+sleep 1
+PSTATE=$(evalcs '"pauseOpen=" + _Scripts.Managers.UIManager.Initiate.PauseWindow.activeInHierarchy')
+check "escape resumes game" "pauseOpen=False" "$PSTATE"
+evalcs '_Scripts.Managers.UIManager.Initiate.ShowPauseMenu(); "opened"' > /dev/null
+sleep 1.2
+press ui.end        # Resume
+press ui.up         # Quit to Main Menu
+C=$(cursor)
+press ui.activate
+sleep 1
+check "exit confirm announced" "QUIT GAME" "$(speech "$C")"
+press ui.down       # Quit button
+C=$(cursor)
+press ui.activate
+sleep 3
+check "quit confirm returns to main menu" "main menu" "$(speech "$C")"
+
 # --- 6. focus mode toggles both ways ---
 C=$(cursor)
 press focusmode

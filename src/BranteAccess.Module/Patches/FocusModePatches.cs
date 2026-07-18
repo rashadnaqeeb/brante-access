@@ -64,6 +64,11 @@ namespace BranteAccess.Module.Patches
             _harmony = null;
         }
 
-        private static bool SkipWhileFocused() => !FocusMode.Active;
+        // Suppress only while one of OUR screens is active: with an empty stack (a surface the
+        // mod has no screen for yet) the game's own keys - Escape to pause, A/D paging - are the
+        // only working keyboard, and dead keys are worse than stock keys. Once a screen claims
+        // the surface, its actions own the keyboard and the game's reads stay skipped.
+        private static bool SkipWhileFocused()
+            => !(FocusMode.Active && Screens.ScreenManager.Current != null);
     }
 }
