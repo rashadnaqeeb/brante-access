@@ -106,6 +106,10 @@ while [ "$STEP" -lt "$MAX" ]; do
       else
         ACTION="homeenter"
       fi ;;
+    "screen chapterrestart")
+      # Rewind confirmation from the relive selection: Confirm is node 2 (End would land
+      # on Cancel).
+      ACTION="walk 2" ;;
     "screen cutscene")
       echo "note step $STEP: cutscene - waiting"; sleep 5; continue ;;
     "screen none")
