@@ -495,11 +495,18 @@ go to DECISIONS.md, not to the user.
       from the same keys, never the tooltip prefab. Gaps found are the four items below; the
       per-surface tooltip data elsewhere (parameter scales, objectives, characters, choice
       conditions/consequences) is already folded and verified per window.)
-- [ ] todo - Map window detail pass: every city item carries Map.<X>.Description behind its
+- [x] verified - Map window detail pass: every city item carries Map.<X>.Description behind its
       TooltipWithTitleBehavior (label IS GetTranslation(TitleKey) via MapItemTranslation, so
       the pairing is authoritative) - fold description onto Space; and the window has an
       inactive-in-ch2 Regions layer (MapRegionItem with Map.<Region>.Description) - find what
       activates it (chapter? toggle?) and cover it
+      (2026-07-18: the "inactive Regions" reading was prefab-asset staleness - LIVE both
+      layers are active in ch2. Screen now rows every TooltipWithTitleBehavior carrier:
+      15 cities (live label) + 6 provinces (invisible hover zones, label from TitleKey with
+      the province word - no game string distinguishes them from cities, map.province
+      authored). Space reads GetTranslation(TitleMainText) on both. Live: "Pragos, 1 of 21"
+      + full city description, "Magra, province, 21 of 21" + province description, Escape
+      back to scene clean.)
 - [x] verified - Destiny locked chapter tabs: speak the game's own HUD.WillOpen2..5 tooltip title
       as the unavailable reason (currently bare "unavailable"; rule: announce the failed
       requirement with the game's own string)

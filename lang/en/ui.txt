@@ -115,6 +115,9 @@ member.selected = {name} selected
 # Destiny window (the game marks an achieved objective only by color)
 destiny.achieved = achieved
 
+# Map window (the game distinguishes provinces from cities only by map layout)
+map.province = {name}, province
+
 # Main menu buttons (the game's labels are localized sprites - no game string exists)
 mainmenu.continue = Continue
 mainmenu.newgame = New game

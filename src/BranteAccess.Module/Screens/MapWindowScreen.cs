@@ -4,14 +4,18 @@ using BranteAccess.Module.Speech;
 using BranteAccess.Module.UI;
 using BranteAccess.Module.UI.Graph;
 using MapArea = _Scripts.AMVCC.Views.Windows.Map.MapAreaItemBehaviour;
+using Tooltip = _Scripts.AMVCC.Views.TooltipWithTitleBehavior;
 using GameLoc = I2.Loc.LocalizationManager;
 
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The Map of the Empire window: a picture of the Empire whose only readable content is
-    /// the province and city name labels (the game's area items are hover-highlight only -
-    /// no click action exists). One text row per visible area, in the prefab's layout order.
+    /// The Map of the Empire window: a picture of the Empire whose readable content is the
+    /// hover surfaces - city areas (visible name labels) and province regions (invisible
+    /// hover zones, named only in their tooltip keys). One row per surface in prefab layout
+    /// order, cities then provinces; a province row carries the province word (the game
+    /// shows the distinction only as map layout). Space reads the same Map.X.Description
+    /// the game's hover tooltip shows. No click action exists anywhere on the map.
     /// </summary>
     public sealed class MapWindowScreen : Screen
     {
@@ -33,20 +37,30 @@ namespace BranteAccess.Module.Screens
             if (w == null) return;
 
             b.PushContext("", role: null, positions: true);
-            foreach (var area in w.GetComponentsInChildren<MapArea>())
+            foreach (var tip in w.GetComponentsInChildren<Tooltip>())
             {
-                var item = area;
-                if (!UiWidgets.Visible(item.gameObject)) continue;
-                b.AddItem(ControlId.Referenced(item, "map:area:" + item.gameObject.name),
+                var t = tip;
+                if (!UiWidgets.Visible(t.gameObject)) continue;
+                var area = t.GetComponent<MapArea>();
+                var name = area != null
+                    ? (System.Func<string>)(() => area.Text.text)
+                    : () => GameLoc.GetTranslation(t.TitleKey);
+                var label = area != null
+                    ? name
+                    : () => Loc.T("map.province", new { name = name() });
+                b.AddItem(ControlId.Referenced(t, "map:area:" + t.gameObject.name),
                     new NodeVtable
                     {
                         ControlType = ControlTypes.Text,
                         Announcements = new[]
                         {
-                            new NodeAnnouncement(() => item.Text.text,
-                                kind: AnnouncementKinds.Label),
+                            new NodeAnnouncement(label, kind: AnnouncementKinds.Label),
                         },
-                        SearchText = () => item.Text.text,
+                        SearchText = name,
+                        OnTooltip = string.IsNullOrEmpty(t.TitleMainText)
+                            ? (System.Action)null
+                            : () => Mod.Speech.Speak(
+                                GameLoc.GetTranslation(t.TitleMainText)),
                     });
             }
             b.PopContext();

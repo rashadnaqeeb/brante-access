@@ -5,6 +5,13 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Map window judgment calls (2026-07-18, Phase 7)
+
+- **Province rows carry a mod-authored "province" word (map.province template)**: the game
+  distinguishes provinces from cities purely by map layout (regions are invisible hover
+  zones), and no game string names the distinction - the description prose is too long for
+  a label. Cities stay bare names, matching their on-screen labels.
+
 ## Window-close crash workaround (2026-07-18, Phase 5)
 
 - **The mod writes ONE piece of game state: UIManager.OpenedTooltip gets an inactive stub
