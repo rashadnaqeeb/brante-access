@@ -40,9 +40,17 @@ LOGC=$(logcur)
 while [ "$STEP" -lt "$MAX" ]; do
   STEP=$((STEP + 1))
 
+  # Mod errors abort; the game's own errors (e.g. UIManager.SetAchievementInfo NREs in the
+  # fourth-death Continue path, a game bug that also fires on mouse clicks) are noted and
+  # driving continues - the game survives them.
   ERRS=$(curl -s -m 5 "$BASE/log?since=$LOGC&grep=Error" | grep -v '^next:' || true)
+  MODERRS=$(echo "$ERRS" | grep 'Brante Access' || true)
+  if [ -n "$MODERRS" ]; then
+    echo "ABORT step $STEP: mod errors in /log:"; echo "$MODERRS"; exit 1
+  fi
   if [ -n "$ERRS" ]; then
-    echo "ABORT step $STEP: mod errors in /log:"; echo "$ERRS"; exit 1
+    echo "note step $STEP: game errors in /log (continuing):"
+    echo "$ERRS" | head -3
   fi
   LOGC=$(logcur)
 

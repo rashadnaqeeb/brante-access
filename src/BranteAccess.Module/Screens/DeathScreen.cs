@@ -61,6 +61,14 @@ namespace BranteAccess.Module.Screens
         private int _spokenPage;
         private string _spokenText;
         private string _spokenTitle;
+        private string _pendingText;
+        private float _pendingSince;
+        private bool _pendingSeat;
+        // A newly activated pager shows its prefab placeholder (raw Russian) for a few frames
+        // before the game populates it (heard live in the fourth-death resolve, speech 470) -
+        // deliveries for swapped/rewritten text wait until the text holds still. Page turns
+        // set their text synchronously and stay immediate.
+        private const float TextSettleSeconds = 0.45f;
 
         private static DeathWindow Window() => Object.FindObjectOfType<DeathWindow>();
 
@@ -95,6 +103,8 @@ namespace BranteAccess.Module.Screens
         {
             _watched = null;
             _spokenTitle = null;
+            _pendingText = null;
+            _pendingSeat = false;
         }
 
         public override void OnUpdate()
@@ -116,25 +126,37 @@ namespace BranteAccess.Module.Screens
                 bool entry = _watched == null;
                 _watched = t;
                 _spokenPage = page;
-                _spokenText = text;
-                if (!entry)
-                {
-                    // Setup swapped to resolve: the consequence is new content, delivered like
-                    // any new page (the screen-entry seat covers the first pager).
-                    Navigation.FocusNode(ControlId.Structural("death:page"), announce: false);
-                    Mod.Speech.Speak(text);
-                }
+                _pendingText = null;
+                // Screen entry: the navigator's seat announcement reads the page. A mid-screen
+                // swap (setup to resolve) is new content - delivered below once it settles,
+                // with a silent re-seat onto the page row.
+                _spokenText = entry ? text : null;
+                _pendingSeat = !entry;
                 return;
             }
             if (page != _spokenPage)
             {
                 _spokenPage = page;
                 _spokenText = text;
+                _pendingText = null;
                 Mod.Speech.Speak(text);
                 return;
             }
-            if (text == _spokenText) return;
+            if (text == _spokenText) { _pendingText = null; return; }
+            if (text != _pendingText)
+            {
+                _pendingText = text;
+                _pendingSince = Time.unscaledTime;
+                return;
+            }
+            if (Time.unscaledTime - _pendingSince < TextSettleSeconds) return;
+            _pendingText = null;
             _spokenText = text;
+            if (_pendingSeat)
+            {
+                _pendingSeat = false;
+                Navigation.FocusNode(ControlId.Structural("death:page"), announce: false);
+            }
             Mod.Speech.Speak(text);
         }
 
