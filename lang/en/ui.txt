@@ -29,6 +29,8 @@ state.unavailable = unavailable
 state.selected = selected
 state.on = on
 state.off = off
+# Spoken for a value the game renders as a bare dash (a cleared status row)
+state.none = none
 
 # Settings window (value/reason strings the game renders only visually)
 settings.percent = {value} percent

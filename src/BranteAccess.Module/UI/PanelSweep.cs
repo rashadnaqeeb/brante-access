@@ -59,9 +59,9 @@ namespace BranteAccess.Module.UI
         {
             var parts = new System.Collections.Generic.List<string>();
             foreach (var tmp in root.GetComponentsInChildren<TMPro.TMP_Text>())
-                if (IsRow(tmp, tmp.text)) parts.Add(tmp.text);
+                if (IsRow(tmp, tmp.text)) parts.Add(Spoken(tmp.text));
             foreach (var legacy in root.GetComponentsInChildren<UnityEngine.UI.Text>())
-                if (IsRow(legacy, legacy.text)) parts.Add(legacy.text);
+                if (IsRow(legacy, legacy.text)) parts.Add(Spoken(legacy.text));
             return string.Join(", ", parts.ToArray());
         }
 
@@ -77,6 +77,15 @@ namespace BranteAccess.Module.UI
                 if (IsRow(legacy, legacy.text))
                     return ControlId.Structural(idPrefix + ":text:" + legacy.GetInstanceID());
             return null;
+        }
+
+        // The game renders a bare dash as a row's whole value where a status has cleared -
+        // readers voice the dash character, so it gets the mod's none word. Dashes inside
+        // game prose are untouched (the check is whole-row).
+        private static string Spoken(string value)
+        {
+            var v = value.Trim();
+            return v == "—" || v == "–" || v == "-" ? Loc.T("state.none") : value;
         }
 
         // A button's label is spoken by the button node, not as a separate row.
@@ -99,7 +108,7 @@ namespace BranteAccess.Module.UI
                     ControlType = ControlTypes.Text,
                     Announcements = new[]
                     {
-                        new NodeAnnouncement(() => UiWidgets.LabelText(t.gameObject),
+                        new NodeAnnouncement(() => Spoken(UiWidgets.LabelText(t.gameObject)),
                             kind: AnnouncementKinds.Label),
                     },
                     OnTooltip = pgs == null ? (System.Action)null
