@@ -145,8 +145,33 @@ namespace BranteAccess.Module.UI
             var hud = Object.FindObjectOfType<HudController>();
             if (hud == null) return false;
             var back = (GameObject)BackField.GetValue(hud);
-            if (back == null || !back.activeInHierarchy) return false;
+            if (back == null || !back.activeInHierarchy)
+            {
+                Mod.Warn("[hud] back button null or inactive - Escape not delivered");
+                return false;
+            }
+            SeedTooltipSlot();
             return UiWidgets.Click(back);
+        }
+
+        // The game's back handler (WindowMainButton_Click) calls OpenedTooltip.SetActive(false)
+        // without a null guard, and the slot is only ever assigned by mouse-hover tooltip
+        // handlers - so a keyboard-only session NREs on its first window close, which
+        // deactivates the back button and strands the window open. An inactive stub in the
+        // slot makes that SetActive a no-op; any real tooltip open replaces the stub.
+        private static GameObject _tooltipStub;
+
+        private static void SeedTooltipSlot()
+        {
+            var mgr = GameUi.Manager;
+            if (mgr == null || mgr.OpenedTooltip != null) return;
+            if (_tooltipStub == null)
+            {
+                _tooltipStub = new GameObject("BranteAccess.TooltipStub");
+                _tooltipStub.SetActive(false);
+                Object.DontDestroyOnLoad(_tooltipStub);
+            }
+            mgr.OpenedTooltip = _tooltipStub;
         }
     }
 }

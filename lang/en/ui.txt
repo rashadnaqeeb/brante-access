@@ -31,6 +31,8 @@ state.on = on
 state.off = off
 # Spoken for a value the game renders as a bare dash (a cleared status row)
 state.none = none
+# A locked control whose reason is a game string (the Destiny chapter tabs' hover title)
+state.unavailable_reason = unavailable, {reason}
 
 # Settings window (value/reason strings the game renders only visually)
 settings.percent = {value} percent

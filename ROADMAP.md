@@ -500,9 +500,25 @@ go to DECISIONS.md, not to the user.
       the pairing is authoritative) - fold description onto Space; and the window has an
       inactive-in-ch2 Regions layer (MapRegionItem with Map.<Region>.Description) - find what
       activates it (chapter? toggle?) and cover it
-- [ ] todo - Destiny locked chapter tabs: speak the game's own HUD.WillOpen2..5 tooltip title
+- [x] verified - Destiny locked chapter tabs: speak the game's own HUD.WillOpen2..5 tooltip title
       as the unavailable reason (currently bare "unavailable"; rule: announce the failed
       requirement with the game's own string)
+      (2026-07-18: LockedReason reads the tab's own TooltipWithTitleBehavior.TitleKey via
+      state.unavailable_reason. Live on the ch2 save: tabs III/IV/V each spoke their own
+      reason ("chapter III, tab, unavailable, Will unlock in Chapter III "Youth", 3 of 5",
+      IV "Peace Time", V "The Revolt") and Enter on a locked tab refused with the same
+      string; chapter I stayed bare, chapter II spoke selected.)
+- [x] verified - Keyboard-only window close crashed the game's own back handler: UIManager.
+      OpenedTooltip is only assigned by mouse-hover tooltip handlers, so the first Escape of
+      a session NREs in HudController.WindowMainButton_Click (OpenedTooltip.SetActive without
+      a null guard), deactivating the back button and stranding the window open. HudBar now
+      seeds an inactive stub GameObject into the slot before clicking back; ClickBack also
+      logs instead of failing silently when the button is missing.
+      (2026-07-18: reproduced on a fresh game session (first ui.back after opening Destiny
+      hit the NRE, window stuck); after the fix, open Destiny + ui.back closed cleanly with
+      the scene re-announced and zero exceptions in /log. Also fixed the load-transition
+      IsActive NRE spam: GameUi.State reads PREGAME while GameManager.Instance is null
+      during a save-load scene swap - ~40 "Screen.IsActive threw" log lines per load gone.)
 - [ ] todo - Window title-row help: every window's TitleRow HelpIcon carries
       Window_<X>.Title/.Description (what-this-window-is help) - expose per window (likely
       Space on a title node or a help row; decide one pattern for all windows)

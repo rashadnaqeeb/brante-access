@@ -5,6 +5,18 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Window-close crash workaround (2026-07-18, Phase 5)
+
+- **The mod writes ONE piece of game state: UIManager.OpenedTooltip gets an inactive stub
+  GameObject seeded before clicking the HUD back button.** The game's own back handler
+  dereferences that slot without a null guard, and only mouse-hover tooltip code ever
+  assigns it - so every keyboard-only session crashed (NRE) on its first window close,
+  stranding the window open with a dead back button. The alternative was a Harmony patch
+  on WindowMainButton_Click; seeding the slot the game itself expects to be filled is
+  smaller and lets the game's own code run unmodified. Any real tooltip open replaces
+  the stub; the stub is inactive so the handler's SetActive(false) is a no-op. This is a
+  bug workaround, not state caching - the never-cache rule is about reads.
+
 ## Empire window judgment calls (2026-07-18, Phase 5)
 
 - **Office rows are hud.pair with the window's own header texts**: the Overseer and

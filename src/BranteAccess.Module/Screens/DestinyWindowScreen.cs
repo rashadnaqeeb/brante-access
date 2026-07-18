@@ -12,7 +12,7 @@ namespace BranteAccess.Module.Screens
 {
     /// <summary>
     /// The Destiny window: the chapter tabs as a button row (locked tabs refuse with the
-    /// unavailable word - the game gives them no reason string, only a gray), then the active
+    /// unavailable word plus the game's own hover reason, HUD.WillOpenN), then the active
     /// chapter's objective lists grouped under the game's own category headers. An achieved
     /// objective carries the achieved word (the game shows it only as black-vs-gray). Space
     /// reads the objective's description and its requirement rows. Switching tabs is spoken
@@ -69,6 +69,18 @@ namespace BranteAccess.Module.Screens
         private static string TabLabel(GameObject tab)
             => UiWidgets.LocalizedLabel(tab);
 
+        // A locked tab's reason is the game's own hover tooltip title (HUD.WillOpen2..5),
+        // carried by the TooltipWithTitleBehavior on the tab itself. The current chapter's
+        // tab has no tooltip component, so the bare unavailable word is the fallback.
+        private static string LockedReason(GameObject tab)
+        {
+            var tip = tab.GetComponent<_Scripts.AMVCC.Views.TooltipWithTitleBehavior>();
+            return tip == null || string.IsNullOrEmpty(tip.TitleKey)
+                ? Loc.T("state.unavailable")
+                : Loc.T("state.unavailable_reason",
+                    new { reason = GameLoc.GetTranslation(tip.TitleKey) });
+        }
+
         public override void Build(GraphBuilder b)
         {
             var dw = Window();
@@ -92,7 +104,7 @@ namespace BranteAccess.Module.Screens
                                     ? Loc.T("state.selected") : null,
                                 kind: AnnouncementKinds.Selected),
                             new NodeAnnouncement(() => tab.GetComponent<UnityEngine.UI.Button>()
-                                    .interactable ? null : Loc.T("state.unavailable"),
+                                    .interactable ? null : LockedReason(tab),
                                 kind: AnnouncementKinds.Enabled),
                         },
                         SearchText = () => TabLabel(tab),
@@ -100,7 +112,7 @@ namespace BranteAccess.Module.Screens
                         {
                             if (!tab.GetComponent<UnityEngine.UI.Button>().interactable)
                             {
-                                Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
+                                Mod.Speech.Speak(LockedReason(tab), interrupt: true);
                                 return;
                             }
                             UiWidgets.Click(tab);
