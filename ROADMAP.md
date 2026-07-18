@@ -371,7 +371,7 @@ go to DECISIONS.md, not to the user.
       rides the objective popup (generic popup family), not this window.)
 - [ ] todo - Insurrection window (+ InsurrectionSidePopup/tooltip)
 - [ ] todo - War window (WindowsList.WarWindow - confirm where it appears)
-- [x] built - Chapter start window (keyboarded page turner)
+- [x] verified - Chapter start window (keyboarded page turner)
       (2026-07-18: ChapterStartScreen - header + page title/position/description rows,
       objectives fold their hover-only description onto the row, parameter rows fold
       name/value/segment, other panels swept; Prev/Next as nodes (image-only buttons, mod
@@ -379,8 +379,21 @@ go to DECISIONS.md, not to the user.
       title+position+description with focus staying on the pager button. Verified live at
       Childhood start: all 5 pages turned one keypress each, objective rows with descriptions,
       end-stop refusal "unavailable", Begin Chapter swept + activated into scene 01.01.01.
-      Remaining before verified: read a parameter-page CONTENT row live (next chapter start).)
-- [ ] todo - Chapter final window (stats summary pages)
+      Content rows verified live at Adolescence start: objective rows spoke name + folded
+      description ("Gloria's Secret. You discover the secret society..."), all 6 pages
+      delivered title/position/description on one keypress each.)
+- [x] verified - Chapter final window (stats summary pages)
+      (2026-07-18: ChapterFinalScreen - epilogue text rows (second prefab text deduped),
+      page title/position/description row, timeline rows folding event + branch + year from
+      the year headers ("Birth, Personal Life, year 1118"), objective pages reuse the
+      chapterstart fold + ObjectiveDetails on Space, parameter pages reuse ParameterRows
+      (name-value trim added for the valueless Deaths row), continue node runs the game's
+      NextSceneButton_Click. IsActive gates on the left page's own active+alpha state - the
+      controller GameObject outlives readable content on both ends (pregame block, hide fade),
+      and without the gate it masks the between-chapters chapter-select screen. Verified live
+      at End of Chapter I: all 4 pages paged both directions with deliveries, prev refusal at
+      page 0, Space read Determination scales and Deaths scale, continue crossed into
+      chapter 2 (loading screen -> cutscene -> picture -> interlude -> Adolescence start).)
 
 ## Phase 6 - Popups, cutscenes, special flows
 
@@ -447,9 +460,14 @@ go to DECISIONS.md, not to the user.
       (2026-07-18: scripts/advance.sh - story-advance driver that pushes the live game forward
       through the mod's navigator, verifying speech per action (rotating choice picks, silence
       and /log-error aborts, stops on chapterstart/unknown screens). The game writes a save per
-      chapter reached - those are the jump points. First long run under way on the Testname
-      save; pulled forward from Phase 8 because every remaining Phase 5 window needs a later
-      chapter.)
+      chapter reached - those are the jump points. Pulled forward from Phase 8 because every
+      remaining Phase 5 window needs a later chapter. First long run: 183 steps on the Testname
+      save through the scripted death, The Sacrament and the era interlude, stopping exactly at
+      the then-unported chapter final window - the intended discovery loop. Driver hardened
+      after it: transient "screen none" retried up to 8 probes (was instant abort), chapterfinal
+      added as a clean stop, chapterselect (between-chapters loading screen) advanced via
+      Home+Enter (Continue is the start node; End would refuse on a locked chapter station).
+      Chapter 2 reached and its save written 2026-07-18.)
 - [ ] todo - Full keyboard-only playthrough of the prologue + chapter 1 via dev server, zero
       mouse, no unspoken interactive element encountered (log any gap as a new roadmap item)
 - [ ] todo - Sampled sweep across later chapters (3+ scenes per chapter incl. one special

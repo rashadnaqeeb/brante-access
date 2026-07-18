@@ -49,6 +49,7 @@ line'
 
 STEP=0
 SILENT=0
+NONE_COUNT=0
 LAST_TITLE=""
 TITLE_COUNT=0
 LOGC=$(logcur)
@@ -66,6 +67,7 @@ while [ "$STEP" -lt "$MAX" ]; do
   DIRECTIVE=$(echo "$RAW" | head -1 | sed 's/^=> //')
   KIND=${DIRECTIVE%%|*}
   TITLE=${DIRECTIVE#*|}
+  if [ "$KIND" != "screen none" ]; then NONE_COUNT=0; fi
 
   if [ "$TITLE" = "$LAST_TITLE" ]; then TITLE_COUNT=$((TITLE_COUNT + 1)); else TITLE_COUNT=0; LAST_TITLE="$TITLE"; fi
   if [ "$TITLE_COUNT" -gt 40 ]; then
@@ -75,12 +77,26 @@ while [ "$STEP" -lt "$MAX" ]; do
   case "$KIND" in
     "screen chapterstart")
       echo "STOP step $STEP: chapter start window reached (manual verification item)"; exit 0 ;;
+    "screen chapterfinal")
+      echo "STOP step $STEP: chapter final window reached (chapter save written)"; exit 0 ;;
     "screen mainmenu")
       echo "STOP step $STEP: main menu"; exit 0 ;;
     "screen death"|"screen interlude"|"screen popup"|"screen chapterpicture")
       ACTION="endenter" ;;
+    "screen chapterselect")
+      # Between-chapters loading screen: Continue is the start node (End would land on a
+      # locked chapter station and refuse).
+      ACTION="homeenter" ;;
     "screen cutscene")
       echo "note step $STEP: cutscene - waiting"; sleep 5; continue ;;
+    "screen none")
+      # Transient: the screen stack empties during scene loads. Retry; a surface the mod
+      # genuinely does not cover stays "none" and falls to the stuck-title abort.
+      NONE_COUNT=$((NONE_COUNT + 1))
+      if [ "$NONE_COUNT" -ge 8 ]; then
+        echo "ABORT step $STEP: no active screen after $NONE_COUNT probes (uncovered surface)"; exit 1
+      fi
+      echo "note step $STEP: no active screen - retrying"; sleep 2; continue ;;
     screen*)
       echo "ABORT step $STEP: unhandled screen '$KIND'"; exit 1 ;;
     choices*)
@@ -98,6 +114,8 @@ while [ "$STEP" -lt "$MAX" ]; do
   C=$(cursor)
   if [ "$ACTION" = "endenter" ]; then
     press ui.end; sleep 0.3; press ui.activate
+  elif [ "$ACTION" = "homeenter" ]; then
+    press ui.home; sleep 0.3; press ui.activate
   else
     PICKED=${ACTION#choice }
     evalcs "BranteAccess.Module.UI.Navigation.FocusNode(BranteAccess.Module.UI.Graph.ControlId.Structural(\"scene:choice:$PICKED\"), false); \"focused\"" > /dev/null

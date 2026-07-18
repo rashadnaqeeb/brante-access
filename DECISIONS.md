@@ -5,6 +5,32 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Chapter final window judgment calls (2026-07-18, Phase 5)
+
+- **Timeline rows fold the year from the year headers above them**: the game renders the
+  chapter timeline as year-header items interleaved with event items in one list; a speech
+  row per event folds "event, branch, year N" (year label and value are the game's own
+  texts), so year headers are not separate stops. Same fold rule as elsewhere: detail rides
+  the item, one keypress saved per row.
+- **Timeline rows get no Space detail**: their ObjectiveInitializer components are blank in
+  the shipped game (Objective null, description empty - verified live), and TimelineComponent
+  carries only the texts already folded on. Nothing withheld; there is nothing more to read.
+- **IsActive gates on the left page's active+alpha, not controller presence**: the
+  ChapterFinalWindowController GameObject exists before the pregame gate lifts and lingers
+  at alpha 0 through the hide animation while the next chapter loads. Presence-only IsActive
+  masked the between-chapters chapter-select screen (caught live: screen stack stayed
+  "chapterfinal" a full minute after the continue press). Hidden is not closed, both ways.
+- **A duplicate loading-screen cover was written and then deleted**: the between-chapters
+  loading screen looked uncovered (screen stack empty), so a LifeTimelineScreen was built and
+  live-verified - then ROADMAP review showed ChapterSelectScreen already owns that surface
+  (verified earlier, including this variant); the stack had been empty only because of the
+  chapterfinal masking bug above. The duplicate was removed the same session; the surface
+  walk it performed stands as extra evidence for the shared row layout. Lesson recorded:
+  grep the Screens directory for the game component name before writing a new cover.
+- **ParameterRows trims the name-value pair**: the chapter final's Deaths row has an empty
+  value text (the game shows only the segment word), which left a dangling space before the
+  comma; the shared label now trims, all callers inherit.
+
 ## Home window judgment calls (2026-07-18, Phase 5)
 
 - **Parameter rows extracted to a shared ParameterRows helper**: the Home window fills its

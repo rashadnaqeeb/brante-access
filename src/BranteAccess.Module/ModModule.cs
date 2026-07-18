@@ -119,6 +119,7 @@ namespace BranteAccess.Module
                 new CreditsScreen(),
                 new ChapterPictureScreen(),
                 new ChapterStartScreen(),
+                new ChapterFinalScreen(),
                 new DeathScreen(),
                 new InterludeScreen(),
                 new SceneScreen(),
