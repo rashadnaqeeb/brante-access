@@ -481,6 +481,14 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
 - [ ] todo - Timeline (WindowLiveTimelineController / life timeline) readable
 - [ ] todo - Insurrection-day and other special scene variants (from scene census below)
+- [x] verified - Epilogue scenes (ConsequenceSceneController: 070.* game-over outcomes reached
+      after a True Death - same TextController surface as normal scenes, no choices, ends on
+      the UniversalParametersGenerator control panel's Continue)
+      (2026-07-19: found by the driver as an uncovered screen after the chapter III gallows
+      True Death. SceneScreen now recognizes both controllers (shared TitleObject) and sweeps
+      the generator panel as its stat-panel root. Live: "Outcome of the Revolt" delivered all
+      8 pages over HTTP, End reached "Continue, button", Enter closed onward into the
+      FourthDeath judgment flow. Zero mod errors.)
 - [ ] in progress - Scene census: enumerate atypical scenes (duel, province finals, variative
       finals - grep decompile for their controllers), list each here as its own item, then
       verify each

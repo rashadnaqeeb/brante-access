@@ -5,6 +5,23 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Game-over and death-flow judgment calls (2026-07-19, Phase 6/8)
+
+- **Epilogue scenes ride SceneScreen, not a new screen**: ConsequenceSceneController
+  (070.* outcomes) is the same TextController transcript minus choices; a dedicated screen
+  would duplicate the pager, delivery, and HUD wiring for zero spoken difference. SceneScreen
+  detects either controller and treats the UniversalParametersGenerator control panel as its
+  stat-panel root (rows deliver, Continue sweeps in).
+- **Death-window text swaps settle 0.45s before speaking** (same constant as the interlude
+  panel gate): a newly activated resolve pager displays the prefab's raw Russian placeholder
+  for a few frames before the game populates it, and it was heard live (speech 470). Page
+  turns stay immediate - the game sets their text synchronously in the click handler.
+- **The story driver only aborts on mod errors; the game's own logged errors are noted and
+  driving continues**: the fourth-death Continue path fires a UIManager.SetAchievementInfo
+  NullReferenceException inside the GAME for the game's own mouse path too (our activation
+  invokes the same Button_Click). The game demonstrably survives it; aborting on it would
+  block coverage of everything past the fourth death. Mod errors still abort hard.
+
 ## Conversion panel and panel-sweep judgment calls (2026-07-18, Phase 6)
 
 - **Panel-swap deliveries repeat the panel's static title and description**: the conversion
