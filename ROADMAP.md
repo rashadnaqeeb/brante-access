@@ -104,8 +104,18 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 3 - Main menu and meta UI
 
-- [ ] todo - Main menu screen (continue/new game/load/settings/credits/exit + language
+- [x] verified - Main menu screen (continue/new game/load/settings/credits/exit + language
       selection); first spoken screen
+      (2026-07-18: 7-node graph over two Tab-stops - 5 sprite CustomMainMenuButtons with
+      mod-authored labels + 2 Discord URL buttons with game-text labels, scene-scoped so
+      additively loaded Settings/LoadWindow buttons never leak in (sweep caught the duplicate-id
+      crash before scoping). Live: End "Quit, button, 5 of 5", Tab "Game's community on Discord,
+      button, 1 of 2", Shift+Tab restored "Continue, button", Enter opened Settings through the
+      game's click path. Ground truth: Continue IS the load entry (LoadGameButton_Click opens
+      LoadWindow), and language selection lives in the Settings scene, not the menu - both
+      covered by their own Phase 3 items. Continue's unavailable-when-saveless gate verified in
+      the Phase 2 uGUI-adapter item; activation with saves rides the save/load item.
+      sweep.sh green 16/16)
 - [ ] todo - New-game flow: disclaimer, intro, name request window (text entry), chapter start
 - [ ] todo - Settings window (sliders, toggles, language dropdown) - includes muting game audio
       by keyboard

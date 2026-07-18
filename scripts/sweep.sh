@@ -28,11 +28,12 @@ evalcs()  { curl -s -m 10 -X POST "$BASE/eval" -d "$1"; }
 # --- 1. server + module alive ---
 H=$(curl -s -m 5 "$BASE/health")
 check "health" "ok Brante Access" "$H"
+LOGC=$(echo "$H" | sed -E 's/.*logCursor=([0-9]+).*/\1/')
 
 # --- 2. main menu screen + graph ---
 NAV=$(curl -s -m 5 "$BASE/nav")
 check "stack has mainmenu" "mainmenu(0)" "$NAV"
-check "mainmenu graph built" "graph (5 nodes)" "$NAV"
+check "mainmenu graph built" "graph (7 nodes)" "$NAV"
 check "ui category live" "categories: UI, Global" "$NAV"
 
 # --- 3. navigator moves speak (End then Home guarantees at least one real move each way) ---
@@ -43,6 +44,14 @@ check "End speaks Quit" "Quit, button, 5 of 5" "$(speech "$C")"
 C=$(cursor)
 press ui.home
 check "Home speaks Continue" "Continue, button" "$(speech "$C")"
+
+# --- 3b. Tab-stop cycling: extras stop and back ---
+C=$(cursor)
+press ui.next
+check "Tab reaches extras stop" "Discord, button" "$(speech "$C")"
+C=$(cursor)
+press ui.prev
+check "Shift+Tab restores stop 1" "Continue, button" "$(speech "$C")"
 
 # --- 4. tooltip fallback ---
 C=$(cursor)
@@ -72,8 +81,8 @@ C=$(cursor)
 press focusmode
 check "focus mode on spoken" "focus mode on" "$(speech "$C")"
 
-# --- 7. no mod errors in the log ---
-ERRS=$(curl -s -m 5 "$BASE/log?since=0&grep=Error%3ABrante" | grep -c "Brante" || true)
+# --- 7. no mod errors logged DURING this sweep (older ring-buffer content is not this run's) ---
+ERRS=$(curl -s -m 5 "$BASE/log?since=$LOGC&grep=Error%3ABrante" | grep -c "Brante" || true)
 check "no mod error log lines" "0" "$ERRS"
 
 echo

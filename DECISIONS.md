@@ -5,6 +5,21 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Main menu screen judgment calls (2026-07-18, Phase 3)
+
+- **Discord URL buttons are in the graph** (stop 2, game's own TMP labels): the "no unspoken
+  interactive element" bar includes them. Their activation (opens a browser) is deliberately NOT
+  exercised by the sweep - a browser launch on an unattended run is noise; the click path is the
+  same UiWidgets.Click verified on Settings.
+- **ExtraButtons is scene-scoped to "MainMenu"**: FindObjectsOfType sees additively loaded
+  scenes (Settings/LoadWindow), and their same-named buttons collided as duplicate control ids -
+  found by the regression sweep on its second run, not by eye.
+- **The roadmap's "language selection" on the main menu does not exist** - the language dropdown
+  lives in the Settings scene (verified live). It is covered by the Settings window item.
+- **Sweep error check counts only lines after the run's start logCursor**: the ring buffer keeps
+  old (already fixed) errors for the whole session; counting from 0 made every later run red on
+  history instead of regressions.
+
 ## Navigator port judgment calls (2026-07-18, Phase 2)
 
 - **Regression sweep is scripts/sweep.sh (bash), not the roadmap's sweep.ps1**: the agent's

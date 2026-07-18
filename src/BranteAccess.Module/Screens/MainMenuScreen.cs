@@ -3,14 +3,17 @@ using BranteAccess.Module.Game;
 using BranteAccess.Module.Speech;
 using BranteAccess.Module.UI;
 using BranteAccess.Module.UI.Graph;
+using UnityEngine.UI;
 
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The main menu: one Tab-stop of vertical buttons, read live from the scene's
+    /// The main menu. Stop 1: the five sprite buttons, read live from the scene's
     /// CustomMainMenuButton components each render (their labels are localized SPRITES, so the
-    /// spoken labels are mod-authored ui.txt keys - see DECISIONS.md). Activation invokes the
-    /// game Button's own onClick so game logic and sounds run.
+    /// spoken labels are mod-authored ui.txt keys - see DECISIONS.md; the Continue button runs
+    /// the game's LoadGameButton_Click, opening the load window). Stop 2: the scene's remaining
+    /// visible buttons (Discord links), labels from their own game text. Activation goes through
+    /// the game's pointer-click path so game logic and sounds run.
     /// </summary>
     public sealed class MainMenuScreen : Screen
     {
@@ -47,6 +50,47 @@ namespace BranteAccess.Module.Screens
                         },
                     });
             }
+
+            // The scene's other visible buttons (the Discord links) - their labels are the
+            // game's own localized text, read live.
+            var extras = ExtraButtons();
+            if (extras.Count == 0) return;
+            b.BeginStop("extras");
+            foreach (var extra in extras)
+            {
+                var go = extra.gameObject;
+                b.AddItem(
+                    ControlId.Referenced(extra, "mainmenu:extra:" + go.name),
+                    new NodeVtable
+                    {
+                        ControlType = ControlTypes.Button,
+                        Announcements = new[]
+                        {
+                            new NodeAnnouncement(() => UiWidgets.LabelText(go),
+                                kind: AnnouncementKinds.Label),
+                        },
+                        OnActivate = () => UiWidgets.Click(go),
+                    });
+            }
+        }
+
+        // Visible MainMenu-scene buttons that are not sprite menu buttons, in visual order.
+        // Scene-scoped: FindObjectsOfType sees ADDITIVELY loaded scenes too (Settings/LoadWindow),
+        // and their same-named buttons would collide as duplicate control ids (found by sweep).
+        private static List<Button> ExtraButtons()
+        {
+            var list = new List<Button>();
+            foreach (var btn in UnityEngine.Object.FindObjectsOfType<Button>())
+                if (btn.gameObject.scene.name == "MainMenu"
+                    && btn.GetComponent<CustomMainMenuButton>() == null
+                    && UiWidgets.Visible(btn.gameObject))
+                    list.Add(btn);
+            list.Sort((a, c) =>
+            {
+                int byY = c.transform.position.y.CompareTo(a.transform.position.y);
+                return byY != 0 ? byY : a.transform.position.x.CompareTo(c.transform.position.x);
+            });
+            return list;
         }
 
         // The scene's menu buttons in visual order (top to bottom). Re-queried per render - never
