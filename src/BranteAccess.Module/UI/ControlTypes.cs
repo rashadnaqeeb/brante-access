@@ -70,6 +70,15 @@ namespace BranteAccess.Module.UI
             Common = () => RoleWord("tab"),
         };
 
+        /// <summary>A text-entry field: activation enters a modal edit (the screen captures raw input
+        /// while the game's input field has keyboard focus).</summary>
+        public static readonly ControlType Edit = new ControlType
+        {
+            Key = "edit",
+            Order = StandardOrder,
+            Common = () => RoleWord("edit"),
+        };
+
         /// <summary>An expandable group header (a tree section). No role word of its own - the announcer
         /// appends the expanded/collapsed state word.</summary>
         public static readonly ControlType Group = new ControlType
@@ -86,6 +95,6 @@ namespace BranteAccess.Module.UI
         };
 
         /// <summary>Every registered type. New types are added here.</summary>
-        public static readonly ControlType[] All = { Button, Toggle, Slider, RadioButton, ComboBox, Tab, Group, Text };
+        public static readonly ControlType[] All = { Button, Toggle, Slider, RadioButton, ComboBox, Tab, Edit, Group, Text };
     }
 }

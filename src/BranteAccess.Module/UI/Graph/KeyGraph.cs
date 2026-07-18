@@ -114,11 +114,14 @@ namespace BranteAccess.Module.UI.Graph
             }
 
             // Nothing matched (or first render): the start node - but prefer the SELECTED member of its
-            // stop (initial focus lands on the checked radio/tab, not the top of a long list).
+            // stop (initial focus lands on the checked radio/tab, not the top of a long list). An
+            // EXPLICIT start (the screen called SetStart) wins over the heuristic: a mixed form-stop
+            // containing radio pairs must still land where the screen said, not on a checked radio.
             if (resolved == null)
             {
                 var startNode = render.Nodes.ContainsKey(render.StartKey) ? render.Nodes[render.StartKey] : null;
-                var sel = startNode != null ? SelectedNodeInStop(render, startNode.StopKey) : null;
+                var sel = startNode != null && !render.ExplicitStart
+                    ? SelectedNodeInStop(render, startNode.StopKey) : null;
                 resolved = sel?.Id ?? startNode?.Id ?? render.StartKey;
             }
 

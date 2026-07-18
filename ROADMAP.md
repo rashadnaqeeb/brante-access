@@ -116,7 +116,18 @@ go to DECISIONS.md, not to the user.
       covered by their own Phase 3 items. Continue's unavailable-when-saveless gate verified in
       the Phase 2 uGUI-adapter item; activation with saves rides the save/load item.
       sweep.sh green 16/16)
-- [ ] todo - New-game flow: disclaimer, intro, name request window (text entry), chapter start
+- [x] verified - New-game flow: disclaimer, intro, name request window (text entry), chapter start
+      (2026-07-18: NameRequestScreen - subtitle, modal edit field ("Sir blank Brante, edit"),
+      two radio pairs off the live toggles ("Enabled, radio button, selected"), Start gated on
+      the model (name >= 2 letters) announcing the failed requirement; text entry captures raw
+      input (InputManager stands down; dev route mirrors it) and echoes characters from the
+      field's own text. DisclaimerScreen spoke all 3 pages on Enter. CutsceneScreen announced
+      "cutscene, spoken narration, any key skips", claims no input category (ui.down refused
+      "category UI inactive" while focusmode still fired), cutscene Updates un-patched so the
+      game's own skip keys stay live - scene auto-advanced to Intro proving Update runs. Main
+      menu drops from the stack the frame RUNNING flips: speech went Start -> disclaimer text
+      with no stale menu refocus. Chapter start window first exists at Chapter 1, unreachable
+      until the prologue is playable - rides its dedicated Phase 5 item, see DECISIONS.md)
 - [ ] todo - Settings window (sliders, toggles, language dropdown) - includes muting game audio
       by keyboard
 - [ ] todo - Save/load windows incl. chapter-select page, delete confirmation popup

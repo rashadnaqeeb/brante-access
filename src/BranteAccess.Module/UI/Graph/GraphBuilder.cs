@@ -291,9 +291,8 @@ namespace BranteAccess.Module.UI.Graph
                     render.Nodes[e.From].Transitions[e.Dir] = new Transition(e.To, e.Label);
             StitchModeBoundaries();
 
-            render.StartKey = _start != null && render.Nodes.ContainsKey(_start)
-                ? _start
-                : render.Order[0].Id;
+            render.ExplicitStart = _start != null && render.Nodes.ContainsKey(_start);
+            render.StartKey = render.ExplicitStart ? _start : render.Order[0].Id;
             StampPositions();
             return render;
         }

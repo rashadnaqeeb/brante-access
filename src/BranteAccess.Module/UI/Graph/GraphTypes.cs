@@ -207,6 +207,10 @@ namespace BranteAccess.Module.UI.Graph
     public sealed class GraphRender
     {
         public ControlId StartKey;
+
+        /// <summary>True when the screen SET the start explicitly (builder SetStart with a node that
+        /// exists) - initial landing honors it over the selected-member heuristic.</summary>
+        public bool ExplicitStart;
         public readonly Dictionary<ControlId, GraphNode> Nodes = new Dictionary<ControlId, GraphNode>();
 
         /// <summary>Declaration order - drives stop/region cycling and type-ahead scan order.</summary>

@@ -15,13 +15,15 @@ namespace BranteAccess.Module.Patches
         // Every listed Update body is INPUT-ONLY - skipping it removes nothing but key reads.
         // Deliberately not listed: NameRequestWindow.Update (also drives button interactable per
         // frame; handled with text entry in Phase 3), GameManager.Update and the Console toggle
-        // (dev-gated developer keys the mod leaves alone).
+        // (dev-gated developer keys the mod leaves alone), and the two cutscene classes
+        // (ChapterCutscene, CutsceneIntro): their key reads ARE the accessible path - a voiceover
+        // plays and any key / Enter skips; suppressing them left the player trapped in the
+        // cutscene with no keyboard at all (found live in the new-game flow). CutsceneScreen
+        // announces them; the game handles the keys.
         private static readonly Type[] InputOnlyUpdates =
         {
             typeof(_Scripts.AMVCC.Controllers.TextController),
             typeof(_Scripts.Managers.UIManager),
-            typeof(ChapterCutscene),
-            typeof(CutsceneIntro),
             typeof(_Scripts.AMVCC.Views.Windows.ChapterFinal.ChapterFinalWindowController),
             typeof(_Scripts.AMVCC.Views.Windows.ChapterStart.ChapterStartWindowController),
             typeof(_Scripts.AMVCC.Views.Windows.Credits.WindowCreditsController),

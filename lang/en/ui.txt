@@ -23,9 +23,24 @@ role.slider = slider
 role.radiobutton = radio button
 role.combobox = combo box
 role.tab = tab
+role.edit = edit
 
 # Control states
 state.unavailable = unavailable
+state.selected = selected
+
+# Text entry (edit fields; a hint is allowed - modal editing is an unusual control)
+edit.start = editing, Enter to accept
+edit.blank = blank
+edit.space = space
+
+# Name request popup (the Start gate is the game's dimmed button; it carries no reason string)
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = unavailable, name needs at least 2 letters
+
+# Voiceover cutscenes (the game's own skip keys stay live; the hint is the content)
+cutscene.intro = cutscene, spoken narration, any key skips
+cutscene.chapter = cutscene, spoken narration, Enter skips
 
 # Main menu buttons (the game's labels are localized sprites - no game string exists)
 mainmenu.continue = Continue

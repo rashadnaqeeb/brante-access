@@ -112,14 +112,15 @@ namespace BranteAccess.Module.Input
             }
         }
 
+        /// <summary>Dispatching stands down this frame: the player is typing in a game text field
+        /// (hero-name entry, dev console) or the focused screen captures raw input. Guards Tick AND
+        /// <see cref="Dispatch"/> - the dev route must mirror what a physical press would do.</summary>
+        public static bool DispatchSuppressed
+            => IsTypingInTextField() || (SuppressDispatch != null && SuppressDispatch());
+
         public static void Tick()
         {
-            // Don't steal keystrokes while the player is typing in a game text field
-            // (the hero-name entry; the dev console).
-            if (IsTypingInTextField()) return;
-
-            // A focused screen capturing raw input wants keys to reach the game untouched.
-            if (SuppressDispatch != null && SuppressDispatch()) return;
+            if (DispatchSuppressed) return;
 
             RebuildLive(); // this frame's category claims + chord shadowing
 
@@ -157,13 +158,30 @@ namespace BranteAccess.Module.Input
         }
 
         /// <summary>Fire the action with this key through the same routing a real press takes
-        /// (UI to the navigator first, else Performed). The dev driver's entry point - features are
-        /// verified through it. False when no action has the key.</summary>
+        /// (UI to the navigator first, else Performed) - including the category gate: an action
+        /// whose category no screen currently claims does not fire, exactly like the physical key
+        /// it mirrors. The dev driver's entry point - features are verified through it. False when
+        /// no action has the key or its category is inactive.</summary>
         public static bool Dispatch(string key)
         {
+            if (DispatchSuppressed) return false;
+            RebuildLive();
             for (int i = 0; i < _actions.Count; i++)
-                if (_actions[i].Key == key) { Fire(_actions[i]); return true; }
+                if (_actions[i].Key == key)
+                {
+                    if (!_activeCats.Contains(_actions[i].Category)) return false;
+                    Fire(_actions[i]);
+                    return true;
+                }
             return false;
+        }
+
+        /// <summary>Whether this category is live right now (screen claims + Global). For the dev
+        /// driver's error reporting - <see cref="Dispatch"/> enforces the gate itself.</summary>
+        public static bool CategoryActive(InputCategory cat)
+        {
+            RebuildLive();
+            return _activeCats.Contains(cat);
         }
 
         private static void Fire(InputAction action)

@@ -103,20 +103,33 @@ namespace BranteAccess.Module
         // per-surface screens that speak and build graphs.
         private static void RegisterScreens()
         {
-            ScreenManager.Register(new MainMenuScreen());
-            // Settings/LoadWindow open as ADDITIVE scene loads (MainMenuController), not window slots.
-            ScreenManager.Register(new PredicateScreen("settings",
-                Message.Localized("ui", "screen.settings"), 10, () => GameUi.IsSceneLoaded("Settings")));
-            ScreenManager.Register(new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null));
-            ScreenManager.Register(new PredicateScreen("popup", null, 20, () => GameUi.OpenedPopup != null));
-            ScreenManager.Register(new PredicateScreen("pause", null, 24, () => GameUi.PauseOpen));
-            Mod.Log("ScreenManager: 5 outer screens registered");
+            var screens = new Screens.Screen[]
+            {
+                new MainMenuScreen(),
+                new NameRequestScreen(),
+                new DisclaimerScreen(),
+                new CutsceneScreen(),
+                // Settings/LoadWindow open as ADDITIVE scene loads (MainMenuController), not window slots.
+                new PredicateScreen("settings",
+                    Message.Localized("ui", "screen.settings"), 10, () => GameUi.IsSceneLoaded("Settings")),
+                new PredicateScreen("window", null, 10, () => GameUi.OpenedWindow != null),
+                new PredicateScreen("popup", null, 20, () => GameUi.OpenedPopup != null),
+                new PredicateScreen("pause", null, 24, () => GameUi.PauseOpen),
+            };
+            foreach (var s in screens) ScreenManager.Register(s);
+            Mod.Log("ScreenManager: " + screens.Length + " outer screens registered");
         }
 
         // IDevDriver - probed by the host per request, so the newest generation always answers.
 
         public string DispatchUi(string action)
-            => InputManager.Dispatch(action) ? "dispatched " + action : null;
+        {
+            if (InputManager.DispatchSuppressed) return "suppressed (raw input capture)";
+            foreach (var a in InputManager.Actions)
+                if (a.Key == action && !InputManager.CategoryActive(a.Category))
+                    return "not dispatched: category " + a.Category + " inactive";
+            return InputManager.Dispatch(action) ? "dispatched " + action : null;
+        }
 
         public string DescribeNav()
         {

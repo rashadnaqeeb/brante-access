@@ -20,7 +20,11 @@ namespace BranteAccess.Module.Screens
         public override string Key => "mainmenu";
         public override Message ScreenName => Message.Localized("ui", "screen.mainmenu");
         public override int Layer => 0;
-        public override bool IsActive() => GameUi.SceneName == "MainMenu";
+        // The PREGAME gate drops this screen the instant a game starts (SetCharacterName and save
+        // load flip RUNNING before the menu scene unloads) - otherwise the popup closing would
+        // refocus the menu and speak stale lines over the scene transition.
+        public override bool IsActive()
+            => GameUi.SceneName == "MainMenu" && GameUi.State == GameState.PREGAME;
 
         public override void Build(GraphBuilder b)
         {

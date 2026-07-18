@@ -5,6 +5,42 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## New-game flow judgment calls (2026-07-18, Phase 3)
+
+- **Cutscene Update bodies are UN-patched** (CutsceneIntro, ChapterCutscene removed from
+  FocusModePatches, 14 -> 12 methods): their key reads ARE the accessible skip path - a blind
+  player pressing any key to skip is exactly the intended interaction. Suppressing them while a
+  cutscene screen held focus trapped the player in an unskippable scene. CutsceneScreen claims
+  NO input category so every key reaches the game untouched; the mod only announces what is
+  playing and how to skip.
+- **Text entry is modal** (NameRequestScreen): activating the name field hands the keyboard to
+  the game's TMP_InputField (CapturesRawInput; InputManager stands down entirely), the mod
+  echoes typed characters by diffing the field's own text (model state, never our key events),
+  Enter/Escape end the mode via the field's own submit/cancel. Mirrors wotr-access's key-capture
+  pattern.
+- **The dev /input route mirrors physical-press gating**: Dispatch now stands down during raw
+  input capture AND refuses actions whose category no screen claims ("not dispatched: category
+  UI inactive"). Found live: during the cutscene, /input ui.down dispatched even though a
+  physical DownArrow would have done nothing - the driver must never be able to do what a key
+  cannot, or verification lies.
+- **Explicit start beats the selected-member landing heuristic** (GraphBuilder.SetStart ->
+  GraphRender.ExplicitStart): the name-request form is one stop whose radios have a selected
+  member, so the wotr landing rule (remembered -> selected -> first) landed initial focus on a
+  checked radio mid-form instead of the subtitle at the top. A screen that declares a start
+  means it; the selected-member rule still applies to stops without one.
+- **Start button availability is read from the model** (name length >= 2), not
+  Button.interactable: the game dims the button both for short names AND as a double-click
+  guard after Start fires, so interactable alone announced a misleading "unavailable" during
+  the transition. The failed-requirement line is mod-authored (namerequest.start_unavailable) -
+  the game's only signal is the dimmed sprite, no string exists.
+- **Main menu screen gates on PREGAME** (GameUi.State): RUNNING flips inside SetCharacterName
+  BEFORE the menu scene unloads, so without the gate the closing name popup refocused the menu
+  and spoke stale lines over the scene transition.
+- **"Chapter start" defers to its dedicated Phase 5 item**: the ChapterStartWindowController
+  first exists when Chapter 1 begins, which requires playing through the prologue - unreachable
+  until the Phase 4 event screen lands. The Phase 3 new-game item covers the flow up to the
+  first playable scene (name -> disclaimer -> intro cutscene -> Intro event loads).
+
 ## Main menu screen judgment calls (2026-07-18, Phase 3)
 
 - **Discord URL buttons are in the graph** (stop 2, game's own TMP labels): the "no unspoken

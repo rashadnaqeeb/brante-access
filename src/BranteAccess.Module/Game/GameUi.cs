@@ -25,5 +25,10 @@ namespace BranteAccess.Module.Game
 
         public static bool PauseOpen =>
             Manager != null && Manager.PauseWindow != null && Manager.PauseWindow.activeInHierarchy;
+
+        /// <summary>PREGAME at the menu and pre-story scenes; RUNNING flips the instant a game
+        /// begins (SetCharacterName / save load), BEFORE the menu scene unloads - screens gate on
+        /// it to drop out early instead of speaking stale refocus lines mid-transition.</summary>
+        public static GameState State => GameManager.Instance.CurrentGameState;
     }
 }
