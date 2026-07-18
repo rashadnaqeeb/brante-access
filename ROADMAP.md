@@ -480,7 +480,9 @@ go to DECISIONS.md, not to the user.
       directly, which had forked into an unreachable NRE path), final Continue exits to the
       relive chapter select, rewind popup ("Rewind to Chapter Youth" + description) confirmed,
       Youth interlude + chapter start reached. Standard death verified earlier (line 245
-      item). Remaining: GameOverWindow + its restart/continue popup.)
+      item). A second trial later the same day traversed COMPLETELY hands-off by the story
+      driver (23 steps: judgment pages, answers, Continue, relive select, rewind confirm)
+      with zero mod errors. Remaining: GameOverWindow + its restart/continue popup.)
 - [x] verified - Chapter title splash (StartPictureHelper, "ChildhoodPicture" et al - the
       click-anywhere picture between chapter select and the chapter start book)
       (2026-07-18: ChapterPictureScreen - one node, game's localized title + "Enter continues"
