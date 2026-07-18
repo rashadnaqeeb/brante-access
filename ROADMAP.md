@@ -342,7 +342,18 @@ go to DECISIONS.md, not to the user.
       sits active with unlocalized Russian text until the controller's Start, and the first
       graph build beat it. RelationPopup still unexamined - kept on the todo list below.)
 - [ ] todo - RelationPopup (relation-change popup surface; unexamined)
-- [ ] todo - Empire window
+- [x] verified - Empire window
+      (2026-07-18: EmpireWindowScreen - the Overseer and Patriarch office rows as hud.pair
+      label-value using the window's own header texts (transform sibling "Name"), Space reads
+      Readouts.CharacterDetail where the game tracks a character behind the office (null for
+      "None"/hero outcomes), then the province parameter rows through the shared ParameterRows
+      sweep. Build gated on the first active parameter row matching its own I2 translation
+      (Start()-race guard, Home precedent). Verified live in chapter 2 scene 1 via the real
+      HUD button: entry "The Province" (HUD.Empire) + "Overseer Archduke Milanidas"; Space
+      read the Archduke's description and the Patriarch Fotis description on his row; rows
+      "Power -4, Overseer in Power" / "Church -4, Old Faith" / "Wealth of Magra 6, Security" /
+      "Order 8, Peace"; Space on Order read the scale with the now marker; Escape back to
+      the scene.)
 - [ ] todo - Work window
 - [x] verified - Home window
       (2026-07-18: HomeWindowScreen - heir row folded as label plus value ("Heir Stephan

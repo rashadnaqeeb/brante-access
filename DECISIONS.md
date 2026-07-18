@@ -5,6 +5,17 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Empire window judgment calls (2026-07-18, Phase 5)
+
+- **Office rows are hud.pair with the window's own header texts**: the Overseer and
+  Patriarch rows pair the sibling "Name" header TMP ("Overseer" / "Patriarch") with the
+  holder-name TMP, reusing the existing hud.pair template rather than a new key. The header
+  text is the game's own localized label, read live at speech time.
+- **Space reads a character description only where the game tracks a character**: the
+  controller's Imperator/Patriarkh CharacterIdentification carries .Character for tracked
+  office holders and leaves it null for "None"/hero outcomes; the tooltip stays silent on
+  null rather than inventing a "no details" line - matching the game, which shows nothing.
+
 ## Relations window judgment calls (2026-07-18, Phase 5)
 
 - **Build gate is the controller's own model query, not the placeholder**: the window prefab
