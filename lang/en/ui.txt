@@ -58,6 +58,24 @@ choice.op.moreequal = at least
 choice.op.lessequal = at most
 choice.op.not = not
 
+# Choice detail readout (Space/F1 on a choice) - composed from the same serialized data the
+# game's hover tooltips render. Section headers ("Conditions Met", "Consequences") and the
+# "now" word are the game's own strings passed in as values.
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, met
+choice.cond.notmet = {row}, not met
+choice.cond.any = any of, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name} relation {delta}
+choice.cons.set = {name}, {value}
+
+# Parameter scale readout (Space/F1 on a stat row) - the game's ParameterValueTooltip data;
+# segment texts and the parameter name and description are the game's strings.
+param.scale.single = {value}, {text}
+param.scale.range = {min} to {max}, {text}
+param.scale.now = {now}, {row}
+
 # Voiceover cutscenes (the game's own skip keys stay live; the hint is the content)
 cutscene.intro = cutscene, spoken narration, any key skips
 cutscene.chapter = cutscene, spoken narration, Enter skips

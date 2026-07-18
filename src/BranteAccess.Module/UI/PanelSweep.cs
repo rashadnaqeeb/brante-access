@@ -89,6 +89,10 @@ namespace BranteAccess.Module.UI
         {
             if (!IsRow(text, value)) return;
             var t = text;
+            // Stat rows carry the game's ParameterGetSet - Space reads the same scale detail
+            // the game's ParameterValueTooltip shows on hover, composed from the parameter
+            // asset at speech time.
+            var pgs = t.GetComponentInParent<_Scripts.AMVCC.Views.Windows.ParameterGetSet>();
             b.AddItem(ControlId.Referenced(t, idPrefix + ":text:" + t.GetInstanceID()),
                 new NodeVtable
                 {
@@ -98,6 +102,8 @@ namespace BranteAccess.Module.UI
                         new NodeAnnouncement(() => UiWidgets.LabelText(t.gameObject),
                             kind: AnnouncementKinds.Label),
                     },
+                    OnTooltip = pgs == null ? (System.Action)null
+                        : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
                 });
         }
     }

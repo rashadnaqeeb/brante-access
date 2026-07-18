@@ -5,6 +5,21 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Tooltip readout judgment calls (2026-07-18, Phase 4)
+
+- **Tooltips are composed from the model, never opened.** Space speaks what the game's hover
+  tooltip renders, built from the same serialized data (ParameterButtonChanger conditions and
+  effects, ParameterGetSet's Parameter asset) - the house rule against reading a tooltip view
+  that lags focus. The game's tooltip gates are honored exactly: conditions only when
+  NeedCheckPossible, consequences only when UseConsequence and not NoConsequence and not
+  story mode.
+- **Every condition row carries met or not met plus the live current value** ("now 0" - the
+  game's own Now word). The visual tooltip encodes met-ness as row color; speech needs words,
+  and current values are what the sighted player reads off the same tooltip.
+- **The current scale segment is marked by the game's "now" word spoken first** ("now, 10 to
+  19, Full of Power"): the game marks it with bold and color; "selected" would be wrong (it is
+  a value fact, not a selection).
+
 ## Death window judgment calls (2026-07-18, Phase 4)
 
 - **DeathScreen sits at layer 21** for the same popup-slot reason as the interlude: the death

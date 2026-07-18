@@ -250,8 +250,19 @@ go to DECISIONS.md, not to the user.
       re-seat). The prefab shows placeholder title/text ("New Text" + Russian block) that the
       game rewrites a beat after ShowDeathPopup; title and current-page rewrites re-deliver,
       verified: "First Death" then the English page 0 spoken after the placeholders.)
-- [ ] todo - In-scene tooltips reachable by keyboard: condition tooltip (requirements),
+- [x] verified - In-scene tooltips reachable by keyboard: condition tooltip (requirements),
       consequence tooltip, parameter value tooltip
+      (2026-07-18: Space/F1 on a choice speaks the game's two hover tooltips composed from the
+      choice's own model data (Readouts.ChoiceDetails): "Conditions Met, Willpower at least 0,
+      now 0, met. Consequences, Willpower -5, now 0, Robert Brante, GRATEFUL, Robert Brante
+      relation +1, now 2"; a no-condition choice speaks only "Consequences, Willpower +10,
+      now 0"; a detail-less node says "no tooltip". Space on a stat panel row (ParameterGetSet
+      via PanelSweep) speaks the scale tooltip: "Willpower. Your remaining inner strength...
+      -10 to -1, Exhausted, 0 to 9, Ready for Action, now, 10 to 19, Full of Power, 20 to 30,
+      Prepared for Anything" with "now" preceding the current segment. Headers and the now
+      word are game strings (ConditionIsMet/ConditionNotMet/Consequence/Now). The not-met
+      header and OR-tree branch live only on locked choices - composition shared with the
+      verified unavailable announcement; confirm wording when one appears naturally.)
 - [ ] todo - Scene-phase gating: no activation during page-turn/show/hide animations
       (IsButtonsBlocked, animation events)
 

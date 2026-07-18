@@ -233,6 +233,10 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Enabled),
                         },
                         SearchText = () => ChoiceText(choice),
+                        // The game's hover-tooltip detail (conditions with current values,
+                        // consequence stat effects), composed from the choice's own model data.
+                        OnTooltip = () => Mod.Speech.Speak(
+                            Readouts.ChoiceDetails(choice) ?? Loc.T("nav.no_details")),
                         OnActivate = () =>
                         {
                             if (!choice.IsButtonInteractable)
