@@ -471,8 +471,18 @@ go to DECISIONS.md, not to the user.
 
 - [ ] todo - All remaining tooltip types (TooltipWithTitle, ObjectiveTooltip, EventTooltip,
       SimpleTooltip) reachable and spoken wherever they appear
-- [ ] todo - Objectives/quest surfaces (GameObjectives, ObjectiveContainerBehaviour) spoken
-- [ ] todo - Any unlockable/achievement notifications (UnlockedItemBehaviour, GetAchievement)
+- [x] verified - Objectives/quest surfaces (GameObjectives, ObjectiveContainerBehaviour)
+      (2026-07-18: examined - neither names a UI surface. GameObjectives is a serializable
+      data list on the save model; ObjectiveContainerBehaviour only deactivates itself at
+      Start when its container is empty. Every real objective surface is already covered
+      and verified: Destiny window rows + Space details, chapter final objective sweeps,
+      and the objective-earned popup notification.)
+- [x] verified - Unlockable/achievement notifications (UnlockedItemBehaviour, GetAchievement)
+      (2026-07-18: examined - GetAchievement is a data marker (an ObjectiveEnum field, no
+      behavior); Steam achievement toasts render in the Steam overlay, outside the game UI
+      and out of mod scope. UnlockedItemBehaviour is a static TMP label localized in Start,
+      spoken by whatever screen sweeps the window it sits in; the scene census below will
+      surface any instance living on an uncovered surface.)
 
 ## Phase 8 - Verification sweeps (standing + final)
 
