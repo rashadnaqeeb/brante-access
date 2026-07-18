@@ -6,8 +6,6 @@ using BranteAccess.Module.UI;
 using BranteAccess.Module.UI.Graph;
 using UnityEngine;
 using CharacterWindow = _Scripts.AMVCC.Views.Windows.Character.CharacterWindowManager;
-using ParameterComponent = _Scripts.AMVCC.Views.Windows.ParameterComponent;
-using ParameterGetSet = _Scripts.AMVCC.Views.Windows.ParameterGetSet;
 using GameLoc = I2.Loc.LocalizationManager;
 
 namespace BranteAccess.Module.Screens
@@ -112,27 +110,7 @@ namespace BranteAccess.Module.Screens
                     });
                 });
 
-            // The chapter era's active parameter panel only (inactive panels are excluded by
-            // the live component search). Name, value and segment fold onto one row; Space
-            // reads the full scale breakdown from the parameter asset.
-            foreach (var par in wm.GetComponentsInChildren<ParameterComponent>())
-            {
-                var pc = par;
-                var pgs = pc.GetComponent<ParameterGetSet>();
-                b.AddItem(ControlId.Referenced(pc, "character:parameter:" + pc.GetInstanceID()),
-                    new NodeVtable
-                    {
-                        ControlType = ControlTypes.Text,
-                        Announcements = new[]
-                        {
-                            new NodeAnnouncement(() => pc.Name.text + " " + pc.TextValue.text
-                                + (string.IsNullOrEmpty(pc.Descr.text) ? "" : ", " + pc.Descr.text),
-                                kind: AnnouncementKinds.Label),
-                        },
-                        OnTooltip = pgs == null ? (System.Action)null
-                            : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
-                    });
-            }
+            ParameterRows.Add(b, wm, "character:parameter:");
 
             b.PopContext();
 

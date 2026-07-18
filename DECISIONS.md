@@ -5,6 +5,31 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Home window judgment calls (2026-07-18, Phase 5)
+
+- **Parameter rows extracted to a shared ParameterRows helper**: the Home window fills its
+  ParameterComponent rows byte-for-byte the way the Character window does (same controller
+  code shape: Name from I2, TextValue from the model, Descr from CheckSegment), so the folded
+  row plus Space-scale-readout node moved from CharacterWindowScreen into Screens/
+  ParameterRows and both windows call it. Future stat windows (Empire era panels) reuse it.
+- **Populate gate compares a parameter name with its own I2 translation**: Home has no hero
+  name to gate on (Character precedent); instead the first ParameterComponent's Name text
+  must equal GetTranslation of its ParameterGetSet asset's enum name - exactly the write the
+  controller's Start() performs, so the gate opens on the game's own populate result for
+  both the normal and broken-family panels.
+- **Heir row is plain hud.pair from the live component texts**: the controller's SetHeir
+  already resolves the heir name (hero full name with the noble-sword el, or the sibling's
+  true name) into the TextValue text; re-deriving it mod-side would duplicate GetHeirName
+  logic for nothing. Guarded by Visible(Heir) since the broken panel hides it.
+- **Broken-family panel coded but unverifiable in chapter 1**: same parameter sweep (the
+  active-panel component search covers whichever panel the game shows) plus the collapse
+  objective row reading Readouts.ObjectiveDetails on Space. Needs a chapter 3+ save where
+  СемьяРаспалась is set - listed as a deferred confirmation on the ROADMAP item.
+- **Dev-only gotcha, not a mod behavior**: opening a window by calling the HUD handler with
+  a null sender NREs inside UIManager.Show at OnSelect and skips the ShowBackButtonEvent
+  broadcast (back button never appears). Verification opens windows by clicking the real
+  HUD button GameObject through UiWidgets.Click.
+
 ## Destiny window judgment calls (2026-07-18, Phase 5)
 
 - **Objective conditions speak the earn-popup's rendering, not the hover panel's**: the

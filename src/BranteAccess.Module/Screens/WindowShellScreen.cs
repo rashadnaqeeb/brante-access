@@ -21,6 +21,7 @@ namespace BranteAccess.Module.Screens
             "Window_Character",
             "Window_Family",
             "Window_Destiny",
+            "Window_Home",
         };
 
         public override string Key => "window";

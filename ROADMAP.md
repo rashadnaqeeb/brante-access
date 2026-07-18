@@ -333,7 +333,18 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Relations window (+ RelationPopup, relation tooltips)
 - [ ] todo - Empire window
 - [ ] todo - Work window
-- [ ] todo - Home window
+- [x] verified - Home window
+      (2026-07-18: HomeWindowScreen - heir row folded as label plus value ("Heir Stephan
+      Brante"), then the household parameter rows through the new shared ParameterRows helper
+      (extracted from the Character window): "Reputation 3, Tarnished Honor" / "Wealth 5,
+      Moderate Means" / "Unity 6, Disagreements", Space read the Unity scale with segments and
+      the now marker, Escape closed back to the scene. Entry gated on the first parameter row
+      matching its own I2 translation (Start()-race guard). Opened via the game's real HUD
+      button click path. Character window re-verified after the ParameterRows refactor
+      (identity rows, "Perception 3, Curious", scale readout, Escape). Broken-family panel
+      (chapter 3+ СемьяРаспалась objective) coded - same parameter sweep plus the collapse
+      objective with Space reading Readouts.ObjectiveDetails - deferred confirmation: needs a
+      save where the family has broken.)
 - [ ] todo - Map window
 - [x] verified - Destiny window (+ objective earned shine → spoken notification)
       (2026-07-18: DestinyWindowScreen - chapter tabs as a tab row (locked tabs announce and
