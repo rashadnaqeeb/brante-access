@@ -341,7 +341,19 @@ go to DECISIONS.md, not to the user.
       controller's own model count (unlocked non-family characters) - the prefab placeholder
       sits active with unlocalized Russian text until the controller's Start, and the first
       graph build beat it. RelationPopup still unexamined - kept on the todo list below.)
-- [ ] todo - RelationPopup (relation-change popup surface; unexamined)
+- [x] verified - RelationPopup (examined: no surface to build)
+      (2026-07-18: three findings close this. The RelationPopup class itself is a generic
+      show/hide container with a click-away background, referenced by no game code (prefab
+      serialized events only) and with ZERO loaded instances at the main menu or in a
+      chapter 2 scene with Relations open (Resources.FindObjectsOfTypeAll) - if a story
+      scene ever instantiates one, the scene census item below will surface it. Relation
+      CHANGES are the SceneConsequenceGenerator NPS panels/relation rows - they instantiate
+      as children of the generator, so the already-verified SceneScreen stat-panel sweep
+      delivers them ("+1 (Become 3)" composition, Phase 4). The hover RelationTooltip
+      (UIManager slot) has full data parity with the mod's folds: name/role/relation
+      pair/status on the row labels, description + status detail behind Space
+      (Readouts.CharacterDetail) in Family, Relations, and Empire - per the house rule the
+      mod reads the model, not the tooltip.)
 - [x] verified - Empire window
       (2026-07-18: EmpireWindowScreen - the Overseer and Patriarch office rows as hud.pair
       label-value using the window's own header texts (transform sibling "Name"), Space reads
