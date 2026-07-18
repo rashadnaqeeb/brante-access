@@ -263,8 +263,19 @@ go to DECISIONS.md, not to the user.
       word are game strings (ConditionIsMet/ConditionNotMet/Consequence/Now). The not-met
       header and OR-tree branch live only on locked choices - composition shared with the
       verified unavailable announcement; confirm wording when one appears naturally.)
-- [ ] todo - Scene-phase gating: no activation during page-turn/show/hide animations
+- [x] verified - Scene-phase gating: no activation during page-turn/show/hide animations
       (IsButtonsBlocked, animation events)
+      (2026-07-18: keyboard activation now honors the game's animation-time input block - the
+      CanvasGroup.blocksRaycasts chain SceneAnimationController switches off during page-turn/
+      show/hide - at the shared UiWidgets boundary (Interactable and Click both check
+      RaycastsReachable), so Enter cannot double-fire through a fading panel the mouse could
+      not reach. Smoke-tested live: blocksRaycasts flipped off on the open interlude popup via
+      /eval, Enter on its Continue refused (popup stayed open, stack unchanged); flipped back,
+      Enter closed it and the flow proceeded ("Grandfather's Return" event popup delivered).
+      Page Enter was already gated on the game's own NextButton.interactable and choice Enter
+      on IsButtonInteractable plus the GetButtonClickedState resolve gate (both verified
+      earlier). IsButtonsBlocked itself gates only HudController buttons - the Phase 5 HUD
+      item must honor it there.)
 
 ## Phase 5 - HUD and service windows
 

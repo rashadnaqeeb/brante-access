@@ -5,6 +5,17 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Animation gating judgment calls (2026-07-18, Phase 4)
+
+- **Keyboard activation honors blocksRaycasts.** The game blocks input during scene animations
+  by switching CanvasGroups' blocksRaycasts off, which only stops the MOUSE - our ExecuteEvents
+  path goes around the raycaster. UiWidgets.Click and Interactable now walk the group chain and
+  refuse what a mouse click could not reach. The gate lives at the shared boundary, not
+  per-screen, so every current and future surface inherits it.
+- **A blocked activation with no refusal branch is a silent no-op**, matching what the sighted
+  player gets clicking a mid-animation panel (nothing). Nodes that already carry refusal
+  branches speak the unavailable word as before.
+
 ## Tooltip readout judgment calls (2026-07-18, Phase 4)
 
 - **Tooltips are composed from the model, never opened.** Space speaks what the game's hover

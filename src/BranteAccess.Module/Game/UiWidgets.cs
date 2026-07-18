@@ -50,25 +50,43 @@ namespace BranteAccess.Module.Game
         }
 
         /// <summary>Interactable through the whole CanvasGroup chain - Selectable.IsInteractable
-        /// already folds in every parent group's interactable flag.</summary>
+        /// folds in every parent group's interactable flag; the raycast chain adds the game's
+        /// animation-time input block (see <see cref="RaycastsReachable"/>).</summary>
         public static bool Interactable(GameObject go)
         {
             if (go == null) return false;
             var selectable = go.GetComponent<Selectable>();
-            return selectable != null && selectable.IsInteractable();
+            return selectable != null && selectable.IsInteractable() && RaycastsReachable(go);
         }
 
         /// <summary>Activate through the game's own pointer-click path (ExecuteEvents), so
         /// Button.OnPointerClick runs its interactable check, transitions, sounds, and onClick
         /// exactly as a mouse click would. False when the object handles no click (caller
-        /// speaks its "nothing to activate" feedback).</summary>
+        /// speaks its "nothing to activate" feedback) or the game is blocking input to it
+        /// (a mouse click could not reach it either).</summary>
         public static bool Click(GameObject go)
         {
-            if (go == null) return false;
+            if (go == null || !RaycastsReachable(go)) return false;
             var handler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(go);
             if (handler == null) return false;
             ExecuteEvents.Execute(handler, new PointerEventData(EventSystem.current),
                 ExecuteEvents.pointerClickHandler);
+            return true;
+        }
+
+        /// <summary>Could a mouse click reach this control right now? The game blocks input
+        /// during page-turn/show/hide animations by switching ancestor CanvasGroups'
+        /// blocksRaycasts off (SceneAnimationController) - keyboard activation goes around the
+        /// raycaster, so it must honor the same block or Enter double-fires mid-animation.</summary>
+        private static bool RaycastsReachable(GameObject go)
+        {
+            for (var t = go.transform; t != null; t = t.parent)
+            {
+                var group = t.GetComponent<CanvasGroup>();
+                if (group == null) continue;
+                if (!group.blocksRaycasts) return false;
+                if (group.ignoreParentGroups) break;
+            }
             return true;
         }
     }
