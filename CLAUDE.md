@@ -54,8 +54,9 @@ HudController.cs`, `_Scripts/AMVCC/Views/Windows/*` (all windows), `Messenger.cs
 
 ## Modding route
 
-**BepInEx 5 (x64, Mono)** - the game has no native mod system. Plugin targets `net48`
-(needs the .NET Framework 4.8 targeting pack), references game assemblies from `<Game>\..._Data\Managed`
+**BepInEx 5 (x64, Mono)** - the game has no native mod system. Plugin targets `net472`
+(Unity 2018.3's .NET 4.x Mono profile; drop to net471/net46 only if an API turns out missing at
+runtime - record it here if so), references game assemblies from `<Game>\..._Data\Managed`
 and BepInEx's bundled Harmony (HarmonyX, use 2.x API). Prism (`prism.dll`) deploys next to the
 game exe. Install for players = copy files (screen-reader-friendly); no admin, no registry.
 
@@ -71,10 +72,14 @@ or the copy fails silently on locked DLLs - then you test a stale build. `-c Rel
 compiles without deploying. (Exact project layout is created in the bring-up phase; keep this
 section updated as it lands.)
 
-Game control (game window does NOT need focus once the dev server forces runInBackground):
-- Kill: `powershell -c "Stop-Process -Name 'The Life and Suffering of Sir Brante' -Force -ErrorAction SilentlyContinue"`
-- Launch: `powershell -c "Start-Process 'steam://rungameid/1068500'"` (verify appid on first use;
-  if direct exe launch works without Steam DRM complaints, prefer it and record that here.)
+Game control (game window does NOT need focus once the dev server forces runInBackground).
+Steam **appid 1272160** (verified from appmanifest). Carried gotcha from the Disco project: do
+NOT invoke `powershell.exe` from the Bash tool (the auto-mode classifier blocks it) and
+`steam://` URLs silently no-op - use these exact forms:
+- Launch: `"C:/Program Files (x86)/Steam/steam.exe" -applaunch 1272160`
+- Kill: `MSYS_NO_PATHCONV=1 taskkill.exe /F /IM "The Life and Suffering of Sir Brante.exe"`
+  (plain `taskkill` from Bash mangles `/F` into a path)
+- If direct exe launch works without Steam DRM complaints, prefer it and record that here.
 - Mute game audio via Settings volume sliders once reachable, or the SoundManager from the REPL,
   so unattended runs stay quiet. Record the chosen mechanism here.
 
@@ -97,25 +102,77 @@ reading back speech - act, then listen, in one /eval or /input + /speech pair. R
 source to discover structure; use the live server to confirm runtime values. A Harmony patch is
 smoke-tested by calling the patched method from /eval and expecting the announcement.
 
-## Hard rules (carried from the reference mods)
+## Hard rules (migrated from wotr-access and Non-Visual Calculus - binding here)
 
-- **Speech never interrupts by default.** Queued speech is the house style; interrupt only for
-  focus moves under held-key repeat.
+**Speech & announcements**
+- **Speech never interrupts by default.** Queued is the house style; interrupt only where an
+  action supersedes prior speech (focus moves under key repeat). All speech goes through the
+  Tts facade / speech pipeline - never call a backend (Prism/SAPI) directly.
 - **Speak on delivery, driven by model state** - never off our own input. Find the same signal
   the game's view uses for "this is visible now" (game state, Messenger events, SceneStateMachine
   phase) and key announcements off that, once per new content.
 - **Visibility gates**: hidden is not closed. Never let Enter activate through a window the game
-  has hidden (animations, popup transitions). Gate activation on the game's own shown state.
-- **Pass game text through** - the game already localizes; never re-translate or hardcode English
-  copies of game strings. Mod-authored strings go through the mod's localization table
-  (port wotr-access's `Loc`/`Message` layer) with enGB as the complete manifest.
-- **Strip TMP rich text at the speech boundary**, keep raw text where links/markup matter.
+  has hidden (animations, popup transitions, `IsButtonsBlocked`). Gate activation on the game's
+  own shown state.
+- **Strip TMP rich text at the speech boundary**; keep raw text where markup matters upstream.
+- **Announcement style** (users are expert screen-reader users - strip fluff, never information):
+  distinguishing word first ("anchored cursor", not "cursor anchored"); no navigation hints
+  except for unusual controls; no redundant context or obvious type suffixes; include ALL
+  gameplay-relevant detail - concise means no fluff, not less information; no emdashes or fancy
+  punctuation (readers voice them); "selected" is the selected-state word, never invent
+  per-screen synonyms; expand on-screen abbreviations to full words using the game's own
+  localized long forms; label readouts with the game's own header string where one exists; fold
+  an item's detail onto the item itself rather than a separate stop (saves a keypress, makes it
+  type-ahead searchable); read detail from the model, not a tooltip that lags focus.
 - **Transcript pattern for the event scene**: passage rows + choices in one stop, no position
-  chatter, silent re-home on new content, the delivery announcement is the speech.
+  chatter on transcript lines, silent re-home on new content, the delivery announcement is the
+  speech.
 - **Unavailable choices announce as unavailable with the failed requirement** (the per-check
   data is on `ParameterButtonChanger`), never hidden or silently dead.
+
+**State & strings**
+- **Never cache game state.** No copying game data into mod-side collections or strings for
+  later; re-query the game at speech time. The only acceptable "cache" is a reference to a live
+  component read at speech time. A blind player trusts speech absolutely - stale data is worse
+  than no data. Centralize shared reads in one adapter class per surface.
+- **Reuse game data; never hardcode game text.** The game already localizes: fetch through
+  I2 `LocalizationManager.GetTranslation` or read live components; reuse the game's own
+  placeholder substitution helpers (hero name, `<el>`). Before authoring any string, check
+  whether a game string exists; author only when none does.
+- **No inline user-facing string literals.** Every mod-authored spoken/displayed word goes
+  through the mod's central strings/localization table (port wotr's `Loc.T(key)` layer; enGB
+  files are the complete manifest; other languages are a dropped-in folder). Word order lives in
+  `{0}` templates - never concatenate English grammar around a value in code. Punctuation and
+  log/debug text are exempt. Sole exception: debug-only tooling.
+
+**Engineering**
+- **No silent failures.** Pumps, patches, and event handlers fail invisibly unless logged: every
+  catch logs what failed and where via the mod logger (never Unity `Debug.Log` directly). No
+  empty catches, no catch-and-return-default without logging. A logged failure is actionable; a
+  silent one is invisible to a player who cannot see the screen.
+- **No defensive null handling.** Null-check only where null is legitimate and expected
+  (FirstOrDefault, API boundaries). Let code crash otherwise - a crash is visible and logged, a
+  swallowed null is not. Trust private callers.
+- **Comments state what is, not what isn't** - no change history, no "removed X", no documenting
+  absences. Prescriptive rules and what-happens facts that justify an instruction are fine.
+- **No throwaway dev hacks** - never force-enable a gated feature in the tree (`|| true`); set
+  the real config and rebuild/reload. Gates stay honest.
 - If a piece of code decides what words the user hears, it must be reachable by tests or the
-  dev server; nothing user-facing gets verified by eyeballing code alone.
+  dev server; nothing user-facing gets verified by eyeballing code alone. Keep
+  composition/wording logic free of Unity types so it stays unit-testable.
+
+## Gotchas (seeded from the reference mods; append new ones as found)
+
+- Do not invoke `powershell.exe` from the Bash tool - the auto-mode classifier blocks it. Use
+  `dotnet build`, `taskkill.exe` (with `MSYS_NO_PATHCONV=1`), and `steam.exe -applaunch`
+  directly (see Game control above).
+- Stale DLLs survive in bin and deploy dirs: `dotnet build` never removes a file it no longer
+  produces. After renaming/removing an assembly, delete `src/*/bin` and the deployed plugin
+  folder once.
+- Close the game before building, or the deploy copy fails on locked DLLs and you test a stale
+  build. Treat "file in use" build warnings as a failed deploy, never ignorable.
+- Sweep BOTH `TMP_Text`/`TextMeshProUGUI` and legacy `UnityEngine.UI.Text` when reading a
+  screen - don't assume all labels are TMP until verified per screen.
 
 ## Autonomous run protocol
 

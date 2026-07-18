@@ -80,8 +80,9 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 5 - HUD and service windows
 
-- [ ] todo - HUD bar: year, chapter, window buttons with unlock state; direct hotkeys to each
-      window; back button
+- [ ] todo - HUD bar: year, chapter, window buttons with unlock state (Tab-stop reachable from
+      the scene; arrows + Enter open windows - no per-window hotkeys, per DECISIONS.md); back
+      button
 - [ ] todo - Character window (parameters, scales/segments)
 - [ ] todo - Soul window (willpower, death mechanics)
 - [ ] todo - Family window
@@ -131,12 +132,10 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Stability: one multi-hour session, no speech loss, no leaked Harmony errors in /log
 - [ ] todo - Second-pass code review of everything user-facing (self /code-review), fix findings
 
-## Phase 9 - Ship
+## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)
 
-- [ ] todo - Release build profile: dev server compiled out, deploy layout for players
-- [ ] todo - Player docs: getting-started walkthrough (install, first launch, key list),
-      README, key reference generated from bindings
-- [ ] todo - Accessible installer (port wotr-access installer approach: auto-detect Steam dir,
-      CLI mode) or documented copy-install; verify on a clean BepInEx-less copy
-- [ ] todo - Final DECISIONS.md review pass; anything user-facing that deserves the user's
-      attention summarized at the end of the run
+- [ ] todo - Release build profile: dev server compiled out; verify the Release deploy still
+      speaks and navigates (one smoke pass)
+- [ ] todo - KEYS.md: short key reference for the user, generated from the actual bindings
+- [ ] todo - Final DECISIONS.md review pass; anything that deserves the user's attention
+      summarized at the end of the run
