@@ -632,6 +632,12 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Sampled sweep across later chapters (3+ scenes per chapter incl. one special
       scene each)
 - [ ] todo - Stability: one multi-hour session, no speech loss, no leaked Harmony errors in /log
+      (data point 2026-07-18: ~10.5h dev session with 4 hot reloads and hundreds of /eval
+      compiles ended in a mono Boehm GC crash, "Unexpected mark stack overflow" in the gc log,
+      during a GC under the per-frame graph rebuild - no mod recursion on the managed stack.
+      Dev-tooling aggravation, not a shipping code path: Release sessions never hot-reload or
+      eval. Driver made eval-free in response; the stability run must pass on a fresh launch
+      with zero /eval traffic to count)
 - [ ] todo - Second-pass code review of everything user-facing (self /code-review), fix findings
 
 ## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)

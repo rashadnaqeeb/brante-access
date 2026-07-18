@@ -4,7 +4,7 @@
 # Reaching a chapter makes the game write that chapter's save, which is the jump point for
 # later-chapter window verification.
 #
-# Per step: probe the mod's screen stack via /eval, then either activate a choice (rotating
+# Per step: probe the mod's screen stack via /nav, then either activate a choice (rotating
 # among available ones so a lethal first choice cannot loop forever), or End+Enter to page
 # text / press the way-forward button. Any action that produces no speech is retried; three
 # consecutive silent actions abort. Mod errors in /log abort. Unknown screens abort.
@@ -22,30 +22,12 @@ MAX="${1:-60}"
 cursor() { curl -s -m 5 "$BASE/health" | sed -E 's/.*speechCursor=([0-9]+).*/\1/'; }
 logcur() { curl -s -m 5 "$BASE/health" | sed -E 's/.*logCursor=([0-9]+).*/\1/'; }
 press()  { curl -s -m 5 -X POST "$BASE/input" -d "$1" > /dev/null; }
-evalcs() { curl -s -m 15 -X POST "$BASE/eval" --data-binary "$1"; }
 
-PROBE='
-var cur = BranteAccess.Module.Screens.ScreenManager.Current;
-string key = cur == null ? "none" : cur.Key;
-string line;
-if (key != "scene") { line = "screen " + key; }
-else
-{
-    var sc = UnityEngine.Object.FindObjectOfType<_Scripts.AMVCC.Controllers.SceneController>();
-    string title = sc.Title.GetComponent<TMPro.TextMeshProUGUI>().text.Replace("|", " ");
-    var avail = new System.Collections.Generic.List<string>();
-    if (!sc.GetButtonClickedState())
-    {
-        var pbcs = new System.Collections.Generic.List<_Scripts.AMVCC.Views.ParameterButtonChanger>(
-            UnityEngine.Object.FindObjectsOfType<_Scripts.AMVCC.Views.ParameterButtonChanger>());
-        pbcs.Sort((a, c) => a.ButtonIndex.CompareTo(c.ButtonIndex));
-        foreach (var p in pbcs)
-            if (p.IsButtonInteractable && BranteAccess.Module.Game.UiWidgets.Visible(p.gameObject))
-                avail.Add(p.ButtonIndex.ToString());
-    }
-    line = (avail.Count > 0 ? "choices " + string.Join(",", avail.ToArray()) : "advance") + "|" + title;
-}
-line'
+# The probe reads /nav (no compilation). It must NOT use /eval: every eval compiles a fresh
+# dynamic assembly, and hundreds of them in one session overflowed the Boehm GC's mark stack
+# and crashed the game (2026-07-18, "Unexpected mark stack overflow" in the gc log). The
+# active screen is the starred stack entry; a scene's available choices are the choice nodes
+# not marked unavailable.
 
 STEP=0
 SILENT=0
@@ -64,10 +46,24 @@ while [ "$STEP" -lt "$MAX" ]; do
   fi
   LOGC=$(logcur)
 
-  RAW=$(evalcs "$PROBE")
-  DIRECTIVE=$(echo "$RAW" | head -1 | sed 's/^=> //')
-  KIND=${DIRECTIVE%%|*}
-  TITLE=${DIRECTIVE#*|}
+  NAVOUT=$(curl -s -m 5 "$BASE/nav")
+  if ! echo "$NAVOUT" | grep -q '^stack:'; then
+    echo "ABORT step $STEP: no /nav response (dev server gone or module not loaded)"; exit 1
+  fi
+  ACTIVE=$(echo "$NAVOUT" | sed -n 's/^stack:.* \([a-z]*\)([0-9]*)\*.*$/\1/p')
+  [ -z "$ACTIVE" ] && ACTIVE=none
+  CHOICE_IDS=""
+  if [ "$ACTIVE" != "scene" ]; then
+    KIND="screen $ACTIVE"
+    TITLE="screen $ACTIVE"
+  else
+    CHOICE_IDS=$(echo "$NAVOUT" | grep 'scene:choice:' | grep -o 'scene:choice:[0-9]*' | sed 's/.*://')
+    AVAIL=$(echo "$NAVOUT" | grep 'scene:choice:' | grep -v ', unavailable' \
+      | grep -o 'scene:choice:[0-9]*' | sed 's/.*://' | tr '\n' ',' | sed 's/,$//')
+    # Progress fingerprint for the stuck detector: newest transcript page + choice set.
+    TITLE="scene:$(echo "$NAVOUT" | grep -o 'scene:page:[0-9]*' | tail -1):$CHOICE_IDS"
+    if [ -n "$AVAIL" ]; then KIND="choices $AVAIL"; else KIND=advance; fi
+  fi
   if [ "$KIND" != "screen none" ]; then NONE_COUNT=0; fi
 
   # Stuck means same scene AND no new speech: long scenes legitimately run past 40 pages
@@ -111,7 +107,7 @@ while [ "$STEP" -lt "$MAX" ]; do
     advance)
       ACTION="endenter" ;;
     *)
-      echo "ABORT step $STEP: unparseable probe result: $RAW"; exit 1 ;;
+      echo "ABORT step $STEP: unparseable probe result: $KIND"; exit 1 ;;
   esac
 
   C=$(cursor)
@@ -120,8 +116,16 @@ while [ "$STEP" -lt "$MAX" ]; do
   elif [ "$ACTION" = "homeenter" ]; then
     press ui.home; sleep 0.3; press ui.activate
   else
+    # Reach the picked choice by keys alone: choices are the last nodes of the transcript
+    # stop, so End lands on the last choice and Up walks back to the target (unavailable
+    # choices are nodes too, so the walk counts ALL choice nodes, not just available ones).
     PICKED=${ACTION#choice }
-    evalcs "BranteAccess.Module.UI.Navigation.FocusNode(BranteAccess.Module.UI.Graph.ControlId.Structural(\"scene:choice:$PICKED\"), false); \"focused\"" > /dev/null
+    TOTAL=$(echo "$CHOICE_IDS" | grep -c .)
+    POS=$(echo "$CHOICE_IDS" | grep -n "^$PICKED\$" | cut -d: -f1)
+    UPS=$((TOTAL - POS))
+    press ui.end
+    UI=0
+    while [ "$UI" -lt "$UPS" ]; do press ui.up; sleep 0.15; UI=$((UI + 1)); done
     sleep 0.3; press ui.activate
   fi
 

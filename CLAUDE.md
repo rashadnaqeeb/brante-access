@@ -203,6 +203,11 @@ smoke-tested by calling the patched method from /eval and expecting the announce
 - In /eval, Mono.CSharp's InteractiveBase shadows `Time` (helper method) and Assembly-CSharp
   defines its own `Console` - write `UnityEngine.Time.*` and `System.Console.*` fully qualified,
   or build a result string and return it instead of printing.
+- Every /eval compiles a fresh dynamic assembly that lives until the process exits. Hundreds
+  of them in one long session crashed the game's Boehm GC ("Unexpected mark stack overflow",
+  mono breakpoint 0x80000003 during marking - seen 2026-07-18 after ~10.5h, 4 hot reloads,
+  ~400 driver evals). Steady-state automation must poll /nav|/health|/gui, never /eval; keep
+  /eval for one-off inspection, and prefer restarting the game between long automated runs.
 
 ## Autonomous run protocol
 
