@@ -57,9 +57,13 @@ while [ "$STEP" -lt "$MAX" ]; do
     KIND="screen $ACTIVE"
     TITLE="screen $ACTIVE"
   else
-    CHOICE_IDS=$(echo "$NAVOUT" | grep 'scene:choice:' | grep -o 'scene:choice:[0-9]*' | sed 's/.*://')
-    AVAIL=$(echo "$NAVOUT" | grep 'scene:choice:' | grep -v ', unavailable' \
-      | grep -o 'scene:choice:[0-9]*' | sed 's/.*://' | tr '\n' ',' | sed 's/,$//')
+    # Graph lines render ids as "ControlId(scene:choice:N, ref=...)"; the focused-node
+    # header repeats the id, so only graph lines' leading token counts (the focused graph
+    # line starts with "* " instead of two spaces).
+    CHOICE_IDS=$(echo "$NAVOUT" | awk '{id=($1=="*")?$2:$1; if (id ~ /^ControlId\(scene:choice:[0-9]+,$/) {gsub(/^ControlId\(scene:choice:|,$/,"",id); print id}}')
+    AVAIL=$(echo "$NAVOUT" | grep -v ', unavailable' \
+      | awk '{id=($1=="*")?$2:$1; if (id ~ /^ControlId\(scene:choice:[0-9]+,$/) {gsub(/^ControlId\(scene:choice:|,$/,"",id); print id}}' \
+      | tr '\n' ',' | sed 's/,$//')
     # Progress fingerprint for the stuck detector: newest transcript page + choice set.
     TITLE="scene:$(echo "$NAVOUT" | grep -o 'scene:page:[0-9]*' | tail -1):$CHOICE_IDS"
     if [ -n "$AVAIL" ]; then KIND="choices $AVAIL"; else KIND=advance; fi
@@ -121,7 +125,10 @@ while [ "$STEP" -lt "$MAX" ]; do
     # choices are nodes too, so the walk counts ALL choice nodes, not just available ones).
     PICKED=${ACTION#choice }
     TOTAL=$(echo "$CHOICE_IDS" | grep -c .)
-    POS=$(echo "$CHOICE_IDS" | grep -n "^$PICKED\$" | cut -d: -f1)
+    POS=$(echo "$CHOICE_IDS" | grep -n "^$PICKED\$" | head -1 | cut -d: -f1)
+    if [ -z "$POS" ]; then
+      echo "ABORT step $STEP: picked choice $PICKED not in choice list"; exit 1
+    fi
     UPS=$((TOTAL - POS))
     press ui.end
     UI=0
