@@ -67,12 +67,20 @@ namespace BranteAccess.Module.Screens
         private static TMPro.TextMeshProUGUI Title(DeathWindow w)
             => (TMPro.TextMeshProUGUI)TitleField.GetValue(w);
 
-        // The active pager: setup and resolve are mutually exclusive in the hierarchy.
+        // The active pager. The window ROOT carries its own SimplePageTurner which stays
+        // active for the window's whole life; a resolve pager activates as a CHILD alongside
+        // it (seen live in the true-death judgment: the root pager sat exhausted on the
+        // question while Resolve1 displayed), so an active child pager wins over the root.
         private static SimplePageTurner Turner()
         {
+            SimplePageTurner root = null;
             foreach (var t in Object.FindObjectsOfType<SimplePageTurner>())
-                if (t.gameObject.activeInHierarchy) return t;
-            return null;
+            {
+                if (!t.gameObject.activeInHierarchy) continue;
+                if (t.GetComponent<DeathWindow>() != null) { root = t; continue; }
+                return t;
+            }
+            return root;
         }
 
         private static int PageIndex(SimplePageTurner t) => (int)PageIndexField.GetValue(t);
