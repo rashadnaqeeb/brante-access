@@ -123,6 +123,7 @@ namespace BranteAccess.Module
                 new InterludeScreen(),
                 new SceneScreen(),
                 new WindowShellScreen(),
+                new CharacterWindowScreen(),
                 new GenericPopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);

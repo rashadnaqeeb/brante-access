@@ -5,6 +5,21 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Character window judgment calls (2026-07-18, Phase 5)
+
+- **Dedicated window screens stand the shell down by name**: WindowShellScreen keeps a Covered
+  set of window prefab names; a dedicated screen (same layer, name-gated IsActive) adds its
+  window there. One list, no registration protocol.
+- **Freshly-shown windows gate their graph on the game's own populate result.** The prefab
+  instantiates with serialized placeholder text and the game fills it a beat later (the
+  Character window's entry seat spoke Russian prefab text live). The gate is a field the
+  game's Start() writes (hero name == ParametersManager.HeroName), not a frame count.
+- **Pair rows read the game's layout**: a label-value pair ("Age:" + "6 Years") is spoken as
+  the pair container's visible texts in order - both words are the game's, no authored labels.
+- **The skull strip speaks as a count**: its game label ("Deaths") plus the Death parameter
+  value out of the strip length ("Deaths, 0 of 4") - the sprites are the only visual encoding,
+  the parameter is the model behind them.
+
 ## HUD bar judgment calls (2026-07-18, Phase 5)
 
 - **Bar labels come from the game's own tooltip lookup**: a HUD button's GameObject name IS its

@@ -15,9 +15,20 @@ namespace BranteAccess.Module.Screens
     /// </summary>
     public sealed class WindowShellScreen : Screen
     {
+        // Windows with a dedicated screen - the shell stands down for these.
+        private static readonly HashSet<string> Covered = new HashSet<string>
+        {
+            "Window_Character",
+        };
+
         public override string Key => "window";
         public override int Layer => 10;
-        public override bool IsActive() => GameUi.OpenedWindow != null;
+
+        public override bool IsActive()
+        {
+            var w = GameUi.OpenedWindow;
+            return w != null && !Covered.Contains(w.name);
+        }
         public override Message ScreenName => Message.MaybeRaw(HudBar.OpenWindowTitle());
 
         // Delivery bookkeeping only - the name re-reads from the game at speech time.

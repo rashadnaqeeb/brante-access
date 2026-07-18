@@ -101,6 +101,10 @@ chapterselect.ironman = unavailable, Iron Man mode
 hud.region = HUD
 hud.pair = {label} {value}
 
+# Character window (the deaths label is the game's own text; the count is the Death
+# parameter, out of the skull strip's length)
+character.deaths = {label}, {value} of {max}
+
 # Main menu buttons (the game's labels are localized sprites - no game string exists)
 mainmenu.continue = Continue
 mainmenu.newgame = New game

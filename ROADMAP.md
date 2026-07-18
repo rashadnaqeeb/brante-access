@@ -294,7 +294,18 @@ go to DECISIONS.md, not to the user.
       11) and Escape both returned to the scene; IsButtonsBlocked smoke test: BlockHudButtons on
       = Enter silent no-op, off = window opened. Build guard closes the one-frame close race
       that spoke a reconcile line over the scene return.)
-- [ ] todo - Character window (parameters, scales/segments)
+- [x] verified - Character window (parameters, scales/segments)
+      (2026-07-18: CharacterWindowScreen (shell stands down via its Covered set) - identity
+      rows from the window's live pair containers, deaths row from the game's own "Deaths"
+      label + Death parameter, parameter rows folding name/value/segment with the scale
+      readout on Space. Verified live in chapter 1 by keys only: entry "Personality" then seat
+      "Testname Brante"; rows "Age: 6 Years", "Estate: Lowborn", "Occupation: growing up",
+      "Deaths, 0 of 4", "Perception 3, Curious", "Determination 0, Spineless", "Willpower 10,
+      Full of Power"; Space on Willpower spoke the full scale readout with "now" on the
+      current segment; Escape returned to the scene. Entry race fixed: no graph until the
+      game's Start() has written the hero name (the seat spoke Russian prefab placeholders
+      before the gate - caught live). Teen/Youth panels and the chapter 4+ work block render
+      through the same folded rows - confirm wording when a later chapter is reached.)
 - [ ] todo - Soul window (willpower, death mechanics)
 - [ ] todo - Family window
 - [ ] todo - Relations window (+ RelationPopup, relation tooltips)
