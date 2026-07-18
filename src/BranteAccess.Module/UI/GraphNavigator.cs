@@ -266,6 +266,8 @@ namespace BranteAccess.Module.UI
                     var node = _graph?.CurrentNode;
                     if (node == null) return false;
                     if (node.Vtable.OnTooltip != null) { _graph.Tooltip(); return true; }
+                    var help = Screen?.HelpText();
+                    if (!string.IsNullOrEmpty(help)) { Speak(help); return true; }
                     Speak(Loc.T("nav.no_tooltip"));
                     return true;
                 }

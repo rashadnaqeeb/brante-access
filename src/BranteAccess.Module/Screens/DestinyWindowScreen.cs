@@ -188,6 +188,8 @@ namespace BranteAccess.Module.Screens
             if (active >= 0) Mod.Speech.Speak(TabLabel(dw.Tabs[active]));
         }
 
+        public override string HelpText() => GameUi.WindowHelp();
+
         public override IEnumerable<ElementAction> GetActions()
         {
             yield return new ElementAction(ActionIds.Back, null, _ => HudBar.ClickBack());

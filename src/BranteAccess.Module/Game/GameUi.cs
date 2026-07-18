@@ -26,6 +26,21 @@ namespace BranteAccess.Module.Game
         public static bool PauseOpen =>
             Manager != null && Manager.PauseWindow != null && Manager.PauseWindow.activeInHierarchy;
 
+        /// <summary>The open window's what-this-is help: the description behind the game's
+        /// TitleRow help icon (Window_X.Description), read fresh per call. Null where the
+        /// window carries none. The first Title-parented HelpIcon is the window-level one
+        /// (deeper icons - Destiny's timeline - belong to their own panes).</summary>
+        public static string WindowHelp()
+        {
+            var w = OpenedWindow;
+            if (w == null) return null;
+            foreach (var tip in w.GetComponentsInChildren<_Scripts.AMVCC.Views.TooltipWithTitleBehavior>(true))
+                if (tip.name == "HelpIcon" && tip.transform.parent.name.Contains("Title")
+                    && !string.IsNullOrEmpty(tip.TitleMainText))
+                    return I2.Loc.LocalizationManager.GetTranslation(tip.TitleMainText);
+            return null;
+        }
+
         /// <summary>PREGAME at the menu and pre-story scenes; RUNNING flips the instant a game
         /// begins (SetCharacterName / save load), BEFORE the menu scene unloads - screens gate on
         /// it to drop out early instead of speaking stale refocus lines mid-transition.

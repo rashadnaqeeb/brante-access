@@ -68,6 +68,8 @@ namespace BranteAccess.Module.Screens
             HudBar.Build(b);
         }
 
+        public override string HelpText() => GameUi.WindowHelp();
+
         public override IEnumerable<ElementAction> GetActions()
         {
             yield return new ElementAction(ActionIds.Back, null, _ => HudBar.ClickBack());

@@ -526,9 +526,16 @@ go to DECISIONS.md, not to the user.
       the scene re-announced and zero exceptions in /log. Also fixed the load-transition
       IsActive NRE spam: GameUi.State reads PREGAME while GameManager.Instance is null
       during a save-load scene swap - ~40 "Screen.IsActive threw" log lines per load gone.)
-- [ ] todo - Window title-row help: every window's TitleRow HelpIcon carries
+- [x] verified - Window title-row help: every window's TitleRow HelpIcon carries
       Window_<X>.Title/.Description (what-this-window-is help) - expose per window (likely
       Space on a title node or a help row; decide one pattern for all windows)
+      (2026-07-18: pattern chosen - Space on a node with no detail of its own falls back to
+      Screen.HelpText (new base hook); window screens return GameUi.WindowHelp, which reads
+      the open window's Title-parented HelpIcon TooltipWithTitleBehavior and translates its
+      TitleMainText fresh per press. The Window_X.Title terms translate EMPTY, so only the
+      description speaks; nodes with their own detail are unaffected (fallback only fires
+      where OnTooltip is null, replacing the dead "no tooltip" line with real information).
+      Live: Home window heir row + Space spoke the game's House description; Escape clean.)
 - [ ] todo - Pause-menu toggle descriptions: the pause window's toggles carry
       TooltipWithTitleBehavior descriptions (ConsequenceToggle.Description,
       IsPictureAnimatedToggle.Desription (sic)) - fold onto Space on those toggles

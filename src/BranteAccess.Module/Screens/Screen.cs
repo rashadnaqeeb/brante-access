@@ -90,6 +90,11 @@ namespace BranteAccess.Module.Screens
         /// are log-like text may keep it, screens where letters mean something else opt out.</summary>
         public virtual bool AllowsTypeahead => true;
 
+        /// <summary>Screen-level detail: what Space reads when the focused node has no detail
+        /// of its own - a window's what-this-is help where the game provides one (the sighted
+        /// user's TitleRow help icon). Null keeps the plain no-tooltip line.</summary>
+        public virtual string HelpText() => null;
+
         /// <summary>Screen-level actions dispatched by id - the navigator maps Escape to
         /// <see cref="ActionIds.Back"/>. Default: none.</summary>
         public virtual IEnumerable<ElementAction> GetActions() { yield break; }
