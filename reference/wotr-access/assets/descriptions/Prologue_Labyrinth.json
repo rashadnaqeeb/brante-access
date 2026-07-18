@@ -1,0 +1,328 @@
+{
+  "rooms": [
+    {
+      "x": 93.97,
+      "y": 40.03,
+      "z": 120.07,
+      "key": "shieldmaze_armory_hall"
+    },
+    {
+      "x": 54.72,
+      "y": 32.55,
+      "z": 81.57,
+      "key": "shieldmaze_armory_store"
+    },
+    {
+      "x": 148.73,
+      "y": 36.47,
+      "z": 70.82,
+      "key": "shieldmaze_banner_crossing"
+    },
+    {
+      "x": 77.22,
+      "y": 39.99,
+      "z": 116.07,
+      "key": "shieldmaze_banner_passage"
+    },
+    {
+      "x": 156.98,
+      "y": 36.61,
+      "z": 40.33,
+      "key": "shieldmaze_bare_alcove"
+    },
+    {
+      "x": 105.22,
+      "y": 39.67,
+      "z": 152.82,
+      "key": "shieldmaze_bare_cavern"
+    },
+    {
+      "x": 123.97,
+      "y": 34.35,
+      "z": 48.33,
+      "key": "shieldmaze_broad_stair"
+    },
+    {
+      "x": 162.48,
+      "y": 36.4,
+      "z": 71.82,
+      "key": "shieldmaze_builders_hall"
+    },
+    {
+      "x": 64.22,
+      "y": 36.55,
+      "z": 120.82,
+      "key": "shieldmaze_button_court"
+    },
+    {
+      "x": 84.47,
+      "y": 40.01,
+      "z": 174.82,
+      "key": "shieldmaze_cavern_crossing"
+    },
+    {
+      "x": 155.98,
+      "y": 39.64,
+      "z": 163.57,
+      "key": "shieldmaze_cavern_lake"
+    },
+    {
+      "x": 127.22,
+      "y": 40.31,
+      "z": 117.32,
+      "key": "shieldmaze_ceremonial_hall"
+    },
+    {
+      "x": 127.72,
+      "y": 40.31,
+      "z": 85.32,
+      "key": "shieldmaze_chapel_hall"
+    },
+    {
+      "x": 122.97,
+      "y": 32.8,
+      "z": 25.58,
+      "key": "shieldmaze_corpse_pit"
+    },
+    {
+      "x": 93.47,
+      "y": 39.72,
+      "z": 104.32,
+      "key": "shieldmaze_council_hall"
+    },
+    {
+      "x": 47.22,
+      "y": 36.77,
+      "z": 116.57,
+      "key": "shieldmaze_crate_closet"
+    },
+    {
+      "x": 55.72,
+      "y": 36.55,
+      "z": 120.57,
+      "key": "shieldmaze_crate_passage"
+    },
+    {
+      "x": 90.97,
+      "y": 42.08,
+      "z": 40.58,
+      "key": "shieldmaze_curving_gallery"
+    },
+    {
+      "x": 89.51,
+      "y": 40.03,
+      "z": 88.53,
+      "key": "shieldmaze_dormitory"
+    },
+    {
+      "x": 78.72,
+      "y": 36.59,
+      "z": 136.57,
+      "key": "shieldmaze_flooded_den"
+    },
+    {
+      "x": 62.47,
+      "y": 36.57,
+      "z": 139.32,
+      "key": "shieldmaze_flooded_hall"
+    },
+    {
+      "x": 51.22,
+      "y": 32.56,
+      "z": 96.57,
+      "key": "shieldmaze_flooded_workshop"
+    },
+    {
+      "x": 118.97,
+      "y": 39.3,
+      "z": 153.57,
+      "key": "shieldmaze_fungal_grove"
+    },
+    {
+      "x": 70.22,
+      "y": 44.13,
+      "z": 33.33,
+      "key": "shieldmaze_gallery"
+    },
+    {
+      "x": 116.22,
+      "y": 32.8,
+      "z": 36.83,
+      "key": "shieldmaze_gate_antechamber"
+    },
+    {
+      "x": 70.22,
+      "y": 40.01,
+      "z": 173.32,
+      "key": "shieldmaze_glowing_grotto"
+    },
+    {
+      "x": 127.22,
+      "y": 40.03,
+      "z": 137.07,
+      "key": "shieldmaze_grand_hall"
+    },
+    {
+      "x": 57.22,
+      "y": 39.66,
+      "z": 32.83,
+      "key": "shieldmaze_great_hall"
+    },
+    {
+      "x": 78.53,
+      "y": 39.78,
+      "z": 103.76,
+      "key": "shieldmaze_hall"
+    },
+    {
+      "x": 140.98,
+      "y": 36.41,
+      "z": 42.08,
+      "key": "shieldmaze_hidden_armory"
+    },
+    {
+      "x": 111.22,
+      "y": 39.98,
+      "z": 99.07,
+      "key": "shieldmaze_hidden_pantry"
+    },
+    {
+      "x": 161.23,
+      "y": 36.45,
+      "z": 55.08,
+      "key": "shieldmaze_holding_pen"
+    },
+    {
+      "x": 143.98,
+      "y": 36.65,
+      "z": 53.08,
+      "key": "shieldmaze_idol_chamber"
+    },
+    {
+      "x": 30.23,
+      "y": 32.55,
+      "z": 117.82,
+      "key": "shieldmaze_kitchen"
+    },
+    {
+      "x": 33.72,
+      "y": 32.61,
+      "z": 106.32,
+      "key": "shieldmaze_kitchen_hall"
+    },
+    {
+      "x": 109.97,
+      "y": 40.0,
+      "z": 120.32,
+      "key": "shieldmaze_library"
+    },
+    {
+      "x": 140.48,
+      "y": 38.53,
+      "z": 74.57,
+      "key": "shieldmaze_long_stair"
+    },
+    {
+      "x": 107.72,
+      "y": 40.03,
+      "z": 87.82,
+      "key": "shieldmaze_mess_hall"
+    },
+    {
+      "x": 93.22,
+      "y": 39.98,
+      "z": 165.32,
+      "key": "shieldmaze_mushroom_cavern"
+    },
+    {
+      "x": 126.72,
+      "y": 32.8,
+      "z": 41.08,
+      "key": "shieldmaze_pit_hall"
+    },
+    {
+      "x": 116.72,
+      "y": 32.82,
+      "z": 27.33,
+      "key": "shieldmaze_rack_room"
+    },
+    {
+      "x": 114.47,
+      "y": 40.03,
+      "z": 89.57,
+      "key": "shieldmaze_refectory_gallery"
+    },
+    {
+      "x": 151.23,
+      "y": 36.71,
+      "z": 36.83,
+      "key": "shieldmaze_scaffold_chamber"
+    },
+    {
+      "x": 131.23,
+      "y": 32.81,
+      "z": 28.58,
+      "key": "shieldmaze_sealed_door"
+    },
+    {
+      "x": 127.97,
+      "y": 36.49,
+      "z": 57.08,
+      "key": "shieldmaze_stair_antechamber"
+    },
+    {
+      "x": 49.97,
+      "y": 32.83,
+      "z": 107.82,
+      "key": "shieldmaze_stair_chamber"
+    },
+    {
+      "x": 73.58,
+      "y": 40.02,
+      "z": 87.65,
+      "key": "shieldmaze_storeroom"
+    },
+    {
+      "x": 98.22,
+      "y": 39.84,
+      "z": 66.32,
+      "key": "shieldmaze_summoning_hall"
+    },
+    {
+      "x": 130.48,
+      "y": 39.27,
+      "z": 151.82,
+      "key": "shieldmaze_temple_threshold"
+    },
+    {
+      "x": 42.72,
+      "y": 32.73,
+      "z": 86.32,
+      "key": "shieldmaze_training_hall"
+    },
+    {
+      "x": 114.97,
+      "y": 40.01,
+      "z": 74.07,
+      "key": "shieldmaze_trapped_antechamber"
+    },
+    {
+      "x": 110.47,
+      "y": 40.03,
+      "z": 108.07,
+      "key": "shieldmaze_trapped_corridor"
+    },
+    {
+      "x": 140.23,
+      "y": 32.8,
+      "z": 29.83,
+      "key": "shieldmaze_trophy_room"
+    },
+    {
+      "x": 160.23,
+      "y": 36.35,
+      "z": 85.32,
+      "key": "shieldmaze_unfinished_corner"
+    }
+  ]
+}

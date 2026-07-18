@@ -1,0 +1,18 @@
+#!/bin/sh
+# Keep the committed tester payload (deploy/Assemblies/WrathAccess.dll) in sync with the source on
+# every commit, so a tester's `git pull` + `.\deploy.ps1` always carries a matching build (the
+# pure-copy distribution model). Runs scripts/stage.ps1 (build Release + restage) and adds the result
+# to THIS commit, but only when C# source or the project file is staged -- doc/asset-only commits
+# skip the build (assets are copied live by deploy.ps1 and never go into the dll). A failed build
+# aborts the commit. Bypass for a throwaway commit with:  git commit --no-verify
+#
+# Enabled via:  git config core.hooksPath .githooks   (one-time per clone; see CLAUDE.md).
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+if printf '%s\n' "$staged" | grep -qE '\.cs$|^src/|WrathAccess\.csproj$'; then
+    echo "[pre-commit] Source staged - restaging the tester payload (scripts/stage.ps1)..."
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/stage.ps1
+    git add deploy/Assemblies/WrathAccess.dll deploy/Assemblies/NAudio.dll
+    echo "[pre-commit] deploy/Assemblies refreshed and added to this commit."
+fi

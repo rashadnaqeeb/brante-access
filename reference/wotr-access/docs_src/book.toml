@@ -1,0 +1,8 @@
+[book]
+authors = ["bradjrenshaw"]
+language = "en"
+src = "src"
+title = "Wrath Access Documentation"
+
+[output.html]
+git-repository-url = "https://github.com/bradjrenshaw/wotr-access"

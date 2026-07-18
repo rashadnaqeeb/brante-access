@@ -1,0 +1,28 @@
+{
+  "rooms": [
+    {
+      "x": 346.43,
+      "y": 40.0,
+      "z": 370.93,
+      "key": "festival_drink_nook"
+    },
+    {
+      "x": 348.43,
+      "y": 40.0,
+      "z": 347.93,
+      "key": "festival_square"
+    },
+    {
+      "x": 368.43,
+      "y": 40.0,
+      "z": 350.43,
+      "key": "festival_stage"
+    },
+    {
+      "x": 325.43,
+      "y": 40.0,
+      "z": 352.18,
+      "key": "festival_training_yard"
+    }
+  ]
+}

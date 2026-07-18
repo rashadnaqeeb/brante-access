@@ -1,0 +1,130 @@
+{
+  "rooms": [
+    {
+      "x": 81.23,
+      "y": 43.05,
+      "z": 134.93,
+      "key": "neathholm_broken_frames"
+    },
+    {
+      "x": 87.48,
+      "y": 45.0,
+      "z": 80.93,
+      "key": "neathholm_canopy_hut"
+    },
+    {
+      "x": 134.98,
+      "y": 41.38,
+      "z": 48.93,
+      "key": "neathholm_cavern_shore"
+    },
+    {
+      "x": 122.73,
+      "y": 42.0,
+      "z": 79.93,
+      "key": "neathholm_cookfire_terrace"
+    },
+    {
+      "x": 94.23,
+      "y": 50.0,
+      "z": 123.68,
+      "key": "neathholm_feathered_hut"
+    },
+    {
+      "x": 46.73,
+      "y": 41.13,
+      "z": 144.43,
+      "key": "neathholm_fungal_path"
+    },
+    {
+      "x": 107.23,
+      "y": 50.0,
+      "z": 117.68,
+      "key": "neathholm_giant_mushroom_hut"
+    },
+    {
+      "x": 151.73,
+      "y": 41.27,
+      "z": 65.93,
+      "key": "neathholm_gravel_spit"
+    },
+    {
+      "x": 96.73,
+      "y": 49.32,
+      "z": 105.93,
+      "key": "neathholm_great_hut_terrace"
+    },
+    {
+      "x": 108.73,
+      "y": 50.0,
+      "z": 97.43,
+      "key": "neathholm_high_perch"
+    },
+    {
+      "x": 72.48,
+      "y": 42.08,
+      "z": 129.68,
+      "key": "neathholm_lakeshore"
+    },
+    {
+      "x": 66.73,
+      "y": 45.0,
+      "z": 102.68,
+      "key": "neathholm_lakeside_camp"
+    },
+    {
+      "x": 56.98,
+      "y": 42.06,
+      "z": 139.93,
+      "key": "neathholm_mushroom_shallows"
+    },
+    {
+      "x": 143.98,
+      "y": 40.82,
+      "z": 63.18,
+      "key": "neathholm_raft_landing"
+    },
+    {
+      "x": 102.23,
+      "y": 45.0,
+      "z": 80.93,
+      "key": "neathholm_rock_landing"
+    },
+    {
+      "x": 51.48,
+      "y": 43.73,
+      "z": 85.43,
+      "key": "neathholm_shore_steps"
+    },
+    {
+      "x": 62.73,
+      "y": 45.0,
+      "z": 110.93,
+      "key": "neathholm_tent_nook"
+    },
+    {
+      "x": 67.48,
+      "y": 43.82,
+      "z": 76.68,
+      "key": "neathholm_torch_stair"
+    },
+    {
+      "x": 80.73,
+      "y": 46.09,
+      "z": 112.68,
+      "key": "neathholm_torchlit_rise"
+    },
+    {
+      "x": 86.73,
+      "y": 45.01,
+      "z": 71.18,
+      "key": "neathholm_trading_post"
+    },
+    {
+      "x": 62.98,
+      "y": 43.58,
+      "z": 80.43,
+      "key": "neathholm_village_common"
+    }
+  ]
+}

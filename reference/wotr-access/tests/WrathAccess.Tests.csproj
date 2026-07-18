@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>WrathAccess.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <!-- The graph navigation core is BCL-only by design (no Unity/game references), so the tests compile
+       those sources directly by link — no dependency on the net48 mod assembly or the game install.
+       Anything added under src/UI/Graph MUST stay BCL-pure or this project stops building (that's a
+       feature: it enforces the boundary). -->
+  <ItemGroup>
+    <Compile Include="..\src\UI\Graph\**\*.cs" LinkBase="GraphSources" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+  </ItemGroup>
+
+</Project>
