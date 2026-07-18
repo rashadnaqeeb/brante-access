@@ -357,9 +357,10 @@ go to DECISIONS.md, not to the user.
       save → load → quit. Run after every ~4 verified items; keep it green.
       (first run green 14/14: health, mainmenu graph, End/Home speech, tooltip fallback,
       Settings activation + refocus, focus-mode toggle both ways, zero mod error log lines.
-      Last run: 2026-07-18, green 38/38 - now includes the event-scene section: transcript
-      row focused on load, safe re-reads leave the pager alone, End+Enter driver reaches
-      choices/continue without ever activating a choice, choice speaks with position.)
+      Last run: 2026-07-18 (after death flow, tooltips, animation gating), green 38/38 -
+      includes the event-scene section: transcript row focused on load, safe re-reads leave
+      the pager alone, End+Enter driver reaches choices/continue without ever activating a
+      choice, choice speaks with position.)
 - [ ] todo - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
       spot-checks deep into the game
 - [ ] todo - Full keyboard-only playthrough of the prologue + chapter 1 via dev server, zero
