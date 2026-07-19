@@ -134,6 +134,7 @@ namespace BranteAccess.Module
                 new WorkWindowScreen(),
                 new CaseForYearScreen(),
                 new GenericPopupScreen(),
+                new TriggerScenePopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);
             Mod.Log("ScreenManager: " + screens.Length + " outer screens registered");

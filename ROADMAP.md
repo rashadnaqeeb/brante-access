@@ -539,9 +539,19 @@ go to DECISIONS.md, not to the user.
       titles; the rows read ButtonText live, so the natural story flow supplies them - the
       dev "CaseOfYear" scene is not in build settings, so titles get their real check when
       the story deals the dialog.)
-- [ ] todo - TriggerScenePopupController (scene-trigger popup with vertical/horizontal
+- [x] verified - TriggerScenePopupController (scene-trigger popup with vertical/horizontal
       parameter/relation/status rows - check live whether GenericPopupScreen already covers
       its prefab before writing anything)
+      (2026-07-19: checked live by loading 051.070.050_ThomasWedding (dev scene-load, the
+      game's own dev-tool pattern) - the scene auto-showed the popup and the generic sweep
+      DID read it, but wrongly: the game marks a negated condition only by strikethrough
+      styling, so all three "not Tommas Guerro EXILED / SEVERED ALL TIES / TRUE DEATH"
+      conditions spoke as if positive. Wrote TriggerScenePopupScreen (layer 21 over the
+      generic popup) + Readouts.Trigger*Row: rows recomposed from the same SceneCondition
+      model the popup renders (FindCondition on the active scene), negation spoken with the
+      not-word, relation rows with the game's relation word. Verified live: title,
+      explanation line, "Conditions Met" header, three not-rows, Continue (game's own click)
+      closed into the scene's title + first passage delivery. Zero mod errors.)
 - [ ] todo - ChapterWindowManager sections (later-chapter final summary: Post, BigDeal, Duels,
       Heir panels + work/family parameter sliders - check at the chapter 3 final whether the
       ChapterFinalScreen sweep already reads them)

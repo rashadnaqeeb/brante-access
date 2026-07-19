@@ -526,6 +526,48 @@ namespace BranteAccess.Module.Game
             return Loc.T("choice.unavailable", new { req = string.Join(", ", reqs.ToArray()) });
         }
 
+        /// <summary>One trigger-popup condition row per serialized type, composed from the same
+        /// model the popup's row generators render. The popup marks a negated condition only by
+        /// strikethrough styling - these rows speak the not-word instead.</summary>
+        public static string TriggerParamRow(_Scripts.Helpers.TriggerConditionByParameter c)
+            => Loc.T("choice.req.param", new
+            {
+                name = GameLoc.GetTranslation(c.ParametersList.ToString()),
+                op = OpWord(c.Operations.ToString()),
+                value = c.SecondValue,
+            });
+
+        public static string TriggerRelationRow(_Scripts.Helpers.TriggerConditionByRelation c)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var who = pm.GetCharacterByName(c.Character);
+            return Loc.T("choice.req.relation", new
+            {
+                name = KeyParams.Initiate.GetCharacterTrueName(who.Name),
+                op = OpWord(c.Operations.ToString()),
+                value = c.Value + " (" + pm.CheckParameterValue(c.Value) + ")",
+            });
+        }
+
+        public static string TriggerStatusRow(_Scripts.Helpers.TriggerConditionByStatus c)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var who = pm.GetCharacterByName(c.Character);
+            var row = Loc.T("choice.req.status", new
+            {
+                name = KeyParams.Initiate.GetCharacterTrueName(who.Name),
+                status = GameLoc.GetTranslation(
+                    pm.GetCharacterStatusKey(c.Character, c.Status) ?? ""),
+            });
+            return c.Not ? Loc.T("choice.req.not", new { req = row }) : row;
+        }
+
+        public static string TriggerObjectiveRow(_Scripts.Helpers.TriggerConditionByObjective c)
+        {
+            var row = ObjectiveTitle(KeyParams.Initiate.GetObjectiveByName(c.Objective));
+            return c.Not ? Loc.T("choice.req.not", new { req = row }) : row;
+        }
+
         /// <summary>One spoken line from a label that wraps over multiple lines on screen.</summary>
         public static string Collapse(string text)
             => string.Join(" ", text.Split(
