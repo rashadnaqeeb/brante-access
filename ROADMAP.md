@@ -718,6 +718,10 @@ go to DECISIONS.md, not to the user.
 
 - [ ] todo - Release build profile: dev server compiled out; verify the Release deploy still
       speaks and navigates (one smoke pass)
-- [ ] todo - KEYS.md: short key reference for the user, generated from the actual bindings
+- [x] verified - KEYS.md: short key reference for the user, generated from the actual bindings
+      (2026-07-19: written from ModModule.RegisterActions and cross-checked against the live
+      /nav bindings dump (15 actions, exact match); typeahead and secondary-action wording
+      checked against GraphNavigator/LoadWindowScreen code - search focus follows matches so
+      Enter activates normally, Backspace's only current use is the load-window delete)
 - [ ] todo - Final DECISIONS.md review pass; anything that deserves the user's attention
       summarized at the end of the run
