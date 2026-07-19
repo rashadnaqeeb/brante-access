@@ -146,6 +146,12 @@ namespace BranteAccess.Module.Screens
                             if (!toggle.isOn) UiWidgets.Click(toggle.gameObject);
                         },
                         StateText = () => toggle.isOn ? Loc.T("state.selected") : null,
+                        // The game explains each mode only in a hover tooltip
+                        // (MainMenuUITooltip off the toggle's TooltipKeyHolder key).
+                        OnTooltip = toggle.GetComponent<TooltipKeyHolder>() == null
+                            ? (System.Action)null
+                            : () => Mod.Speech.Speak(I2.Loc.LocalizationManager.GetTranslation(
+                                toggle.GetComponent<TooltipKeyHolder>().LocalizationKey)),
                     });
             }
             b.EndRow();

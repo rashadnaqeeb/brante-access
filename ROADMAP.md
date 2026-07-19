@@ -237,11 +237,15 @@ go to DECISIONS.md, not to the user.
       -5 (= 0), Ready for Action" - chained by Enter into the year popup and next scene. Same
       whole-panel delivery added to the interlude's post-close panels (silent re-seat replaces
       the old first-row-only seat announcement); to confirm at the next stat interlude.)
-- [ ] built - Status-row dash wording: the game renders a bare em-dash as a status panel's
+- [x] verified - Status-row dash wording: the game renders a bare em-dash as a status panel's
       value when a character's status clears (driver heard "Sophia, Status, [em-dash]" in
       chapter 2 - readers voice the dash). PanelSweep.Spoken now substitutes Loc state.none
       for a WHOLE-ROW dash (em/en/hyphen) in both the delivery join and the row nodes; game
-      prose dashes untouched. Verify at the next cleared-status panel the driver hits.
+      prose dashes untouched.
+      (2026-07-19: the exact substitution code exercised through the dev server (reflection
+      call on PanelSweep.Spoken): em dash, en dash, hyphen, and a whitespace-padded dash all
+      return the mod's "none"; prose containing an inner hyphen ("a - b") passes through
+      unchanged. In-situ trigger (a live cleared status) rides the user's playthrough.)
 - [x] verified - Death trigger flow in text blocks (BlockTextPanel → death window → resume)
       (2026-07-18: DeathScreen (layer 21, popup slot) on the book pattern - one live page row,
       Enter turns via the game's RightButton_Click, arrow buttons with mod labels and
@@ -517,7 +521,7 @@ go to DECISIONS.md, not to the user.
       alone. All 7 pages traversed over HTTP, one delivery per page swap, adult skills revealed
       one per page, last page's Continue (game's own click) closed into the chapter III start
       book. Zero mod errors logged.)
-- [ ] in progress - Death windows: standard death, fourth-death continue flow, GameOverWindow +
+- [x] verified - Death windows: standard death, fourth-death continue flow, GameOverWindow +
       restart/continue popup
       (2026-07-19 fourth-death trial VERIFIED end to end over HTTP: FourthDeath_* scenes loop
       by same-frame scene reload (no pop frame - destroyed-pager detection via ReferenceEquals
@@ -529,14 +533,31 @@ go to DECISIONS.md, not to the user.
       Youth interlude + chapter start reached. Standard death verified earlier (line 245
       item). A second trial later the same day traversed COMPLETELY hands-off by the story
       driver (23 steps: judgment pages, answers, Continue, relive select, rewind confirm)
-      with zero mod errors. Remaining: GameOverWindow + its restart/continue popup.)
+      with zero mod errors.
+      2026-07-19 game-over cluster closed: ShowGameRestartPopup and ShowRestartOrContinuePopup(4)
+      dev-fired via /eval, both delivered whole by the generic popup sweep (title, description,
+      Confirm/Cancel buttons, all navigable; the game-restart popup's four I2 keys have no
+      English entries so the game itself renders Russian - parity, not a mod gap, and no code
+      path even calls it). The standalone GameOver scene (infinite credits scroll, no code
+      loader, no exit) got a minimal GameOverScreen: entry speaks "Game over" + first row,
+      arrow reaches the credits block - previously that scene was totally silent. The shipping
+      game-over ending Credits_GameOver verified speaking via the existing CreditsScreen
+      ("credits", first block "1 of 22"). During diagnosis, interlude page keys became
+      popup-instance-qualified: two interlude scenes back to back with no popup-free frame
+      would re-seat on an identical structural key and swallow the second interlude's entry
+      announcement entirely (the differ never resets while the same screen stays focused).)
 - [x] verified - Chapter title splash (StartPictureHelper, "ChildhoodPicture" et al - the
       click-anywhere picture between chapter select and the chapter start book)
       (2026-07-18: ChapterPictureScreen - one node, game's localized title + "Enter continues"
       hint (the whole screen is the control - unusual enough to earn one). Enter runs the
       game's OnPointerClick (hide animation, sfx, Bolt advance). Verified live: "Chapter I.
       Childhood, Enter continues" spoken, Enter advanced to ChildhoodChapterStart.)
-- [ ] todo - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
+- [x] verified - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
+      (2026-07-19: intro Cutscene_1 dev-loaded - entry announces "cutscene, spoken narration,
+      any key skips" and the scene carries zero text components (the game's own VOICED narration
+      is the content, accessible by design); chapter V entry cutscene exercised earlier the same
+      day on the real story path (announce + Enter skip through our input layer). Both variants
+      share CutsceneScreen.)
 - [x] verified - Timeline (WindowLiveTimelineController / life timeline) readable
       (2026-07-19: LiveTimelineScreen - the LiveTimeline scene (game end, before the finals)
       was fully silent before (empty screen stack). Screen named by the hero's full name row;
@@ -562,14 +583,17 @@ go to DECISIONS.md, not to the user.
       the generator panel as its stat-panel root. Live: "Outcome of the Revolt" delivered all
       8 pages over HTTP, End reached "Continue, button", Enter closed onward into the
       FourthDeath judgment flow. Zero mod errors.)
-- [ ] in progress - Scene census: enumerate atypical scenes (duel, province finals, variative
+- [x] verified - Scene census: enumerate atypical scenes (duel, province finals, variative
       finals - grep decompile for their controllers), list each here as its own item, then
       verify each
       (2026-07-18 decompile pass: no dedicated duel controller exists - DuelStatusesEnum is
       save-model state and duels ride standard scenes; TextBlockSpecialSceneries is per-block
       dressing (sfx/music/picture/poem/death-trigger) on the covered TextController flow.
-      Distinct surfaces found and listed as items below. Remaining census work: watch the
-      chapter 3+ driver runs for scenes whose probe reports an uncovered screen.)
+      Distinct surfaces found and listed as items below. 2026-07-19 closed: the driver runs
+      through chapters II-IV, the finals sequence and the chapter V entry surfaced exactly
+      two uncovered screens - epilogue scenes and LiveTimeline - both since built and
+      verified as their own items; every other scene the probes hit rode the covered
+      TextController/ConsequenceScene surface.)
 - [x] verified - CaseForYearWindow (chapter 3+ case-selection window: PeaceCases/WarCases lists,
       left/right pages, confirm popup; distinct from the verified CaseOfYear popup)
       (2026-07-19: CaseForYearScreen (layer 12, over the scene) + Readouts.CaseDetails/
@@ -603,25 +627,40 @@ go to DECISIONS.md, not to the user.
       NATURALLY at the Family Strife finals scene: parameter row "Unity exactly 0" and
       negated objective row "not The Family Falls Apart" spoken, Continue into the epilogue
       passage - all row types except relation exercised live.)
-- [ ] todo - ChapterWindowManager sections (later-chapter final summary: Post, BigDeal, Duels,
+- [x] verified - ChapterWindowManager sections (later-chapter final summary: Post, BigDeal, Duels,
       Heir panels + work/family parameter sliders - check at the chapter 3 final whether the
       ChapterFinalScreen sweep already reads them)
       (2026-07-19 chapter III final checked live: NO ChapterWindowManager component exists
-      there (FindObjectOfType null) - it is a chapter IV/V surface only; verify at the
-      chapter IV final. Chapter III final itself: 4 pages traversed over HTTP - Destiny
-      timeline (8 events with category + year), Personality x2, page 4 renders empty in the
-      game itself (title/description/Continue only, panels carry no text) and the sweep
-      faithfully delivers "4 of 4" + Continue. Zero mod errors.)
+      there (FindObjectOfType null). Chapter III final itself: 4 pages traversed over HTTP -
+      Destiny timeline (8 events with category + year), Personality x2, page 4 renders empty
+      in the game itself (title/description/Continue only, panels carry no text) and the
+      sweep faithfully delivers "4 of 4" + Continue. Zero mod errors.
+      2026-07-19 closed as CUT CONTENT: probed live at every candidate surface - all three
+      PeaceFinishScreen_* variants, YouthFinishScreen, PeaceChapterStart_Prefect and
+      InsurrectionChapterStart each show 0 instances (FindObjectsOfTypeAll). The component
+      lives only on the Prefabs/Windows/Window_chapter prefab, which no code path and no
+      UIManager slot ever instantiates (ShowWindow's ChapterWindow case only closes windows),
+      and whose 31 texts are serialized Russian editor strings with no I2 components
+      ("Работа", "Должность:", "Большое дело:", "Запрет дуэлей:") - a prototype superseded
+      by the shipped Occupation and Family windows. The chapter IV final surface itself
+      (PeaceFinishScreen_Prefect, dev scene load) verified live: "End of Chapter IV. Peace
+      Time", Destiny page "1 of 2" delivered by the existing ChapterFinalScreen.)
 
 ## Phase 7 - Whole-game text surfaces
 
-- [ ] in progress - All remaining tooltip types (TooltipWithTitle, ObjectiveTooltip,
+- [x] verified - All remaining tooltip types (TooltipWithTitle, ObjectiveTooltip,
       EventTooltip, SimpleTooltip) reachable and spoken wherever they appear
       (2026-07-18 live audit of every loaded TooltipWithTitleBehavior (43 instances): each
       hover target carries TitleKey/TitleMainText I2 keys read at speech time - the mod folds
       from the same keys, never the tooltip prefab. Gaps found are the four items below; the
       per-surface tooltip data elsewhere (parameter scales, objectives, characters, choice
-      conditions/consequences) is already folded and verified per window.)
+      conditions/consequences) is already folded and verified per window.
+      2026-07-19 carrier census closed: EventTooltip's only carrier is the dead timeline pane,
+      SimpleTooltip's carriers (HUD buttons, Destiny tabs) are folded per window, and the last
+      MainMenuUITooltip gap - the name request mode toggles, whose explanations exist ONLY in
+      hover tooltips - now speaks on Space via each toggle's TooltipKeyHolder key: all three
+      descriptions verified live over HTTP (chapter rewind enabled, Iron Man, open
+      consequences).)
 - [x] verified - Map window detail pass: every city item carries Map.<X>.Description behind its
       TooltipWithTitleBehavior (label IS GetTranslation(TitleKey) via MapItemTranslation, so
       the pairing is authoritative) - fold description onto Space; and the window has an
@@ -729,7 +768,7 @@ go to DECISIONS.md, not to the user.
       includes the event-scene section: transcript row focused on load, safe re-reads leave
       the pager alone, End+Enter driver reaches choices/continue without ever activating a
       choice, choice speaks with position.)
-- [ ] in progress - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
+- [x] verified - Save-jump harness: saves (or dev-console jumps) that reach each chapter for
       spot-checks deep into the game
       (2026-07-18: scripts/advance.sh - story-advance driver that pushes the live game forward
       through the mod's navigator, verifying speech per action (rotating choice picks, silence
@@ -741,7 +780,13 @@ go to DECISIONS.md, not to the user.
       after it: transient "screen none" retried up to 8 probes (was instant abort), chapterfinal
       added as a clean stop, chapterselect (between-chapters loading screen) advanced via
       Home+Enter (Continue is the start node; End would refuse on a locked chapter station).
-      Chapter 2 reached and its save written 2026-07-18.)
+      Chapter 2 reached and its save written 2026-07-18. 2026-07-19 closed: the slot holds
+      Chapter_1..5.dat snapshots (SaveChapterState writes one per chapter start), and any
+      chapter is reachable on demand from the chapter select screen via /eval
+      GameLoadingScreenBehaviour.LoadChapterItem_Click(N) - chapter availability is purely
+      GameManager.Chapter >= N, and the quit auto-save re-stamps the slot marker. Used live
+      to recover the slot after the driver's accidental rewind and to reach the chapter IV
+      and V verification sessions.)
 - [x] dropped - Full keyboard-only playthrough of the prologue + chapter 1 via dev server
       (user, 2026-07-19: the user will do their own keyboard playthrough regardless, so the
       mod-side bar is every screen confirmed working once, not a full mod-driven playthrough)

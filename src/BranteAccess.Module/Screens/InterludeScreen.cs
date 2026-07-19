@@ -67,7 +67,12 @@ namespace BranteAccess.Module.Screens
 
         // Structural, not Referenced: all rows would share the popup component, and
         // reference-tier reconciliation snaps focus to the first node sharing a reference.
-        private static ControlId PageId(int page) => ControlId.Structural("interlude:page:" + page);
+        // Qualified by popup instance: when one interlude scene follows another with no
+        // popup-free frame between them, the screen stays focused and the navigator's differ
+        // never resets - a bare page index would re-seat on an identical key and swallow the
+        // new interlude entirely (heard live as a silent GameOver entry).
+        private static ControlId PageId(InterludePopup p, int page) =>
+            ControlId.Structural("interlude:" + p.GetInstanceID() + ":page:" + page);
 
         private static string PageText(InterludePopup p, int page)
         {
@@ -137,7 +142,7 @@ namespace BranteAccess.Module.Screens
             }
             if (page == _spokenPage) return;
             _spokenPage = page;
-            Navigation.FocusNode(PageId(page), announce: false);
+            Navigation.FocusNode(PageId(p, page), announce: false);
             Mod.Speech.Speak(PageText(p, page));
         }
 
@@ -154,7 +159,7 @@ namespace BranteAccess.Module.Screens
                 {
                     int page = i;
                     bool newest = page == pages;
-                    b.AddItem(PageId(page), new NodeVtable
+                    b.AddItem(PageId(p, page), new NodeVtable
                     {
                         ControlType = ControlTypes.Text,
                         Announcements = new[]
@@ -166,7 +171,7 @@ namespace BranteAccess.Module.Screens
                         OnActivate = !newest ? (System.Action)null : () => Popup().NextPage(),
                     });
                 }
-                b.SetStart(PageId(pages));
+                b.SetStart(PageId(p, pages));
                 b.PopContext();
 
                 // The game reveals the close button on the last page only.

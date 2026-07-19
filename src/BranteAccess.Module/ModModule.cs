@@ -117,6 +117,7 @@ namespace BranteAccess.Module
                 new PauseScreen(),
                 new ExitConfirmScreen(),
                 new CreditsScreen(),
+                new GameOverScreen(),
                 new ChapterPictureScreen(),
                 new ChapterStartScreen(),
                 new ChapterFinalScreen(),
