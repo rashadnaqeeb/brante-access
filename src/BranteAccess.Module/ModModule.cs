@@ -123,6 +123,7 @@ namespace BranteAccess.Module
                 new DeathScreen(),
                 new InterludeScreen(),
                 new SceneScreen(),
+                new LiveTimelineScreen(),
                 new WindowShellScreen(),
                 new CharacterWindowScreen(),
                 new FamilyWindowScreen(),

@@ -504,7 +504,15 @@ go to DECISIONS.md, not to the user.
       game's OnPointerClick (hide animation, sfx, Bolt advance). Verified live: "Chapter I.
       Childhood, Enter continues" spoken, Enter advanced to ChildhoodChapterStart.)
 - [ ] todo - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
-- [ ] todo - Timeline (WindowLiveTimelineController / life timeline) readable
+- [x] verified - Timeline (WindowLiveTimelineController / life timeline) readable
+      (2026-07-19: LiveTimelineScreen - the LiveTimeline scene (game end, before the finals)
+      was fully silent before (empty screen stack). Screen named by the hero's full name row;
+      rows follow the scroll content's child order: year marker rows ("1118", "1122") and
+      "category, event" rows ("Personal Life Birth", "Family Nathan's Birth", "Family
+      Brother and Sister's Sacrament"), 40 nodes for 23 events under 16 years; End Life
+      button announced and activated through the game's own click - the flow moved into the
+      finals sequence (Family Strife trigger popup + epilogue scene delivered). Reached by
+      dev scene-load of LiveTimeline over the chapter IV save.)
 - [ ] todo - Insurrection-day and other special scene variants (from scene census below)
 - [x] verified - Epilogue scenes (ConsequenceSceneController: 070.* game-over outcomes reached
       after a True Death - same TextController surface as normal scenes, no choices, ends on
@@ -551,7 +559,10 @@ go to DECISIONS.md, not to the user.
       model the popup renders (FindCondition on the active scene), negation spoken with the
       not-word, relation rows with the game's relation word. Verified live: title,
       explanation line, "Conditions Met" header, three not-rows, Continue (game's own click)
-      closed into the scene's title + first passage delivery. Zero mod errors.)
+      closed into the scene's title + first passage delivery. Zero mod errors. Also fired
+      NATURALLY at the Family Strife finals scene: parameter row "Unity exactly 0" and
+      negated objective row "not The Family Falls Apart" spoken, Continue into the epilogue
+      passage - all row types except relation exercised live.)
 - [ ] todo - ChapterWindowManager sections (later-chapter final summary: Post, BigDeal, Duels,
       Heir panels + work/family parameter sliders - check at the chapter 3 final whether the
       ChapterFinalScreen sweep already reads them)
