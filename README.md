@@ -22,12 +22,14 @@ This mod was developed entirely by Claude (Anthropic's AI, via Claude Code) with
 
 ## Building
 
-Requires the game installed via Steam and the .NET SDK.
+Requires the game (Steam or GOG) and the .NET SDK.
 
 1. Clone the repo.
-2. If your game is not in the default Steam location, set the path in `Directory.Build.local.props`.
-3. Close the game, then run `dotnet build` from the repo root. A debug build deploys BepInEx, the plugin, and the speech library into the game folder automatically.
+2. Run `setup-bepinex.ps1` once. It finds the game install (Steam and GOG are auto-detected; set the `BRANTE_GAME` environment variable if yours is somewhere unusual) and installs the vendored BepInEx into it.
+3. Close the game if it is running, then run `build.ps1`. It builds the mod and deploys the plugin and the speech library into the game folder, and tells you if anything is missing.
 4. Launch the game.
+
+If Windows blocks the scripts, run them as `powershell -ExecutionPolicy Bypass -File .\setup-bepinex.ps1` (and the same for `build.ps1`).
 
 `ROADMAP.md` tracks feature status and `DECISIONS.md` records the judgment calls made during development.
 
