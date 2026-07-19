@@ -37,7 +37,10 @@ namespace BranteAccess.Module.Screens
             get
             {
                 var w = Window();
-                return w == null ? null : Message.MaybeRaw(w.Title.text);
+                // Localize-aware: the freshly instantiated window still renders its
+                // serialized Russian title the beat it appears (heard live at chapter V).
+                return w == null ? null
+                    : Message.MaybeRaw(UiWidgets.LocalizedLabel(w.Title.gameObject));
             }
         }
 
@@ -63,7 +66,7 @@ namespace BranteAccess.Module.Screens
         // shows one (it hides it on the begin page).
         private static string PageAnnouncement(ChapterStartWindow w)
         {
-            var text = w.PageTitle.text;
+            var text = UiWidgets.LocalizedLabel(w.PageTitle.gameObject);
             text += ", " + Loc.T("nav.position", new
             {
                 index = CurrentPage(w) + 1,

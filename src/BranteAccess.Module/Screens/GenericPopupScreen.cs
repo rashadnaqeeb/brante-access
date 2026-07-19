@@ -19,7 +19,12 @@ namespace BranteAccess.Module.Screens
         public override bool IsActive()
         {
             var p = GameUi.OpenedPopup;
-            return p != null && p.activeInHierarchy;
+            // The trigger popup belongs to its dedicated screen for its whole lifecycle:
+            // the generic sweep announcing it on its very first frame reads the prefab's
+            // serialized editor text before the game's ConfigurePopup runs (heard live as
+            // Russian/Portuguese titles on chapter entry).
+            return p != null && p.activeInHierarchy
+                && p.GetComponent<_Scripts.AMVCC.Views.Windows.TriggerScenePopupController>() == null;
         }
 
         public override void Build(GraphBuilder b)
