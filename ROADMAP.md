@@ -657,17 +657,16 @@ go to DECISIONS.md, not to the user.
       added as a clean stop, chapterselect (between-chapters loading screen) advanced via
       Home+Enter (Continue is the start node; End would refuse on a locked chapter station).
       Chapter 2 reached and its save written 2026-07-18.)
-- [ ] todo - Full keyboard-only playthrough of the prologue + chapter 1 via dev server, zero
-      mouse, no unspoken interactive element encountered (log any gap as a new roadmap item)
-- [ ] todo - Sampled sweep across later chapters (3+ scenes per chapter incl. one special
-      scene each)
-- [ ] todo - Stability: one multi-hour session, no speech loss, no leaked Harmony errors in /log
-      (data point 2026-07-18: ~10.5h dev session with 4 hot reloads and hundreds of /eval
-      compiles ended in a mono Boehm GC crash, "Unexpected mark stack overflow" in the gc log,
-      during a GC under the per-frame graph rebuild - no mod recursion on the managed stack.
-      Dev-tooling aggravation, not a shipping code path: Release sessions never hot-reload or
-      eval. Driver made eval-free in response; the stability run must pass on a fresh launch
-      with zero /eval traffic to count)
+- [x] dropped - Full keyboard-only playthrough of the prologue + chapter 1 via dev server
+      (user, 2026-07-19: the user will do their own keyboard playthrough regardless, so the
+      mod-side bar is every screen confirmed working once, not a full mod-driven playthrough)
+- [x] dropped - Sampled sweep across later chapters
+      (user, 2026-07-19: same descope - the user's own playthrough covers this)
+- [x] dropped - Stability: one multi-hour session
+      (user, 2026-07-19: same descope. Data point stands: the 2026-07-18 mono Boehm GC crash
+      ("Unexpected mark stack overflow") was dev-tooling aggravation - hundreds of /eval
+      dynamic assemblies - not a shipping code path; Release sessions never hot-reload or
+      eval, and the multi-hour eval-free driving legs since have been stable)
 - [ ] todo - Second-pass code review of everything user-facing (self /code-review), fix findings
 
 ## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)
