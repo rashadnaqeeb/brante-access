@@ -116,13 +116,14 @@ namespace BranteAccess.Module.Screens
             b.AddItem(titleId, TextRow(() => PageAnnouncement(Window())));
             b.SetStart(titleId);
 
-            // Current page content. Objectives and parameters are folded rows read from their
-            // components; any other panel (the begin page) is swept generically.
+            // Current page content. Objectives, parameters and section unlocks are folded rows
+            // read from their components; any other panel (the begin page) is swept generically.
             if (page < panels.Count)
             {
                 var panel = panels[page];
                 var objectives = panel.GetComponentsInChildren<ObjectiveInitializer>();
                 var parameters = panel.GetComponentsInChildren<ParameterComponent>();
+                var unlocks = panel.GetComponentsInChildren<UnlockedItemBehaviour>();
                 if (objectives.Length > 0)
                     foreach (var obj in objectives)
                     {
@@ -137,6 +138,40 @@ namespace BranteAccess.Module.Screens
                         b.AddItem(ControlId.Referenced(pc, "chapterstart:parameter:" + pc.GetInstanceID()),
                             TextRow(() => pc.Name.text + " " + pc.TextValue.text
                                 + (string.IsNullOrEmpty(pc.Descr.text) ? "" : ", " + pc.Descr.text)));
+                    }
+                else if (unlocks.Length > 0)
+                    // A New Sections row is the unlock text plus an image-only icon that opens
+                    // the unlocked window (HudController wiring on the icon's Button) - one
+                    // button row per unlock, labeled by the game's own unlock text, instead of
+                    // a text row and a bare unlabeled icon stop.
+                    foreach (var unlock in unlocks)
+                    {
+                        var u = unlock;
+                        var icon = u.GetComponentInChildren<UnityEngine.UI.Button>();
+                        b.AddItem(ControlId.Referenced(u, "chapterstart:unlock:" + u.GetInstanceID()),
+                            new NodeVtable
+                            {
+                                ControlType = ControlTypes.Button,
+                                Announcements = new[]
+                                {
+                                    new NodeAnnouncement(
+                                        () => u.GetComponentInChildren<TMPro.TMP_Text>().text,
+                                        kind: AnnouncementKinds.Label),
+                                    new NodeAnnouncement(
+                                        () => UiWidgets.Interactable(icon.gameObject)
+                                            ? null : Loc.T("state.unavailable"),
+                                        kind: AnnouncementKinds.Enabled),
+                                },
+                                OnActivate = () =>
+                                {
+                                    if (!UiWidgets.Interactable(icon.gameObject))
+                                    {
+                                        Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
+                                        return;
+                                    }
+                                    UiWidgets.Click(icon.gameObject);
+                                },
+                            });
                     }
                 else
                 {
