@@ -45,8 +45,17 @@ while [ "$STEP" -lt "$MAX" ]; do
   # the death counter (trial fires at 4) and keep Will off the floor so the run can finish;
   # standard deaths still occur and traverse in place. One eval per 60 steps (~10 per leg)
   # stays far below the ~400-eval GC crash documented in CLAUDE.md.
+  # No declarations in the eval: the REPL keeps state for the whole game session, so a
+  # `var` would compile once and fail as a redefinition on every later call - which is
+  # exactly what happened (silently, because the output was discarded) the first time a
+  # trial fired straight through life support. The result is logged; a non-ok result is
+  # loud but does not abort (one missed reset is survivable, a pattern of them is not).
   if [ $((STEP % 60)) -eq 1 ]; then
-    curl -s -m 10 -X POST "$BASE/eval" --data-binary 'var pm = _Scripts.Managers.ParametersManager.Instance; pm.Parameters.Death = 0; if (pm.Parameters.Will < 15) pm.Parameters.Will = 15; pm.OnBeforeSerialize(); "life support: Death=0 Will=" + pm.Parameters.Will' > /dev/null
+    LS=$(curl -s -m 10 -X POST "$BASE/eval" --data-binary '_Scripts.Managers.ParametersManager.Instance.Parameters.Death = 0; if (_Scripts.Managers.ParametersManager.Instance.Parameters.Will < 15) _Scripts.Managers.ParametersManager.Instance.Parameters.Will = 15; _Scripts.Managers.ParametersManager.Instance.OnBeforeSerialize(); "ls Death=" + _Scripts.Managers.ParametersManager.Instance.Parameters.Death + " Will=" + _Scripts.Managers.ParametersManager.Instance.Parameters.Will')
+    case "$LS" in
+      *"ls Death=0"*) echo "life support step $STEP: $LS" ;;
+      *) echo "life support step $STEP FAILED: $LS" ;;
+    esac
   fi
 
   # Mod errors abort; the game's own errors (e.g. UIManager.SetAchievementInfo NREs in the
