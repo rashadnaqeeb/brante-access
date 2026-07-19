@@ -206,8 +206,10 @@ smoke-tested by calling the patched method from /eval and expecting the announce
 - Every /eval compiles a fresh dynamic assembly that lives until the process exits. Hundreds
   of them in one long session crashed the game's Boehm GC ("Unexpected mark stack overflow",
   mono breakpoint 0x80000003 during marking - seen 2026-07-18 after ~10.5h, 4 hot reloads,
-  ~400 driver evals). Steady-state automation must poll /nav|/health|/gui, never /eval; keep
-  /eval for one-off inspection, and prefer restarting the game between long automated runs.
+  ~400 driver evals; again 2026-07-19 after ~10h, 9 hot reloads, far fewer evals - session
+  AGE plus reload count matters, not eval count alone). Steady-state automation must poll
+  /nav|/health|/gui, never /eval; keep /eval for one-off inspection, and restart the game
+  proactively every few hours of automated driving.
 
 ## Autonomous run protocol
 
