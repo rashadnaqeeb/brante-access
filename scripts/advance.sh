@@ -96,7 +96,15 @@ while [ "$STEP" -lt "$MAX" ]; do
 
   case "$KIND" in
     "screen chapterstart")
-      echo "STOP step $STEP: chapter start window reached (manual verification item)"; exit 0 ;;
+      # The chapter start book (verified surface): page forward with End+Enter (End lands
+      # on the next arrow); the last page reveals Continue before the arrows, so walk to it
+      # by position when it appears.
+      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g{n++; if ($0 ~ /chapterstart:btn:/) last=n} END{if (last) print last}')
+      if [ -n "$TARGET" ]; then
+        ACTION="walk $TARGET"
+      else
+        ACTION="endenter"
+      fi ;;
     "screen chapterfinal")
       echo "STOP step $STEP: chapter final window reached (chapter save written)"; exit 0 ;;
     "screen mainmenu")
