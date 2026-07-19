@@ -118,9 +118,20 @@ namespace BranteAccess.Module.Input
         public static bool DispatchSuppressed
             => IsTypingInTextField() || (SuppressDispatch != null && SuppressDispatch());
 
+        // The keystroke that ENDS a suppression source must not dispatch: TMP's Enter commit /
+        // Escape cancel deactivate the field during the EventSystem's update, earlier in the same
+        // frame than this tick, so by poll time suppression is already off while the key still
+        // reads JustPressed - it would re-activate the edit control it just left. Stand down for
+        // one tick after suppression ends. Dispatch() is exempt: a synthetic press can never be
+        // the physical keystroke that ended the edit.
+        private static bool _suppressedLastTick;
+
         public static void Tick()
         {
-            if (DispatchSuppressed) return;
+            bool suppressed = DispatchSuppressed;
+            bool standDown = suppressed || _suppressedLastTick;
+            _suppressedLastTick = suppressed;
+            if (standDown) return;
 
             RebuildLive(); // this frame's category claims + chord shadowing
 
