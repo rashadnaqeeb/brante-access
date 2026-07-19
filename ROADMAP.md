@@ -522,8 +522,23 @@ go to DECISIONS.md, not to the user.
       dressing (sfx/music/picture/poem/death-trigger) on the covered TextController flow.
       Distinct surfaces found and listed as items below. Remaining census work: watch the
       chapter 3+ driver runs for scenes whose probe reports an uncovered screen.)
-- [ ] todo - CaseForYearWindow (chapter 3+ case-selection window: PeaceCases/WarCases lists,
+- [x] verified - CaseForYearWindow (chapter 3+ case-selection window: PeaceCases/WarCases lists,
       left/right pages, confirm popup; distinct from the verified CaseOfYear popup)
+      (2026-07-19: CaseForYearScreen (layer 12, over the scene) + Readouts.CaseDetails/
+      CaseUnavailableReason. Exercised live at the chapter IV save by opening the window
+      through the game's own UIManager.OpenCaseOfYearWindow: focus takeover from the scene
+      (stack scene, caseforyear), 9 Inquisitor peace-case rows in page order, grayed rows
+      announce the failed check from the serialized conditions ("unavailable, requires Nathan
+      Brante relation at least Sympathy", "requires Tolerance of Faiths at least 5"), Space
+      reads conditions with live met state plus year consequences ("Conditions Not Met,
+      Willpower at least 5, now 5, met, Nathan Brante relation at least 2, now 0, not met.
+      Consequences, Willpower -5, now 5, Theology +1, now 12"), Enter ran the game's click
+      path into the confirm popup (popup screen took over), cancel returned to the case rows,
+      window teardown popped cleanly back to the scene. Caveat: case titles/descriptions are
+      scene-bundled I2 terms (not in the global source), so the harness open spoke empty
+      titles; the rows read ButtonText live, so the natural story flow supplies them - the
+      dev "CaseOfYear" scene is not in build settings, so titles get their real check when
+      the story deals the dialog.)
 - [ ] todo - TriggerScenePopupController (scene-trigger popup with vertical/horizontal
       parameter/relation/status rows - check live whether GenericPopupScreen already covers
       its prefab before writing anything)

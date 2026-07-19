@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BranteAccess.Module.UI;
 using ParameterButtonChanger = _Scripts.AMVCC.Views.ParameterButtonChanger;
 using SceneConsequenceGenerator = _Scripts.AMVCC.Views.Windows.SceneConsequenceGenerator;
 using Objective = _Scripts.AMVCC.Views.Windows.Destiny.Objective;
@@ -356,6 +357,173 @@ namespace BranteAccess.Module.Game
                 });
             }
             return text;
+        }
+
+        /// <summary>A year-case's detail: the case description, its conditions with live met
+        /// state (the same per-check data the game grays the button by), and the stat effects
+        /// the case commits for the year - what the game's hover tooltip and detail popup show
+        /// around the selection window.</summary>
+        public static string CaseDetails(_Scripts.AMVCC.Views.Windows.CaseForYearEnabler e)
+        {
+            var c = e.CurrentCase;
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var names = _Scripts.AMVCC.Models.Static.KeyChapterParametersController.Initiate;
+            var sections = new List<string>
+            {
+                (ElText(GameLoc.GetTranslation(c.Description)) ?? "").TrimEnd('.'),
+            };
+
+            var conds = new List<string>();
+            if (c.NeedCheckPossible && c.ConditionByParam != null)
+                for (int i = 0; i < c.ConditionByParam.Count && i < e.Checks.Count; i++)
+                {
+                    var cond = c.ConditionByParam[i];
+                    conds.Add(WithMet(WithNow(Loc.T("choice.req.param", new
+                    {
+                        name = GameLoc.GetTranslation(cond.ParamName.ParameterName.ToString()),
+                        op = OpWord(cond.Operations.ToString()),
+                        value = cond.SecondValue,
+                    }), pm.GetParameterValue(cond.ParamName)), e.Checks[i]));
+                }
+            if (c.ByRelation != null)
+                for (int i = 0; i < c.ByRelation.Count && i < e.ChecksByRelations.Count; i++)
+                {
+                    var cond = c.ByRelation[i];
+                    conds.Add(WithMet(WithNow(Loc.T("choice.req.relation", new
+                    {
+                        name = names.GetCharacterTrueName(cond.Character.Name),
+                        op = OpWord(cond.Operations.ToString()),
+                        value = cond.Value,
+                    }), pm.GetCharacterRelation(cond.Character,
+                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters)),
+                        e.ChecksByRelations[i]));
+                }
+            if (c.ByStatus != null)
+                for (int i = 0; i < c.ByStatus.Count && i < e.ChecksByStatus.Count; i++)
+                {
+                    var cond = c.ByStatus[i];
+                    var row = Loc.T("choice.req.status", new
+                    {
+                        name = names.GetCharacterTrueName(cond.Character.Name),
+                        status = GameLoc.GetTranslation(
+                            pm.GetCharacterStatusKey(cond.Character, cond.Status) ?? ""),
+                    });
+                    if (cond.Not) row = Loc.T("choice.req.not", new { req = row });
+                    conds.Add(WithMet(row, e.ChecksByStatus[i]));
+                }
+            if (c.ConditionByObjectives != null)
+                for (int i = 0; i < c.ConditionByObjectives.Count && i < e.ChecksByObjective.Count; i++)
+                {
+                    var cond = c.ConditionByObjectives[i];
+                    var row = ObjectiveTitle(cond.Objective);
+                    if (cond.Not) row = Loc.T("choice.req.not", new { req = row });
+                    conds.Add(WithMet(row, e.ChecksByObjective[i]));
+                }
+            if (conds.Count > 0)
+                sections.Add(Loc.T("tooltip.section", new
+                {
+                    title = GameLoc.GetTranslation(UiWidgets.Interactable(e.gameObject)
+                        ? "ConditionIsMet" : "ConditionNotMet"),
+                    rows = string.Join(", ", conds.ToArray()),
+                }));
+
+            var cons = new List<string>();
+            if (c.ParameterValue != null)
+                foreach (var p in c.ParameterValue)
+                {
+                    if (p.Name.ParameterName == ParametersList.Heir)
+                        cons.Add(Loc.T("choice.cons.set", new
+                        {
+                            name = GameLoc.GetTranslation(p.Name.ParameterName.ToString()),
+                            value = pm.GetHeir(p.Value),
+                        }));
+                    else
+                        cons.Add(WithNow(Loc.T("choice.cons.param", new
+                        {
+                            name = GameLoc.GetTranslation(p.Name.ParameterName.ToString()),
+                            delta = Signed(p.Value),
+                        }), pm.GetParameterValue(p.Name)));
+                }
+            if (c.RelationValue != null)
+                foreach (var r in c.RelationValue)
+                    cons.Add(WithNow(Loc.T("choice.cons.relation", new
+                    {
+                        name = names.GetCharacterTrueName(r.Character.Name),
+                        delta = Signed(r.Value),
+                    }), pm.GetCharacterRelation(r.Character,
+                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters)));
+            if (c.StatusValue != null)
+                foreach (var s in c.StatusValue)
+                    cons.Add(Loc.T("choice.cons.set", new
+                    {
+                        name = names.GetCharacterTrueName(s.Character.Name),
+                        value = GameLoc.GetTranslation(
+                            pm.GetCharacterStatusKey(s.Character, s.CurrentStatus) ?? ""),
+                    }));
+            if (cons.Count > 0)
+                sections.Add(Loc.T("tooltip.section", new
+                {
+                    title = GameLoc.GetTranslation("Consequence"),
+                    rows = string.Join(", ", cons.ToArray()),
+                }));
+
+            sections.RemoveAll(string.IsNullOrEmpty);
+            return string.Join(". ", sections.ToArray());
+        }
+
+        /// <summary>Why a year-case is grayed out: its failed checks only, composed from the
+        /// same serialized conditions CaseDetails reads. The plain unavailable word when no
+        /// simple check failed.</summary>
+        public static string CaseUnavailableReason(_Scripts.AMVCC.Views.Windows.CaseForYearEnabler e)
+        {
+            var c = e.CurrentCase;
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var names = _Scripts.AMVCC.Models.Static.KeyChapterParametersController.Initiate;
+            var reqs = new List<string>();
+
+            if (c.NeedCheckPossible && c.ConditionByParam != null)
+                for (int i = 0; i < c.ConditionByParam.Count && i < e.Checks.Count; i++)
+                    if (!e.Checks[i])
+                        reqs.Add(Loc.T("choice.req.param", new
+                        {
+                            name = GameLoc.GetTranslation(
+                                c.ConditionByParam[i].ParamName.ParameterName.ToString()),
+                            op = OpWord(c.ConditionByParam[i].Operations.ToString()),
+                            value = c.ConditionByParam[i].SecondValue,
+                        }));
+            if (c.ByRelation != null)
+                for (int i = 0; i < c.ByRelation.Count && i < e.ChecksByRelations.Count; i++)
+                    if (!e.ChecksByRelations[i])
+                        reqs.Add(Loc.T("choice.req.relation", new
+                        {
+                            name = names.GetCharacterTrueName(c.ByRelation[i].Character.Name),
+                            op = OpWord(c.ByRelation[i].Operations.ToString()),
+                            value = pm.CheckParameterValue(c.ByRelation[i].Value),
+                        }));
+            if (c.ByStatus != null)
+                for (int i = 0; i < c.ByStatus.Count && i < e.ChecksByStatus.Count; i++)
+                    if (!e.ChecksByStatus[i])
+                    {
+                        var cond = c.ByStatus[i];
+                        var req = Loc.T("choice.req.status", new
+                        {
+                            name = names.GetCharacterTrueName(cond.Character.Name),
+                            status = GameLoc.GetTranslation(
+                                pm.GetCharacterStatusKey(cond.Character, cond.Status) ?? ""),
+                        });
+                        reqs.Add(cond.Not ? Loc.T("choice.req.not", new { req }) : req);
+                    }
+            if (c.ConditionByObjectives != null)
+                for (int i = 0; i < c.ConditionByObjectives.Count && i < e.ChecksByObjective.Count; i++)
+                    if (!e.ChecksByObjective[i])
+                    {
+                        var cond = c.ConditionByObjectives[i];
+                        var req = ObjectiveTitle(cond.Objective);
+                        reqs.Add(cond.Not ? Loc.T("choice.req.not", new { req }) : req);
+                    }
+
+            if (reqs.Count == 0) return Loc.T("state.unavailable");
+            return Loc.T("choice.unavailable", new { req = string.Join(", ", reqs.ToArray()) });
         }
 
         /// <summary>One spoken line from a label that wraps over multiple lines on screen.</summary>
