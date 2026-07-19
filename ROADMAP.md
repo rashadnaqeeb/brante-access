@@ -420,7 +420,12 @@ go to DECISIONS.md, not to the user.
       end-stop refusal "unavailable", Begin Chapter swept + activated into scene 01.01.01.
       Content rows verified live at Adolescence start: objective rows spoke name + folded
       description ("Gloria's Secret. You discover the secret society..."), all 6 pages
-      delivered title/position/description on one keypress each.)
+      delivered title/position/description on one keypress each. 2026-07-19: New Sections
+      unlock rows folded - the swept bare-"button" icon (HudController window-open wiring,
+      no text child) replaced by one button row per UnlockedItemBehaviour labeled with the
+      game's own unlock text; verified live at Peace Time start: "'Occupation' screen is
+      now available, button", Enter opened the Occupation window, Escape returned to the
+      book with the page redelivered.)
 - [x] verified - Chapter final window (stats summary pages)
       (2026-07-18: ChapterFinalScreen - epilogue text rows (second prefab text deduped),
       page title/position/description row, timeline rows folding event + branch + year from
