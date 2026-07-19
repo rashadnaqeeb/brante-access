@@ -40,6 +40,15 @@ LOGC=$(logcur)
 while [ "$STEP" -lt "$MAX" ]; do
   STEP=$((STEP + 1))
 
+  # Life support (harness intervention, see DECISIONS.md): the fourth-death trial rewinds
+  # the whole chapter, so three runs in a row died before reaching the chapter final. Reset
+  # the death counter (trial fires at 4) and keep Will off the floor so the run can finish;
+  # standard deaths still occur and traverse in place. One eval per 60 steps (~10 per leg)
+  # stays far below the ~400-eval GC crash documented in CLAUDE.md.
+  if [ $((STEP % 60)) -eq 1 ]; then
+    curl -s -m 10 -X POST "$BASE/eval" --data-binary 'var pm = _Scripts.Managers.ParametersManager.Instance; pm.Parameters.Death = 0; if (pm.Parameters.Will < 15) pm.Parameters.Will = 15; pm.OnBeforeSerialize(); "life support: Death=0 Will=" + pm.Parameters.Will' > /dev/null
+  fi
+
   # Mod errors abort; the game's own errors (e.g. UIManager.SetAchievementInfo NREs in the
   # fourth-death Continue path, a game bug that also fires on mouse clicks) are noted and
   # driving continues - the game survives them.

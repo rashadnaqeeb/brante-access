@@ -7,6 +7,15 @@ stream of questions.
 
 ## Game-over and death-flow judgment calls (2026-07-19, Phase 6/8)
 
+- **The story driver keeps the save alive with a sparse dev-eval (harness only, never the
+  mod)**: three chapter IV runs in a row ended in a fourth-death trial, and each trial
+  rewinds the entire chapter - random-choice driving was net-zero progress. advance.sh now
+  resets the Death counter (the trial fires at 4) and floors Will at 15 once every 60 steps
+  via /eval, so standard deaths still occur and verify their window in place while the
+  chapter can actually finish. ~10 evals per 600-step leg, two orders of magnitude under
+  the documented ~400-eval GC crash. This mutates only the throwaway test save; shipping
+  behavior is untouched.
+
 - **Epilogue scenes ride SceneScreen, not a new screen**: ConsequenceSceneController
   (070.* outcomes) is the same TextController transcript minus choices; a dedicated screen
   would duplicate the pager, delivery, and HUD wiring for zero spoken difference. SceneScreen
