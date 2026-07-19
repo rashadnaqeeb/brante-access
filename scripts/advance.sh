@@ -99,7 +99,9 @@ while [ "$STEP" -lt "$MAX" ]; do
       # The chapter start book (verified surface): page forward with End+Enter (End lands
       # on the next arrow); the last page reveals Continue before the arrows, so walk to it
       # by position when it appears.
-      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g{n++; if ($0 ~ /chapterstart:btn:/) last=n} END{if (last) print last}')
+      # Other swept buttons (the New Sections page's section rows) share the
+      # chapterstart:btn: prefix, so require the Continue label on the same line.
+      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g{n++; if ($0 ~ /chapterstart:btn:/ && $0 ~ /"Continue, button/) last=n} END{if (last) print last}')
       if [ -n "$TARGET" ]; then
         ACTION="walk $TARGET"
       else
