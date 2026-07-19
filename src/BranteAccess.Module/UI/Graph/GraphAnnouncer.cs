@@ -153,7 +153,12 @@ namespace BranteAccess.Module.UI.Graph
             for (int i = 0; i < anns.Count; i++)
             {
                 string t = null;
-                if (anns[i]?.Text != null) t = anns[i].Text();
+                // Guarded like the live-watch and selected-probe invocations: these delegates read
+                // live game state and a transient throw must cost one part, not the input loop -
+                // an unwind here repeats every frame (same node, same compose) and locks the keyboard.
+                if (anns[i]?.Text != null)
+                    try { t = anns[i].Text(); }
+                    catch (Exception e) { Mod.Warn("announcement part threw on " + node?.Id + ": " + e.Message); }
                 if (string.IsNullOrEmpty(t)) continue;
                 if (sb.Length > 0) sb.Append(", ");
                 sb.Append(t);
@@ -202,7 +207,12 @@ namespace BranteAccess.Module.UI.Graph
         {
             var anns = node?.Vtable?.Announcements;
             if (anns == null || anns.Count == 0) return null;
-            return anns[0]?.Text?.Invoke();
+            try { return anns[0]?.Text?.Invoke(); }
+            catch (Exception e)
+            {
+                Mod.Warn("label part threw on " + node.Id + ": " + e.Message);
+                return null;
+            }
         }
 
         // The next part "starts as" this label: equal, or its first comma-separated segment is the label

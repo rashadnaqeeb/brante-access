@@ -498,7 +498,8 @@ namespace BranteAccess.Module.Game
                         {
                             name = names.GetCharacterTrueName(c.ByRelation[i].Character.Name),
                             op = OpWord(c.ByRelation[i].Operations.ToString()),
-                            value = pm.CheckParameterValue(c.ByRelation[i].Value),
+                            value = c.ByRelation[i].Value + " ("
+                                + pm.CheckParameterValue(c.ByRelation[i].Value) + ")",
                         }));
             if (c.ByStatus != null)
                 for (int i = 0; i < c.ByStatus.Count && i < e.ChecksByStatus.Count; i++)

@@ -83,9 +83,11 @@ namespace BranteAccess.Module.Screens
                 ControlType = ControlTypes.Text,
                 Announcements = new[]
                 {
+                    // Header through its own I2 term: the static label localizes on separate
+                    // Start() timing, so a first-open read can catch the prefab's serialized text.
                     new NodeAnnouncement(() => Loc.T("hud.pair", new
                     {
-                        label = header.text,
+                        label = UiWidgets.LocalizedLabel(header.gameObject),
                         value = nameText.text,
                     }), kind: AnnouncementKinds.Label),
                 },

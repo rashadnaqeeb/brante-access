@@ -112,7 +112,7 @@ namespace BranteAccess.Module.Screens
                         {
                             var help = (GameObject)HelpBoxField.GetValue(Behaviour());
                             if (UiWidgets.Visible(help))
-                                Mod.Speech.Speak(UiWidgets.LabelText(help), interrupt: true);
+                                Mod.Speech.Speak(UiWidgets.LabelText(help));
                         },
                     });
             }

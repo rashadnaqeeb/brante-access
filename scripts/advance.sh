@@ -153,9 +153,11 @@ while [ "$STEP" -lt "$MAX" ]; do
       echo "note step $STEP: cutscene - waiting"; sleep 5; continue ;;
     "screen none")
       # Transient: the screen stack empties during scene loads. Retry; a surface the mod
-      # genuinely does not cover stays "none" and falls to the stuck-title abort.
+      # genuinely does not cover stays "none" and falls to the stuck-title abort. The
+      # finals flow's between-scene gap (epilogue teardown to trigger-popup show) runs
+      # tens of seconds - seen live at 16s-plus - hence the long window.
       NONE_COUNT=$((NONE_COUNT + 1))
-      if [ "$NONE_COUNT" -ge 8 ]; then
+      if [ "$NONE_COUNT" -ge 30 ]; then
         echo "ABORT step $STEP: no active screen after $NONE_COUNT probes (uncovered surface)"; exit 1
       fi
       echo "note step $STEP: no active screen - retrying"; sleep 2; continue ;;

@@ -60,7 +60,23 @@ namespace BranteAccess.Host
                 }
 
                 var module = (IModModule)Activator.CreateInstance(type);
-                module.Load(_host);
+                try
+                {
+                    module.Load(_host);
+                }
+                catch
+                {
+                    // A Load that dies partway has already applied some of its patches and
+                    // subscriptions; Dispose is the only owner that can take them back out.
+                    // Without this, they leak for the rest of the process while the old module
+                    // keeps running.
+                    try { module.Dispose(); }
+                    catch (Exception dex)
+                    {
+                        HostLog.Error("ModuleLoader: dispose after failed Load also failed: " + dex);
+                    }
+                    throw;
+                }
 
                 // Swap in only once the new module is fully live, so a failed reload (locked /
                 // corrupt / half-written dll) leaves the running module untouched.

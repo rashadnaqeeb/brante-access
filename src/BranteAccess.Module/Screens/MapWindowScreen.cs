@@ -42,9 +42,11 @@ namespace BranteAccess.Module.Screens
                 var t = tip;
                 if (!UiWidgets.Visible(t.gameObject)) continue;
                 var area = t.GetComponent<MapArea>();
-                var name = area != null
-                    ? (System.Func<string>)(() => area.Text.text)
-                    : () => GameLoc.GetTranslation(t.TitleKey);
+                // City labels resolve through the item's own I2 term, not the rendered TMP - the
+                // label component localizes on its own Start() timing, so the first-open frame
+                // still shows the prefab's serialized text (the pairing label IS
+                // GetTranslation(TitleKey), see the map detail pass in ROADMAP).
+                System.Func<string> name = () => GameLoc.GetTranslation(t.TitleKey);
                 var label = area != null
                     ? name
                     : () => Loc.T("map.province", new { name = name() });

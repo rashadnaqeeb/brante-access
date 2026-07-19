@@ -101,9 +101,11 @@ namespace BranteAccess.Module.Screens
                 AddRow(b, ControlId.Structural("character:deaths"), () =>
                 {
                     var w = Window();
+                    // Label through its own I2 term - the static "Deaths" label localizes on
+                    // separate Start() timing from the window populate this screen gates on.
                     return Loc.T("character.deaths", new
                     {
-                        label = DeathsLabel(w).text,
+                        label = UiWidgets.LocalizedLabel(DeathsLabel(w).gameObject),
                         value = _Scripts.Managers.ParametersManager.Instance
                             .GetParameterValue(w.LiveParameter),
                         max = w.LiveImages.Length,

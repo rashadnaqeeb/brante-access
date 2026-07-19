@@ -712,7 +712,22 @@ go to DECISIONS.md, not to the user.
       ("Unexpected mark stack overflow") was dev-tooling aggravation - hundreds of /eval
       dynamic assemblies - not a shipping code path; Release sessions never hot-reload or
       eval, and the multi-hour eval-free driving legs since have been stable)
-- [ ] todo - Second-pass code review of everything user-facing (self /code-review), fix findings
+- [ ] built - Second-pass code review of everything user-facing (self /code-review), fix findings
+      (2026-07-19 review agent swept all three projects; five findings, all confirmed against
+      source and fixed: (1) critical - unguarded Text() delegates in GraphAnnouncer.LeafText/
+      FirstPartText could throw during focus compose and relock every frame (Tick unwinds
+      before InputManager runs - permanent keyboard freeze in Release); now guarded + logged
+      like the sibling KeyGraph/WatchLive sites. (2) ModuleLoader now disposes a module whose
+      Load() threw partway, so half-applied patches cannot leak (host change - deploys at next
+      restart, compile-checked via Release build). (3) CaseUnavailableReason relation rows
+      spoke the category word INSTEAD of the threshold number; now "N (Word)" like
+      TriggerRelationRow. (4) first-open localization race closed on four more surfaces via
+      LocalizedLabel: Settings title + all row captions, Map city labels (now TitleKey terms),
+      Empire office headers, Character deaths label. (5) ChapterSelect help readout no longer
+      interrupts (only OnTooltip site that did). Clean-bill areas: no cached state, no inline
+      strings, no silent catches, patch lifecycle correct, dev-server threading correct.
+      Remaining for verified: live re-check of the touched announcements (sweep + fresh-restart
+      first-open pass on Settings/Map/Empire/Character rides the Release-smoke restart).
 
 ## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)
 
