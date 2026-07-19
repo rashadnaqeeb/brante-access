@@ -698,3 +698,8 @@ stream of questions.
   adopted from the start (see "Locked with the user (mid-run)" above).
 - **Game content text is never re-authored**: passage/choice text comes from the game's I2
   table at its own keys; mod-authored strings live in the mod's enGB localization manifest.
+- **Unrevealed content never spoken by name** (2026-07-19): chapter select lists only chapters
+  the save has reached (the game keeps later ones permanently deactive and unlabeled); a locked
+  HUD button announces only the game's HUD.WillOpen{n} tooltip line, never the window's name -
+  the game's TooltipEventHandler withholds the name term until Unlocked, so the mod's speech
+  surface matches the sighted text surface exactly.

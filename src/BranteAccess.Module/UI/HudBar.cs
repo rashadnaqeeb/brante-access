@@ -13,7 +13,8 @@ namespace BranteAccess.Module.UI
     /// The HUD bar as a Tab-stop: a year/chapter status row, then the window buttons in one
     /// left-to-right row. Button labels are the game's own I2 terms keyed by the button
     /// object's name (the same lookup the game's hover tooltip does); a still-locked button
-    /// announces the game's own HUD.WillOpen{chapter} reason. Activation goes through the
+    /// announces only the game's own HUD.WillOpen{chapter} reason, never its name - the game
+    /// hides a locked button's name until unlock. Activation goes through the
     /// game's pointer-click path, whose handlers run the game's own IsButtonsBlocked gate.
     /// Shared by every screen that shows the bar (the event scene now, windows later).
     /// </summary>
@@ -51,14 +52,17 @@ namespace BranteAccess.Module.UI
                         ControlType = ControlTypes.Button,
                         Announcements = new[]
                         {
-                            new NodeAnnouncement(() => Label(go), kind: AnnouncementKinds.Label),
+                            // A locked button's whole presentation is the game's own WillOpen
+                            // tooltip line: the game withholds the window's name until unlock
+                            // (TooltipEventHandler only shows the name term when Unlocked), so
+                            // speaking the name here would spoil upcoming windows.
+                            new NodeAnnouncement(() => LockReason(go) ?? Label(go),
+                                kind: AnnouncementKinds.Label),
                             new NodeAnnouncement(() => IsPressed(go)
                                     ? Loc.T("state.selected") : null,
                                 kind: AnnouncementKinds.Selected),
-                            new NodeAnnouncement(() => LockReason(go),
-                                kind: AnnouncementKinds.Enabled),
                         },
-                        SearchText = () => Label(go),
+                        SearchText = () => LockReason(go) ?? Label(go),
                         OnActivate = () =>
                         {
                             var reason = LockReason(go);

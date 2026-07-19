@@ -86,6 +86,10 @@ namespace BranteAccess.Module.Screens
             foreach (var field in ItemFields)
             {
                 var item = (LoadChapterItemBehavior)field.GetValue(screen);
+                // Chapters past the save's progress stay permanently deactive in the game
+                // (CheckChapterItem never enables them; their names only render on hover of
+                // interactable items) - listing them by name would spoil upcoming chapters.
+                if (item.Chapter > _Scripts.Managers.GameManager.Instance.Chapter) continue;
                 var go = item.gameObject;
                 b.AddItem(ControlId.Referenced(item, "chapterselect:chapter:" + item.Chapter),
                     new NodeVtable
