@@ -101,7 +101,9 @@ while [ "$STEP" -lt "$MAX" ]; do
       # by position when it appears.
       # Other swept buttons (the New Sections page's section rows) share the
       # chapterstart:btn: prefix, so require the Continue label on the same line.
-      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g{n++; if ($0 ~ /chapterstart:btn:/ && $0 ~ /"Continue, button/) last=n} END{if (last) print last}')
+      # Node positions count only node-START lines (multi-line LeafTexts wrap: counting
+      # every line once walked onto the prev arrow and ping-ponged the last two pages).
+      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g && /^(\* |  )ControlId\(/{n++; if ($0 ~ /chapterstart:btn:/ && $0 ~ /"Continue, button/) last=n} END{if (last) print last}')
       if [ -n "$TARGET" ]; then
         ACTION="walk $TARGET"
       else
@@ -119,7 +121,7 @@ while [ "$STEP" -lt "$MAX" ]; do
       # Home+Enter. The relive selection (after the fourth death): the age text is the
       # start node, chapter stations follow - walk to the LAST available chapter so the
       # run resumes at the furthest reached content.
-      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g{n++; if ($0 ~ /chapterselect:chapter:/ && $0 !~ /, unavailable/) last=n} END{if (last) print last}')
+      TARGET=$(echo "$NAVOUT" | awk '/^graph \(/{g=1;next} /^stack:/{g=0} g && /^(\* |  )ControlId\(/{n++; if ($0 ~ /chapterselect:chapter:/ && $0 !~ /, unavailable/) last=n} END{if (last) print last}')
       if [ -n "$TARGET" ]; then
         ACTION="walk $TARGET"
       else
