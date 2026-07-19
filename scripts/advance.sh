@@ -85,7 +85,9 @@ while [ "$STEP" -lt "$MAX" ]; do
     fi
     sleep 5
   done
-  ACTIVE=$(echo "$NAVOUT" | sed -n 's/^stack:.* \([a-z]*\)([0-9]*)\*.*$/\1/p')
+  # Screen keys may carry a colon namespace (popup:trigger, window:work) - the class must
+  # include it or those screens parse as "none" (bit the finals leg live on popup:trigger).
+  ACTIVE=$(echo "$NAVOUT" | sed -n 's/^stack:.* \([a-z:]*\)([0-9]*)\*.*$/\1/p')
   [ -z "$ACTIVE" ] && ACTIVE=none
   CHOICE_IDS=""
   if [ "$ACTIVE" != "scene" ]; then
@@ -131,7 +133,8 @@ while [ "$STEP" -lt "$MAX" ]; do
       echo "STOP step $STEP: chapter final window reached (chapter save written)"; exit 0 ;;
     "screen mainmenu")
       echo "STOP step $STEP: main menu"; exit 0 ;;
-    "screen death"|"screen interlude"|"screen popup"|"screen chapterpicture")
+    "screen death"|"screen interlude"|"screen popup"|"screen popup:trigger"|"screen chapterpicture")
+      # popup:trigger's Continue is its last node, so End+Enter dismisses it too.
       ACTION="endenter" ;;
     "screen chapterselect")
       # Two surfaces share this screen. The between-chapters loading screen: Continue is
