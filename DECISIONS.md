@@ -240,6 +240,40 @@ stream of questions.
   rows, so the screen reads nothing there. The interlude timeline is a separate controller
   and a separate ROADMAP item.
 
+## Family window tree redesign judgment calls (2026-07-19)
+
+- **Flattened treeview, not a 2D grid**: the user asked for the family tree to be "browsable
+  in a tree shape". A grid (Up/Down between generations, Left/Right within one) matches the
+  visual layout but forecloses expansion - the engine's tree semantics live on Left/Right at
+  row edges, and BeginGroup cannot open inside a horizontal row. The flattened treeview gives
+  both asks with the standard screen-reader tree gestures: Up/Down walks members in visual
+  tree order, Right/Left expand into and collapse the per-member description text.
+- **Generations come from the game's layout, not hardcoded genealogy**: tiles are grouped by
+  their row container under FamilyTree (FirstRow/SecondRow/ThirdRow in the prefab), rows
+  ordered by container Y, members by sibling index. Parent/marriage lines exist only as the
+  opaque Grid sprite, so per-person parentage is NOT modeled - the roles the game writes on
+  each tile (Grandfather, Father, Ex-wife, You) already carry the genealogy.
+- **No authored generation labels**: a "Parents"-style header would be mod-invented genealogy
+  (Amalia is the father's ex-wife, not the hero's parent) and pure chatter for expert users;
+  the role word is the second thing spoken on every row. Generation boundaries are conveyed
+  by the per-generation position restart (PushContext with an empty label per row).
+- **Detail children use structural-only ControlIds**: a child carrying the tile as its
+  Reference would win the header's tier-1 focus match during Reconcile and yank focus off
+  the child on every rebuild (every frame). Headers keep the tile reference; children are
+  ControlId.Structural(headerKey + ":description"/"":status").
+- **Populate gate is the WhoIs text matching the translation Start writes.** The old gate
+  (tile name StartsWith HeroName) went permanently silent on a save whose hero name is empty
+  - HeroName='' is a legitimate saved state, not "still loading". A draft gate on "WhoIs
+  non-empty" leaked Gloria's tile pre-populate (her prefab placeholder carries non-empty
+  serialized Russian). The exact-translation compare mirrors StatusRelationGetSet.Start
+  byte-for-byte: non-hero tiles GetTranslation(CharacterObject.WhoIs), hero tile
+  GetTranslation("Hero"). In a locale where the placeholder equals the translation the gate
+  passes early, and the text spoken is the text the game would write anyway.
+- **Children are built only while expanded** (b.IsExpanded before declaring them) so the
+  ParametersManager description/status lookups stay off the per-frame path for collapsed
+  members; TreeRight's empty-expansion auto-recollapse speaks "no details" if a member ever
+  has neither child.
+
 ## Family window judgment calls (2026-07-18, Phase 5)
 
 - **The per-character info panel folds onto the member rows** instead of mirroring the game's

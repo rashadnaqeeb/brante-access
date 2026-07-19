@@ -7,19 +7,23 @@ using FamilyWindow = _Scripts.AMVCC.Views.Windows.Family.FamilyWindowController;
 using FamilyTile = _Scripts.AMVCC.Views.Windows.Family.StatusRelationGetSet;
 using RelationTile = _Scripts.AMVCC.Views.Windows.Components.RelationCharacterComponent;
 using CharacterList = _Scripts.AMVCC.Models.Static.CharacterList;
-using ParametersManager = _Scripts.Managers.ParametersManager;
 using GameLoc = I2.Loc.LocalizationManager;
 
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The Family window: one row per family member with everything the game's per-character
-    /// info panel shows folded on - name and role from the live tile, then estate, relation
-    /// value with the game's relation word, and any set status, all re-read from the model
-    /// at speech time (the same ParametersManager calls the game's own select handler makes).
-    /// Space reads the character's description paragraph plus the status detail the game puts
-    /// behind its help-icon tooltip. Enter runs the tile's own button: the game marks the
-    /// member selected and fills its visual panel; the hero tile opens the Character window.
+    /// The Family window as a browsable tree, shaped by the game's own layout: the tile row
+    /// containers under FamilyTree ARE the generations (grandfather row, parents row, hero's
+    /// row), read top row first, left to right within a row. Up/Down walks members in that
+    /// order with positions restarting per generation; each member row folds on everything the
+    /// game's per-character info panel shows (name and role from the live tile, then estate,
+    /// relation value with the game's relation word, any set status), re-read from the model at
+    /// speech time. A non-hero member is an expandable group: Right expands and steps into the
+    /// info panel's description paragraph and the status detail behind the game's help icon;
+    /// Left collapses. Space still reads the same detail in one go. Enter runs the tile's own
+    /// button: the game marks the member selected and fills its visual panel; the hero tile
+    /// opens the Character window (the game's own redirect - it tracks no model data for the
+    /// hero, so the hero row is a plain item).
     /// </summary>
     public sealed class FamilyWindowScreen : Screen
     {
@@ -75,26 +79,51 @@ namespace BranteAccess.Module.Screens
         {
             var wm = Window();
             if (wm == null) return;
-            // Tiles fill in StatusRelationGetSet.Start a beat after ShowWindow; until then
-            // every tile text is a serialized prefab placeholder. The hero tile's populate
-            // result (the game writes HeroName + surname into it) gates the graph.
-            var hero = wm.Characters.Find(t => t.CharacterObject.Name == CharacterList.Hero);
-            // HeroName is null while a save is still loading - same "not populated yet" state
-            // as an unwritten tile (seen as a 155-tick Build crash when the sweep opened the
-            // window mid-load).
-            var heroName = ParametersManager.Instance.HeroName;
-            if (hero == null || string.IsNullOrEmpty(heroName)
-                || !Tile(hero).Name.text.StartsWith(heroName))
-                return;
 
-            b.PushContext("", role: null, positions: true);
+            // The generations, straight from the game's layout: tiles grouped by their row
+            // container (FamilyTree's FirstRow/SecondRow/ThirdRow), rows ordered top-down.
+            // A tile is readable once StatusRelationGetSet.Start has populated it: the gate
+            // is the WhoIs text matching the exact translation Start writes (serialized
+            // prefab placeholders carry Russian or empty text there). Gating on the tile's
+            // own texts survives a save whose hero name is itself empty - the old hero-name
+            // gate left this window permanently silent on one (seen live 2026-07-19).
+            var rowParents = new List<UnityEngine.Transform>();
+            var rowTiles = new List<List<FamilyTile>>();
             foreach (var member in wm.Characters)
             {
-                var tile = member;
-                if (!UiWidgets.Visible(tile.gameObject)) continue;
-                var isHero = tile.CharacterObject.Name == CharacterList.Hero;
-                b.AddItem(ControlId.Referenced(tile, "family:member:" + tile.CharacterObject.Name),
-                    new NodeVtable
+                if (!UiWidgets.Visible(member.gameObject)) continue;
+                var whoIs = Tile(member).WhoIs;
+                if (whoIs != null && whoIs.text != (ExpectedWhoIs(member) ?? "")) continue;
+                var parent = member.transform.parent;
+                int i = rowParents.IndexOf(parent);
+                if (i < 0)
+                {
+                    rowParents.Add(parent);
+                    rowTiles.Add(new List<FamilyTile>());
+                    i = rowParents.Count - 1;
+                }
+                rowTiles[i].Add(member);
+            }
+            if (rowParents.Count == 0) return;
+
+            var rowOrder = new List<int>();
+            for (int i = 0; i < rowParents.Count; i++) rowOrder.Add(i);
+            rowOrder.Sort((x, y) => rowParents[y].position.y.CompareTo(rowParents[x].position.y));
+
+            foreach (var r in rowOrder)
+            {
+                var tiles = rowTiles[r];
+                tiles.Sort((a, b) =>
+                    a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+
+                b.PushContext("", role: null, positions: true);
+                foreach (var member in tiles)
+                {
+                    var tile = member;
+                    var isHero = tile.CharacterObject.Name == CharacterList.Hero;
+                    var id = ControlId.Referenced(tile,
+                        "family:member:" + tile.CharacterObject.Name);
+                    var vtable = new NodeVtable
                     {
                         ControlType = ControlTypes.Button,
                         Announcements = new[]
@@ -109,15 +138,62 @@ namespace BranteAccess.Module.Screens
                         OnTooltip = isHero ? (System.Action)null
                             : () => Mod.Speech.Speak(Readouts.CharacterDetail(tile.CharacterObject)),
                         OnActivate = () => UiWidgets.Click(tile.gameObject),
-                    });
+                    };
+
+                    if (isHero)
+                    {
+                        b.AddItem(id, vtable);
+                        continue;
+                    }
+
+                    b.BeginGroup(id, vtable);
+                    // Children built only while expanded (the model calls stay off the
+                    // per-frame path for collapsed members).
+                    if (b.IsExpanded(id))
+                    {
+                        var co = tile.CharacterObject;
+                        // Structural ids only: a child sharing the tile reference would win the
+                        // header's tier-1 focus match and yank focus off the child every rebuild.
+                        if (!string.IsNullOrEmpty(Readouts.CharacterDescriptionText(co)))
+                            b.AddItem(ControlId.Structural(id.StructuralKey + ":description"),
+                                new NodeVtable
+                                {
+                                    Announcements = new[]
+                                    {
+                                        new NodeAnnouncement(
+                                            () => Readouts.CharacterDescriptionText(co)),
+                                    },
+                                    ExcludeFromSearch = true,
+                                });
+                        if (Readouts.CharacterStatusDetail(co) != null)
+                            b.AddItem(ControlId.Structural(id.StructuralKey + ":status"),
+                                new NodeVtable
+                                {
+                                    Announcements = new[]
+                                    {
+                                        new NodeAnnouncement(
+                                            () => Readouts.CharacterStatusDetail(co)),
+                                    },
+                                    ExcludeFromSearch = true,
+                                });
+                    }
+                    b.EndGroup();
+                }
+                b.PopContext();
             }
-            b.PopContext();
 
             HudBar.Build(b);
         }
 
         private static RelationTile Tile(FamilyTile member)
             => member.GetComponent<RelationTile>();
+
+        // The WhoIs text StatusRelationGetSet.Start writes: the member's WhoIs term, or the
+        // Hero term for the hero tile (its serialized WhoIs enum is meaningless).
+        private static string ExpectedWhoIs(FamilyTile member)
+            => member.CharacterObject.Name == CharacterList.Hero
+                ? GameLoc.GetTranslation(CharacterList.Hero.ToString())
+                : GameLoc.GetTranslation(member.CharacterObject.WhoIs.ToString());
 
         // The game marks the selected member by disabling its tile button (SelectCharacter).
         private static bool IsSelected(FamilyTile member)

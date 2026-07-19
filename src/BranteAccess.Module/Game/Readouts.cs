@@ -339,24 +339,37 @@ namespace BranteAccess.Module.Game
                 : GameLoc.GetTranslation(pm.GetCharacterStatusKey(co, status));
         }
 
+        /// <summary>The character's description paragraph (the info panel's Description text).</summary>
+        public static string CharacterDescriptionText(_Scripts.AMVCC.Models.Static.Character co)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            return GameLoc.GetTranslation(pm.GetCharacterDescription(co,
+                _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters));
+        }
+
+        /// <summary>The status title and detail the game renders behind its help-icon tooltip -
+        /// null for CharacterStatus.Good, where the game hides the icon.</summary>
+        public static string CharacterStatusDetail(_Scripts.AMVCC.Models.Static.Character co)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var status = pm.GetCharacterStatus(co,
+                _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+            if (status == CharacterStatus.Good) return null;
+            var key = pm.GetCharacterStatusKey(co, status);
+            return Loc.T("tooltip.section", new
+            {
+                title = GameLoc.GetTranslation(key),
+                rows = GameLoc.GetTranslation(key + ".Description"),
+            });
+        }
+
         /// <summary>The character's description paragraph plus the status title and detail the
         /// game renders behind its help-icon tooltip when a status is set.</summary>
         public static string CharacterDetail(_Scripts.AMVCC.Models.Static.Character co)
         {
-            var pm = _Scripts.Managers.ParametersManager.Instance;
-            var chars = _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters;
-            var text = GameLoc.GetTranslation(pm.GetCharacterDescription(co, chars));
-            var status = pm.GetCharacterStatus(co, chars);
-            if (status != CharacterStatus.Good)
-            {
-                var key = pm.GetCharacterStatusKey(co, status);
-                text += "\n" + Loc.T("tooltip.section", new
-                {
-                    title = GameLoc.GetTranslation(key),
-                    rows = GameLoc.GetTranslation(key + ".Description"),
-                });
-            }
-            return text;
+            var text = CharacterDescriptionText(co);
+            var status = CharacterStatusDetail(co);
+            return status == null ? text : text + "\n" + status;
         }
 
         /// <summary>A year-case's detail: the case description, its conditions with live met

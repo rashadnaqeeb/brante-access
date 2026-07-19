@@ -339,6 +339,27 @@ go to DECISIONS.md, not to the user.
       name row, the game's own redirect); Escape returned to the scene. Entry gated on the
       hero tile's Start()-written name. Status skipped when CharacterStatus.Good - the game
       renders a bare dash and placeholder detail there.)
+- [x] verified - Family window tree redesign (user, 2026-07-19: the flat list was confusing,
+      missed the expandable description text, and sometimes went silent)
+      (2026-07-19: FamilyWindowScreen rebuilt as a browsable tree shaped by the game's own
+      layout - tiles grouped by their FamilyTree row containers (FirstRow/SecondRow/ThirdRow
+      = the generations), rows top-down by container Y, members left-to-right by sibling
+      index, positions restarting per generation ("Amalia 1 of 3" ... "Stephan 1 of 3").
+      Non-hero members are expandable groups: Right expands ("expanded") then descends into
+      the info panel's description paragraph and the status detail behind the game's help
+      icon as child rows ("1 of 2"/"2 of 2"); Left collapses; Home/End move within the
+      generation; Space still reads the full detail in one go; Enter still selects ("Robert
+      Brante selected") and the hero tile (a plain leaf - the game tracks no model data for
+      the hero) still opens the Character window. The sometimes-silent bug was the populate
+      gate: it required tile text to start with ParametersManager.HeroName, and a save with
+      an EMPTY hero name (the user's chapter V save) failed it forever - zero nodes, dead
+      screen. New per-tile gate: WhoIs text equals the exact translation
+      StatusRelationGetSet.Start writes (prefab placeholders carry Russian or empty text
+      there; caught live when Gloria's non-empty Russian placeholder leaked through a
+      first-draft empty-check gate). Verified live on that save: entry "Family" + Gregor
+      seat, full walk, expand/descend/collapse/ascend, both detail children on Amalia
+      (TRUE DEATH), select delivery, hero redirect, Tab to HUD and back, clean reopen.
+      sweep.sh 59/59 after.)
 - [x] verified - Relations window (relation tooltips folded; RelationPopup still pending)
       (2026-07-18: RelationsWindowScreen on the Family-window pattern - tile rows with
       role/estate/relation/status folded on via the shared Readouts character helpers,
