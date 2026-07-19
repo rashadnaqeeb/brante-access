@@ -42,7 +42,7 @@ namespace BranteAccess.Module.Screens
             => typeof(InsurrectionWindow).GetField(
                 name, BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static FieldInfo PopupField(string name)
+        internal static FieldInfo PopupField(string name)
             => typeof(InsurrectionSidePopupController).GetField(
                 name, BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -123,7 +123,7 @@ namespace BranteAccess.Module.Screens
         // One side's victory conditions: the side's own subtitle, then the peaceful and
         // military groups headed by the popup's own column titles, rows in the game's
         // generation order (objectives, then parameters).
-        private static void AddSide(GraphBuilder b, InsurrectionSidePopupController pop,
+        internal static void AddSide(GraphBuilder b, InsurrectionSidePopupController pop,
             bool empireSide)
         {
             var side = empireSide ? "empire" : "rebel";

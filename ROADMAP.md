@@ -431,16 +431,27 @@ go to DECISIONS.md, not to the user.
       ("The Revolt exactly 0, now 0, met", "Power -4 to -3, now -2, not met" - diapason
       bounds ordered numerically after the empire side's upper-bound-first serialization
       read backwards), objective row "Leading the Revolt, not met", Space on a parameter
-      row read the full Revolt scale breakdown. Zero mod errors. Chosen-side panel text and
-      the non-tooltip side popup ride the chapter V scene-variants item. Dev-open gotcha
+      row read the full Revolt scale breakdown. Zero mod errors. Dev-open gotcha
       (not a mod bug): ShowWindow with a null button throws in the game's OnSelect before
       ShowBackButtonEvent, so the back button never arms - close by destroying OpenedWindow
-      + reactivating CurrentScenePrefab, mirroring the game's destroy branch.)
-- [ ] todo - War window (WindowsList.WarWindow - confirm where it appears)
-      (2026-07-19 evidence so far: ShowWindow's WarWindow case is an explicit no-op sharing
-      a break with GameScene, zero code callers, and FindObjectsOfTypeAll<WarWindowController>
-      returns 0 at a live chapter IV - cut content like the Soul window. Final re-probe rides
-      the chapter V scene-variants visit; close with that.)
+      + reactivating CurrentScenePrefab, mirroring the game's destroy branch.
+      2026-07-19 chapter V: chosen-side panel verified live via the real HUD route (The
+      Revolt button unlocked at ch V) with the rebel objective dev-unlocked then restored:
+      side row "Rebel", 5 parameter rows, only the rebel condition groups built, Escape
+      closed back to the scene. Non-tooltip side popup: new InsurrectionSidePopupScreen
+      (layer 21) - the generic sweep spoke the popup's serialized Russian title on its
+      first frame (labels are code-set in Start) and split condition rows into bare
+      name/value texts; the dedicated screen reads title/subtitle from the controller's
+      I2 keys and reuses the window's AddSide condition builders. Verified live by
+      dev-firing UIManager.ShowInsurrectionSidePopup with rebel unlocked: stack
+      popup:insside only, full briefing with live met state ("The Revolt at least 6,
+      now 2, not met", "Power 3 to 4" ordered), Continue closed it and the scene
+      re-delivered; objective relocked after.)
+- [x] verified - War window (WindowsList.WarWindow - confirm where it appears)
+      (2026-07-19: cut content, nothing to read. ShowWindow's WarWindow case is an explicit
+      no-op sharing a break with GameScene, zero code callers, and
+      FindObjectsOfTypeAll<WarWindowController> returns 0 live at chapter IV AND at
+      chapter V mid-revolt - the window can never appear.)
 - [x] verified - Chapter start window (keyboarded page turner)
       (2026-07-18: ChapterStartScreen - header + page title/position/description rows,
       objectives fold their hover-only description onto the row, parameter rows fold
@@ -535,7 +546,14 @@ go to DECISIONS.md, not to the user.
       button announced and activated through the game's own click - the flow moved into the
       finals sequence (Family Strife trigger popup + epilogue scene delivered). Reached by
       dev scene-load of LiveTimeline over the chapter IV save.)
-- [ ] todo - Insurrection-day and other special scene variants (from scene census below)
+- [x] verified - Insurrection-day and other special scene variants (from scene census below)
+      (2026-07-19: the revolt-day opener (chapter V first scene, "The Family's Fate") is the
+      standard TextController surface and read fully live: trigger popup owned by its
+      dedicated screen, 11 passage pages one keypress each, 4 choices with the two
+      unavailable ones speaking their failed requirements ("requires Reputation at least 5,
+      Stephan Brante" / "requires Gloria"). The census confirmed no other distinct scene
+      controller exists (duels and dressed blocks ride the same flow); epilogue and
+      LiveTimeline variants verified as their own items.)
 - [x] verified - Epilogue scenes (ConsequenceSceneController: 070.* game-over outcomes reached
       after a True Death - same TextController surface as normal scenes, no choices, ends on
       the UniversalParametersGenerator control panel's Continue)
