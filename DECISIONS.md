@@ -5,6 +5,31 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Endgame closure calls (2026-07-19 evening, Phases 6/7/9)
+
+- **The "silent GameOver entry" investigation split into one artifact and one real bug.**
+  The observed silence was a dev artifact: UIManager's popup slot persists across raw
+  LoadScene calls, so a stale chapter V interlude popup sat unconfigured through every
+  dev-loaded scene and there was genuinely no new content to announce. The real bug found
+  underneath: interlude page nodes used bare structural keys ("interlude:page:0"), so two
+  interlude scenes back to back with no popup-free frame re-seat on an identical key while
+  the screen stays focused and the differ never resets - the second interlude would be
+  swallowed whole. Page keys are now qualified by popup instance id; the game instantiates
+  a fresh popup per interlude, so real transitions always produce a new key.
+- **The standalone GameOver scene got a minimal screen despite looking like cut content**
+  (no code path loads it, its credits are serialized Russian dev strings, the scene has no
+  exit - the shipping game-over ending is Credits_GameOver via WindowCreditsController).
+  Bolt graphs are opaque, so reachability cannot be ruled out, and a player landing there
+  would face total silence with no exit; two live-read text rows cost ~50 lines.
+- **GameOverGameRestartPopup speaks Russian and stays that way**: its four I2 keys have no
+  English entries, so the game itself shows Russian to every player - the mod reads the
+  game's rendering (parity rule), and no code path calls the popup anyway.
+- **Release smoke is log-scoped**: the dev server IS the speech readback channel and it is
+  compiled out of Release by design, so the smoke verifies clean load, 34 screens
+  registered, module tick, no errors, port closed. The speech pipeline is identical code in
+  both profiles (backends live in the host, not behind #if DEBUG). The user's installed
+  deploy remains the Debug profile, which is what every live verification ran against.
+
 ## Finals driver aftermath and save recovery (2026-07-19, Phase 8)
 
 - **Killed the finals driver at the chapter-rewind confirm**: the fourth-death judgment

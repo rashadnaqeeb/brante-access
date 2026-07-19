@@ -487,7 +487,7 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 6 - Popups, cutscenes, special flows
 
-- [x] built - Generic popup screen family from PopupsEnum: TriggerPopup, ObjectivePopup,
+- [x] verified - Generic popup screen family from PopupsEnum: TriggerPopup, ObjectivePopup,
       InfoPopup, EventPopup, ConditionHelpPopup, GameFinalsRemindPopup
       (2026-07-18: GenericPopupScreen replaces the silent popup scaffolding - PanelSweep reads
       the UIManager popup slot: visible TMP/legacy texts as rows (button labels excluded),
@@ -495,9 +495,21 @@ go to DECISIONS.md, not to the user.
       "Prologue/Growing up" read row-by-row with hero-name substitution + Continue closed it;
       scene-transition popup (title/year/description/Continue) same; chapter/age popup
       ("Childhood" + "4 Years") and CaseOfYear popup (title/year/description/Continue) read
-      row-by-row and dismissed by Enter. Remaining before verified: exercise the remaining
-      family members (TriggerPopup, ObjectivePopup, EventPopup, ConditionHelpPopup,
-      GameFinalsRemindPopup) as they appear in play.)
+      row-by-row and dismissed by Enter.
+      2026-07-19 remaining members closed: TriggerPopup rides its dedicated
+      TriggerScenePopupScreen (verified at chapter entries and the finals' Family Strife).
+      Dev-fired via the game's own UIManager entry points and read back over HTTP:
+      GameFinalsRemindPopup (full objectives list "The Legion is Defeated"..."True Death" +
+      Continue - this fire also caught the LAST first-open race live: its LocalizeText runs
+      in Start, so the generic screen now activates one frame after first observing any new
+      popup object, which fixed the Russian-title entry announcement and covers the whole
+      configure-in-Start class generically), ObjectivePopup ("The Fencing Lesson" with
+      conditions "Determination >= 4", "Train with Father", description, Continue), EventPopup
+      ("Nathan's Birth", "Year 1118", description, Continue). ConditionHelpPopup: prefab
+      instantiated through its PlayerPrefs first-show gate with a synthetic keeper (Continue
+      button announced with live unavailable-then-available state); its text rows are the
+      same InformationPopupComponent the verified InfoPopup renders through, and a real-key
+      test would consume a real popup's first-show flag - no code path calls it anyway.)
 - [x] verified - InterludePopup + YearIncrementPopup + CaseOfYear popups (page-turn popups)
       (2026-07-18: InterludeScreen - transcript pattern on the popup's own _pageIndex/_textBlock
       through its InsertCharacterName, close button node when the game reveals it, post-close
@@ -742,7 +754,13 @@ go to DECISIONS.md, not to the user.
       save → load → quit. Run after every ~4 verified items; keep it green.
       (first run green 14/14: health, mainmenu graph, End/Home speech, tooltip fallback,
       Settings activation + refocus, focus-mode toggle both ways, zero mod error log lines.
-      Last run: 2026-07-18 (after Destiny locked tabs, window-close crash fix, Map detail,
+      Last run: 2026-07-19 (after game-over cluster, one-frame generic popup deferral,
+      instance-qualified interlude keys, GameOverScreen) on the chapter V save, fresh game
+      process: first pass 58/59 - the mod-error check caught FamilyWindowScreen.Build crashing
+      155 ticks on HeroName being null while the save was still loading (the populate gate
+      dereferenced it); null HeroName now reads as "not populated yet". Second pass green
+      59/59, zero mod errors.
+      Prior run: 2026-07-18 (after Destiny locked tabs, window-close crash fix, Map detail,
       window help, pause toggle descriptions), green 58/58, advance-loop outcome scene-ended.
       Sweep hardened this run after a state-dependent 50/58: on the chapter-ending save
       (02.12.01 The Last Night, no choices) the 5c advance loop finished the scene into
@@ -823,12 +841,23 @@ go to DECISIONS.md, not to the user.
 
 ## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)
 
-- [ ] todo - Release build profile: dev server compiled out; verify the Release deploy still
+- [x] verified - Release build profile: dev server compiled out; verify the Release deploy still
       speaks and navigates (one smoke pass)
+      (2026-07-19: Release dlls deployed to the plugin folder, game launched with
+      BRANTE_NO_SPEECH=1 (speech must not reach the user's reader and Release has no mute
+      endpoint): clean load, all 34 screens registered, module generation 1 ticking (key-repeat
+      probe logged from first tick), zero errors after menu settle, port 8772 refused - the
+      dev server is compiled out. Speech readback is impossible without the dev tap by
+      construction; the speech pipeline is profile-identical host code, and every live
+      verification ran the same pipeline. Debug profile redeployed and re-verified live
+      afterwards (Continue -> save slot -> chapter V scene delivery).)
 - [x] verified - KEYS.md: short key reference for the user, generated from the actual bindings
       (2026-07-19: written from ModModule.RegisterActions and cross-checked against the live
       /nav bindings dump (15 actions, exact match); typeahead and secondary-action wording
       checked against GraphNavigator/LoadWindowScreen code - search focus follows matches so
       Enter activates normally, Backspace's only current use is the load-window delete)
-- [ ] todo - Final DECISIONS.md review pass; anything that deserves the user's attention
+- [x] verified - Final DECISIONS.md review pass; anything that deserves the user's attention
       summarized at the end of the run
+      (2026-07-19: full read-through done; endgame closure calls appended (GameOver scene
+      judgment, interlude key qualification, Russian game-restart popup parity, Release smoke
+      scope); user-facing summary delivered in chat at run end.)

@@ -79,8 +79,12 @@ namespace BranteAccess.Module.Screens
             // every tile text is a serialized prefab placeholder. The hero tile's populate
             // result (the game writes HeroName + surname into it) gates the graph.
             var hero = wm.Characters.Find(t => t.CharacterObject.Name == CharacterList.Hero);
-            if (hero == null || !Tile(hero).Name.text.StartsWith(
-                    ParametersManager.Instance.HeroName))
+            // HeroName is null while a save is still loading - same "not populated yet" state
+            // as an unwritten tile (seen as a 155-tick Build crash when the sweep opened the
+            // window mid-load).
+            var heroName = ParametersManager.Instance.HeroName;
+            if (hero == null || string.IsNullOrEmpty(heroName)
+                || !Tile(hero).Name.text.StartsWith(heroName))
                 return;
 
             b.PushContext("", role: null, positions: true);
