@@ -25,6 +25,7 @@ namespace BranteAccess.Module.Screens
             "Window_Relations",
             "Window_Empire",
             "Window_Map",
+            "Window_Work",
         };
 
         public override string Key => "window";

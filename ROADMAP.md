@@ -371,7 +371,16 @@ go to DECISIONS.md, not to the user.
       "Power -4, Overseer in Power" / "Church -4, Old Faith" / "Wealth of Magra 6, Security" /
       "Order 8, Peace"; Space on Order read the scale with the now marker; Escape back to
       the scene.)
-- [ ] todo - Work window
+- [x] verified - Work window
+      (2026-07-19: WorkWindowScreen - the Occupation window's post panel read through the
+      shared ParameterRows sweep (inactive post panels excluded automatically: 6 parameter
+      objects in the prefab, only the active Inquisitor pair exposed). Opened keyboard-only
+      from the scene (Tab to HUD, Right to Occupation, Enter); rows "Inquisition Power 7,
+      Indisputable Authority" / "Tolerance of Faiths 1, Persecution of Dissent"; Space read
+      the Tolerance of Faiths scale with description and the now marker on the 1-to-2
+      segment; Escape back to the scene with the passage redelivered. Post name is image-only
+      in this window by the game's design - the text lives in the Character window's
+      occupation row, already verified. Same Start()-race gate as Home.)
 - [x] verified - Home window
       (2026-07-18: HomeWindowScreen - heir row folded as label plus value ("Heir Stephan
       Brante"), then the household parameter rows through the new shared ParameterRows helper
