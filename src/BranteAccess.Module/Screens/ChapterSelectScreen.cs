@@ -64,7 +64,7 @@ namespace BranteAccess.Module.Screens
                     ControlType = ControlTypes.Button,
                     Announcements = new[]
                     {
-                        new NodeAnnouncement(() => UiWidgets.LabelText(cont) + ", " + age.text,
+                        new NodeAnnouncement(() => UiWidgets.LocalizedLabel(cont) + ", " + age.text,
                             kind: AnnouncementKinds.Label),
                     },
                     OnActivate = () => UiWidgets.Click(cont),
@@ -93,7 +93,7 @@ namespace BranteAccess.Module.Screens
                         ControlType = ControlTypes.Button,
                         Announcements = new[]
                         {
-                            new NodeAnnouncement(() => UiWidgets.LabelText(go),
+                            new NodeAnnouncement(() => UiWidgets.LocalizedLabel(go),
                                 kind: AnnouncementKinds.Label),
                             new NodeAnnouncement(() => LockReason(item),
                                 kind: AnnouncementKinds.Enabled),
@@ -129,7 +129,7 @@ namespace BranteAccess.Module.Screens
                     ControlType = ControlTypes.Button,
                     Announcements = new[]
                     {
-                        new NodeAnnouncement(() => UiWidgets.LabelText(back),
+                        new NodeAnnouncement(() => UiWidgets.LocalizedLabel(back),
                             kind: AnnouncementKinds.Label),
                     },
                     OnActivate = () => UiWidgets.Click(back),

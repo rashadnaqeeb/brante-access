@@ -93,7 +93,10 @@ NOT invoke `powershell.exe` from the Bash tool (the auto-mode classifier blocks 
 - Launch: `"C:/Program Files (x86)/Steam/steam.exe" -applaunch 1272160`
 - Kill: `MSYS_NO_PATHCONV=1 taskkill.exe /F /IM "The Life and Suffering of Sir Brante.exe"`
   (plain `taskkill` from Bash mangles `/F` into a path)
-- If direct exe launch works without Steam DRM complaints, prefer it and record that here.
+- Direct exe launch WORKS (verified 2026-07-19: game boots, Steamworks fine with Steam
+  running) and is the preferred launch - `-applaunch` silently no-ops when Steam still
+  thinks the game is running (e.g. right after taskkill). From Bash:
+  `cd "<Game>" && ("./The Life and Suffering of Sir Brante.exe" &)`.
 - Mute for unattended runs: `curl -s -X POST --data 'AudioListener.volume = 0f' .../eval`
   (global Unity master volume, session-only - never touches the user's saved settings; the
   game's SoundManager only fades individual music sources). Re-mute after every game restart.

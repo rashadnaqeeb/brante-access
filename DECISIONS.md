@@ -5,6 +5,27 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Finals driver aftermath and save recovery (2026-07-19, Phase 8)
+
+- **Killed the finals driver at the chapter-rewind confirm**: the fourth-death judgment
+  offered "return to the mortal world"; the random driver confirmed a rewind to Childhood,
+  which would have replayed a whole verified chapter for nothing. The finals evidence
+  (epilogue slides, judgment choice rows, chapter select handoff) was already captured, so
+  the run was stopped rather than allowed to loop.
+- **The rewind reset the save slot's Chapter marker to 1** (chapter select then said "not
+  reached" for II-V; availability is just GameManager.Chapter >= N). The slot's per-chapter
+  snapshots (Chapter_2..4.dat) survived - only Autosave and Chapter_1 were rewritten - and
+  `GameLoadingScreenBehaviour.LoadChapterItem_Click(4)` (the game's own handler, dev-invoked
+  once from the chapter select) loaded Chapter_4 and restored the marker. No Chapter_5.dat
+  was ever written by the playthroughs; chapter V access goes through playing into it or
+  `LoadChapterState(5)`, which falls back to default parameters (fine for UI verification).
+- **Full Saves backup** taken before any recovery, at the session scratchpad
+  (`Saves-backup-20260719`). If save state ever looks wrong to the user, that snapshot is
+  from 2026-07-19 evening, post-rewind but pre-recovery.
+- **Game launch is now the exe directly, not steam -applaunch** (recorded in CLAUDE.md):
+  -applaunch silently no-ops while Steam still believes the game is running, which cost a
+  boot cycle after a taskkill; the direct exe boots fine with Steam in the background.
+
 ## Game-over and death-flow judgment calls (2026-07-19, Phase 6/8)
 
 - **The story driver keeps the save alive with a sparse dev-eval (harness only, never the

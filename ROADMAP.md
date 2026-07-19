@@ -417,7 +417,7 @@ go to DECISIONS.md, not to the user.
       objective's row word, an or-group's any-of wording. The timeline pane is dead code in
       the shipped game (empty load handler) - nothing to read. The earned-shine notification
       rides the objective popup (generic popup family), not this window.)
-- [ ] built - Insurrection window (+ InsurrectionSidePopup/tooltip)
+- [x] verified - Insurrection window (+ InsurrectionSidePopup/tooltip)
       (2026-07-19: InsurrectionWindowScreen - title from _windowTitleKey, side panel row
       (chosen side or the game's no-side text), ParameterRows sweep, and the hover-only
       victory conditions composed from the persistent tooltip InsurrectionSidePopupController's
@@ -425,9 +425,22 @@ go to DECISIONS.md, not to the user.
       the popup's own column keys, objective rows (Not-aware, Unlocked as met) and parameter
       rows (diapason as "{name} {min} to {max}" with the empire/rebel LessEqual/MoreEqual met
       logic mirrored from GenerateParameter; no side chosen reads both sides). Shell stands
-      down by component check. Verify: dev-open via ShowWindow(WindowsList.InsurrectionWindow)
-      at a chapter V save, read rows back over /speech.)
+      down by component check. 2026-07-19 verified live at chapter IV via dev
+      ShowWindow(InsurrectionWindow): title "The Anizotte Revolt", side row "not chosen", 5
+      parameter rows with scale words, both sides' condition groups spoken with live now/met
+      ("The Revolt exactly 0, now 0, met", "Power -4 to -3, now -2, not met" - diapason
+      bounds ordered numerically after the empire side's upper-bound-first serialization
+      read backwards), objective row "Leading the Revolt, not met", Space on a parameter
+      row read the full Revolt scale breakdown. Zero mod errors. Chosen-side panel text and
+      the non-tooltip side popup ride the chapter V scene-variants item. Dev-open gotcha
+      (not a mod bug): ShowWindow with a null button throws in the game's OnSelect before
+      ShowBackButtonEvent, so the back button never arms - close by destroying OpenedWindow
+      + reactivating CurrentScenePrefab, mirroring the game's destroy branch.)
 - [ ] todo - War window (WindowsList.WarWindow - confirm where it appears)
+      (2026-07-19 evidence so far: ShowWindow's WarWindow case is an explicit no-op sharing
+      a break with GameScene, zero code callers, and FindObjectsOfTypeAll<WarWindowController>
+      returns 0 at a live chapter IV - cut content like the Soul window. Final re-probe rides
+      the chapter V scene-variants visit; close with that.)
 - [x] verified - Chapter start window (keyboarded page turner)
       (2026-07-18: ChapterStartScreen - header + page title/position/description rows,
       objectives fold their hover-only description onto the row, parameter rows fold
@@ -721,7 +734,7 @@ go to DECISIONS.md, not to the user.
       ("Unexpected mark stack overflow") was dev-tooling aggravation - hundreds of /eval
       dynamic assemblies - not a shipping code path; Release sessions never hot-reload or
       eval, and the multi-hour eval-free driving legs since have been stable)
-- [ ] built - Second-pass code review of everything user-facing (self /code-review), fix findings
+- [x] verified - Second-pass code review of everything user-facing (self /code-review), fix findings
       (2026-07-19 review agent swept all three projects; five findings, all confirmed against
       source and fixed: (1) critical - unguarded Text() delegates in GraphAnnouncer.LeafText/
       FirstPartText could throw during focus compose and relock every frame (Tick unwinds
@@ -735,8 +748,15 @@ go to DECISIONS.md, not to the user.
       Empire office headers, Character deaths label. (5) ChapterSelect help readout no longer
       interrupts (only OnTooltip site that did). Clean-bill areas: no cached state, no inline
       strings, no silent catches, patch lifecycle correct, dev-server threading correct.
-      Remaining for verified: live re-check of the touched announcements (sweep + fresh-restart
-      first-open pass on Settings/Map/Empire/Character rides the Release-smoke restart).
+      2026-07-19 fresh-restart first-open pass (new process, ModuleLoader host fix deployed):
+      Settings title + all 9 rows, Character (incl. deaths row), Empire (office + parameter
+      rows), Map (cities + province), plus Family as a bonus - every announcement English on
+      the very first open. The same pass surfaced TWO MORE first-open races, both fixed with
+      the same LocalizedLabel pattern: chapter select's Continue row spoke the serialized
+      Russian editor text (all three ChapterSelect label reads now localize-aware), and the
+      chapter-title splash popup spoke Portuguese through the generic sweep (PanelSweep row/
+      join/button reads now localize-aware). Their own first-open confirmation rides the
+      Release-smoke restart; the pattern is proven on the five screens above.
 
 ## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)
 

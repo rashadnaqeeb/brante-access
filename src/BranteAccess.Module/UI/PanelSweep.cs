@@ -89,7 +89,7 @@ namespace BranteAccess.Module.UI
                 if (folded.Add(pc)) parts.Add(ParameterLabel(pc));
                 return;
             }
-            parts.Add(Spoken(value));
+            parts.Add(Spoken(UiWidgets.LocalizedLabel(text.gameObject)));
         }
 
         // The id of the first row Build would create - for silently re-seating focus before a
@@ -150,7 +150,7 @@ namespace BranteAccess.Module.UI
         // between-scenes popup, 2026-07-18, before this log existed).
         private static string ButtonLabel(GameObject go)
         {
-            var label = UiWidgets.LabelText(go);
+            var label = UiWidgets.LocalizedLabel(go);
             if (!string.IsNullOrEmpty(label)) return label;
             if (go.name == "LeftArrow") return Loc.T("pager.prev");
             if (go.name == "RightArrow") return Loc.T("pager.next");
@@ -218,7 +218,10 @@ namespace BranteAccess.Module.UI
                     ControlType = ControlTypes.Text,
                     Announcements = new[]
                     {
-                        new NodeAnnouncement(() => Spoken(UiWidgets.LabelText(t.gameObject)),
+                        // Localize-aware: a popup shown the same beat it is instantiated still
+                        // renders its serialized editor text (seen live: the chapter title
+                        // splash spoke Portuguese on first open).
+                        new NodeAnnouncement(() => Spoken(UiWidgets.LocalizedLabel(t.gameObject)),
                             kind: AnnouncementKinds.Label),
                     },
                     OnTooltip = pgs == null ? (System.Action)null

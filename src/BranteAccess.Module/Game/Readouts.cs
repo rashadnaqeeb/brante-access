@@ -583,8 +583,14 @@ namespace BranteAccess.Module.Game
             bool met;
             if (c.ItsDiapason)
             {
-                row = Loc.T("choice.req.param_range",
-                    new { name, min = c.SecondValue, max = c.MaxValue });
+                // The empire side serializes its band upper-bound-first (SecondValue -3,
+                // MaxValue -4); speak the band in numeric order regardless.
+                row = Loc.T("choice.req.param_range", new
+                {
+                    name,
+                    min = System.Math.Min(c.SecondValue, c.MaxValue),
+                    max = System.Math.Max(c.SecondValue, c.MaxValue),
+                });
                 met = pm.CompareParametersValue(c.ParamName.ParameterName, now,
                         empireSide ? Assets._Scripts.AMVCC.Views.Operations.LessEqual
                                    : Assets._Scripts.AMVCC.Views.Operations.MoreEqual,
