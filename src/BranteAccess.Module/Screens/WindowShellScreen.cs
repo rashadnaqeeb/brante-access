@@ -34,7 +34,10 @@ namespace BranteAccess.Module.Screens
         public override bool IsActive()
         {
             var w = GameUi.OpenedWindow;
-            return w != null && !Covered.Contains(w.name);
+            // The insurrection window stands down by component, not name - its screen keys on
+            // the controller, and the prefab name is unconfirmed until the chapter V check.
+            return w != null && !Covered.Contains(w.name)
+                && w.GetComponent<_Scripts.AMVCC.Views.Windows.InsurrectionWindowController>() == null;
         }
         public override Message ScreenName => Message.MaybeRaw(HudBar.OpenWindowTitle());
 

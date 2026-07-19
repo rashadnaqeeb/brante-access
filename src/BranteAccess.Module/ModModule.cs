@@ -133,6 +133,7 @@ namespace BranteAccess.Module
                 new EmpireWindowScreen(),
                 new MapWindowScreen(),
                 new WorkWindowScreen(),
+                new InsurrectionWindowScreen(),
                 new CaseForYearScreen(),
                 new GenericPopupScreen(),
                 new TriggerScenePopupScreen(),

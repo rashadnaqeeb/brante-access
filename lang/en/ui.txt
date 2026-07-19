@@ -52,6 +52,8 @@ namerequest.start_unavailable = unavailable, name needs at least 2 letters
 # terms are bare symbols, which readers voice unreliably).
 choice.unavailable = unavailable, requires {req}
 choice.req.param = {name} {op} {value}
+# A range condition (the insurrection victory rows' diapason form)
+choice.req.param_range = {name} {min} to {max}
 choice.req.relation = {name} relation {op} {value}
 choice.req.status = {name} {status}
 choice.req.not = not {req}

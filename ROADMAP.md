@@ -417,7 +417,16 @@ go to DECISIONS.md, not to the user.
       objective's row word, an or-group's any-of wording. The timeline pane is dead code in
       the shipped game (empty load handler) - nothing to read. The earned-shine notification
       rides the objective popup (generic popup family), not this window.)
-- [ ] todo - Insurrection window (+ InsurrectionSidePopup/tooltip)
+- [ ] built - Insurrection window (+ InsurrectionSidePopup/tooltip)
+      (2026-07-19: InsurrectionWindowScreen - title from _windowTitleKey, side panel row
+      (chosen side or the game's no-side text), ParameterRows sweep, and the hover-only
+      victory conditions composed from the persistent tooltip InsurrectionSidePopupController's
+      serialized lists via reflection: per side its subtitle, then peace/war groups headed by
+      the popup's own column keys, objective rows (Not-aware, Unlocked as met) and parameter
+      rows (diapason as "{name} {min} to {max}" with the empire/rebel LessEqual/MoreEqual met
+      logic mirrored from GenerateParameter; no side chosen reads both sides). Shell stands
+      down by component check. Verify: dev-open via ShowWindow(WindowsList.InsurrectionWindow)
+      at a chapter V save, read rows back over /speech.)
 - [ ] todo - War window (WindowsList.WarWindow - confirm where it appears)
 - [x] verified - Chapter start window (keyboarded page turner)
       (2026-07-18: ChapterStartScreen - header + page title/position/description rows,

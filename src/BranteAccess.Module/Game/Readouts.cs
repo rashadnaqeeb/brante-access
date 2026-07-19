@@ -569,6 +569,52 @@ namespace BranteAccess.Module.Game
             return c.Not ? Loc.T("choice.req.not", new { req = row }) : row;
         }
 
+        // Insurrection victory-condition rows (the side popup/tooltip's serialized model). Met
+        // state is computed the way the game colors the rendered rows: CompareParametersValue
+        // per operation; a range condition checks both ends with the comparison direction
+        // flipped for the rebel side (the game's own diapason logic, mirrored verbatim).
+        public static string InsurrectionParamRow(
+            _Scripts.Helpers.ConditionsByParameter c, bool empireSide)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            int now = pm.GetParameterValue(c.ParamName);
+            var name = GameLoc.GetTranslation(c.ParamName.ParameterName.ToString());
+            string row;
+            bool met;
+            if (c.ItsDiapason)
+            {
+                row = Loc.T("choice.req.param_range",
+                    new { name, min = c.SecondValue, max = c.MaxValue });
+                met = pm.CompareParametersValue(c.ParamName.ParameterName, now,
+                        empireSide ? Assets._Scripts.AMVCC.Views.Operations.LessEqual
+                                   : Assets._Scripts.AMVCC.Views.Operations.MoreEqual,
+                        c.SecondValue)
+                    && pm.CompareParametersValue(c.ParamName.ParameterName, now,
+                        empireSide ? Assets._Scripts.AMVCC.Views.Operations.MoreEqual
+                                   : Assets._Scripts.AMVCC.Views.Operations.LessEqual,
+                        c.MaxValue);
+            }
+            else
+            {
+                row = Loc.T("choice.req.param", new
+                {
+                    name,
+                    op = OpWord(c.Operations.ToString()),
+                    value = c.SecondValue,
+                });
+                met = pm.CompareParametersValue(
+                    c.ParamName.ParameterName, now, c.Operations, c.SecondValue);
+            }
+            return WithMet(WithNow(row, now), met);
+        }
+
+        public static string InsurrectionObjectiveRow(_Scripts.Helpers.ConditionByObjective c)
+        {
+            var row = ObjectiveTitle(c.Objective);
+            if (c.Not) row = Loc.T("choice.req.not", new { req = row });
+            return WithMet(row, c.Not ? !c.Objective.Unlocked : c.Objective.Unlocked);
+        }
+
         /// <summary>One spoken line from a label that wraps over multiple lines on screen.</summary>
         public static string Collapse(string text)
             => string.Join(" ", text.Split(
