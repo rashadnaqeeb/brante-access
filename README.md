@@ -31,6 +31,10 @@ Requires the game installed via Steam and the .NET SDK.
 
 `ROADMAP.md` tracks feature status and `DECISIONS.md` records the judgment calls made during development.
 
+## License
+
+MIT - see [LICENSE](LICENSE).
+
 ## Third-party components
 
 Vendored under `third_party/` with their licenses: BepInEx (LGPL-2.1), Prism, and Mono.CSharp (MIT). Decompiled game code is used only as a local reference and is not part of this repository.
