@@ -578,7 +578,15 @@ go to DECISIONS.md, not to the user.
       and without the gate it masks the between-chapters chapter-select screen. Verified live
       at End of Chapter I: all 4 pages paged both directions with deliveries, prev refusal at
       page 0, Space read Determination scales and Deaths scale, continue crossed into
-      chapter 2 (loading screen -> cutscene -> picture -> interlude -> Adolescence start).)
+      chapter 2 (loading screen -> cutscene -> picture -> interlude -> Adolescence start).
+      2026-07-20: reworked to the chapterstart flat-list pattern - one list of every page's
+      rows with per-page regions, game page follows focus via the game's own pager clicks,
+      per-page title keys read from the serialized SetPageText sources (unswapped: the game
+      swaps title/description keys for per-category objective panel types but the data is
+      straight), hardcoded _pageCount 4 lifted to _panels.Count before paging (later chapters
+      grow past 4). Verified live at End of Chapter I without advancing: 15-row walk synced
+      page 0 to 1 at the title crossing, region jumps landed pages 2 and 3, continue row
+      spoke at bottom, down from the epilogue snapped page 3 back to 0.)
 
 ## Phase 6 - Popups, cutscenes, special flows
 
