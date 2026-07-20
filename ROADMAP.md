@@ -937,8 +937,9 @@ go to DECISIONS.md, not to the user.
 ## Phase 9 - Wrap-up (originally descoped to personal-only; release packaging added 2026-07-20 by user directive, see DECISIONS.md)
 
 - [x] verified - Release packaging: one-zip install (BepInEx + Release plugin + lang + prism +
-      player docs + licenses) via scripts/package.proj, package.ps1 wrapper; v1.0.0 tagged and
-      published on GitHub
+      player docs + licenses) via scripts/package.proj, package.ps1 wrapper. The v1.0.0 tag and
+      GitHub release were published 2026-07-20, then pulled the same day (user: hold the release
+      for a few more bug fixes); the packaging and its verification stand, re-release when ready
       (2026-07-20: the actual artifact extracted into the game install and launched with
       BRANTE_NO_SPEECH=1 - "Brante Access 1.0.0 host up; module generation 1", 34 screens
       registered, zero errors after settle, dev port refused (compiled out). Zip contents
