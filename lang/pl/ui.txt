@@ -94,3 +94,6 @@ mainmenu.newgame = Nowa gra
 mainmenu.credits = Twórcy
 mainmenu.settings = Ustawienia
 mainmenu.quit = Wyjście
+
+verbosity.verbose = szczegółowo
+verbosity.concise = zwięźle

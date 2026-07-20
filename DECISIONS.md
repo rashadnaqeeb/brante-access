@@ -842,3 +842,11 @@ closing it.
   unconditional. FocusModePatches renamed GameInputPatches; its predicate is now just
   `ScreenManager.Current == null` (stand down only where the mod has no screen). Earlier
   entries mentioning FocusMode/F10 describe the pre-removal design.
+- **Verbosity toggle Ctrl+V** (2026-07-20, user directive): global `mod.verbosity` action;
+  concise mode drops the Role and Position announcement kinds from navigator readouts via
+  `GraphAnnouncer.PartFilter` (wotr-access's "Concise" preset minus tooltip - a Space/F1
+  readout here is an explicit request, not a passive part). Feedback is the new mode word
+  alone (verbosity.verbose/.concise, all 14 languages). State persists to plugin-folder
+  prefs.txt (module statics reset every hot reload, so an unpersisted toggle would silently
+  revert); default verbose. The chapter start/final page deliveries keep their "n of m" -
+  that is content position in a pager delivery, not a navigation announcement.

@@ -125,3 +125,8 @@ mainmenu.newgame = New game
 mainmenu.credits = Credits
 mainmenu.settings = Settings
 mainmenu.quit = Quit
+
+# Navigation verbosity toggle (Ctrl+V) - concise drops the control role word and the item
+# position from navigator announcements; the new mode word is the whole announcement
+verbosity.verbose = verbose
+verbosity.concise = concise

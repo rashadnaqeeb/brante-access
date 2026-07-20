@@ -94,3 +94,6 @@ mainmenu.newgame = Новая игра
 mainmenu.credits = Титры
 mainmenu.settings = Настройки
 mainmenu.quit = Выйти
+
+verbosity.verbose = подробно
+verbosity.concise = кратко

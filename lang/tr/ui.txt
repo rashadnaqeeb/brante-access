@@ -97,3 +97,6 @@ mainmenu.newgame = Yeni oyun
 mainmenu.credits = Jenerik
 mainmenu.settings = Ayarlar
 mainmenu.quit = Çıkış
+
+verbosity.verbose = ayrıntılı
+verbosity.concise = kısa

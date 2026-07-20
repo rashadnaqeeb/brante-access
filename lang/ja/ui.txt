@@ -96,3 +96,6 @@ mainmenu.newgame = 新しいゲーム
 mainmenu.credits = クレジット
 mainmenu.settings = 設定
 mainmenu.quit = 終了
+
+verbosity.verbose = 詳細
+verbosity.concise = 簡潔

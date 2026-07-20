@@ -14,3 +14,4 @@ bind.ui.home = İlk öğe
 bind.ui.end = Son öğe
 bind.ui.regionPrev = Önceki bölge
 bind.ui.regionNext = Sonraki bölge
+bind.mod.verbosity = Ayrıntı düzeyini değiştir

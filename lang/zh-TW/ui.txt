@@ -95,3 +95,6 @@ mainmenu.newgame = 新遊戲
 mainmenu.credits = 製作人員
 mainmenu.settings = 設置
 mainmenu.quit = 退出
+
+verbosity.verbose = 詳細
+verbosity.concise = 簡潔

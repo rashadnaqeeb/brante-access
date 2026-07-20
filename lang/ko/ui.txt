@@ -96,3 +96,6 @@ mainmenu.newgame = 새 게임
 mainmenu.credits = 크레딧
 mainmenu.settings = 설정
 mainmenu.quit = 나가기
+
+verbosity.verbose = 자세히
+verbosity.concise = 간단히

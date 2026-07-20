@@ -14,3 +14,4 @@ bind.ui.home = 第一项
 bind.ui.end = 最后一项
 bind.ui.regionPrev = 上一区域
 bind.ui.regionNext = 下一区域
+bind.mod.verbosity = 切换详细程度

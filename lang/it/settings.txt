@@ -14,3 +14,4 @@ bind.ui.home = Primo elemento
 bind.ui.end = Ultimo elemento
 bind.ui.regionPrev = Regione precedente
 bind.ui.regionNext = Regione successiva
+bind.mod.verbosity = Alterna verbosità

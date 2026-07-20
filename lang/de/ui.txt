@@ -94,3 +94,6 @@ mainmenu.newgame = Neues Spiel
 mainmenu.credits = Credits
 mainmenu.settings = Einstellungen
 mainmenu.quit = Beenden
+
+verbosity.verbose = ausführlich
+verbosity.concise = knapp

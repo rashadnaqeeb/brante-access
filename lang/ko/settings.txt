@@ -14,3 +14,4 @@ bind.ui.home = 첫 항목
 bind.ui.end = 마지막 항목
 bind.ui.regionPrev = 이전 영역
 bind.ui.regionNext = 다음 영역
+bind.mod.verbosity = 상세도 전환

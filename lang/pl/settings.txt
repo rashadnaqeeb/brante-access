@@ -14,3 +14,4 @@ bind.ui.home = Pierwszy element
 bind.ui.end = Ostatni element
 bind.ui.regionPrev = Poprzedni obszar
 bind.ui.regionNext = Następny obszar
+bind.mod.verbosity = Przełącz szczegółowość

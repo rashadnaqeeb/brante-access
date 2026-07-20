@@ -37,6 +37,10 @@ namespace BranteAccess.Module
             ScreenManager.NavigatorEnsureFocus = Navigation.EnsureFocus;
             GraphAnnouncer.PositionText = (index, count) =>
                 Loc.T("nav.position", new { index, count });
+            Verbosity.Load();
+            GraphAnnouncer.PartFilter = (type, part) =>
+                Verbosity.Verbose || (part.Kind != AnnouncementKinds.Role
+                                      && part.Kind != AnnouncementKinds.Position);
             GraphAnnouncer.ExpandedStateText = expanded =>
                 Loc.T(expanded ? "nav.expanded" : "nav.collapsed");
             GameInputPatches.Apply();
@@ -93,6 +97,14 @@ namespace BranteAccess.Module
                 .AddBinding(KeyCode.UpArrow, ctrl: true).Repeating();
             InputManager.Register("ui.regionNext", "Next region", InputCategory.UI)
                 .AddBinding(KeyCode.DownArrow, ctrl: true).Repeating();
+
+            // Global (live on every screen): verbosity toggle - concise drops the role word and
+            // the item position from navigator announcements.
+            InputManager.Register("mod.verbosity", "Toggle verbosity", InputCategory.Global,
+                () => Mod.Speech.Speak(
+                    Loc.T(Verbosity.Toggle() ? "verbosity.verbose" : "verbosity.concise"),
+                    interrupt: true))
+                .AddBinding(KeyCode.V, ctrl: true);
         }
 
         // The outer (poll-driven) screens. The window/popup/pause entries are silent generic
