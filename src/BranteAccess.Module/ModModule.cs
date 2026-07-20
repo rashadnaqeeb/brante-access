@@ -39,7 +39,7 @@ namespace BranteAccess.Module
                 Loc.T("nav.position", new { index, count });
             GraphAnnouncer.ExpandedStateText = expanded =>
                 Loc.T(expanded ? "nav.expanded" : "nav.collapsed");
-            FocusModePatches.Apply();
+            GameInputPatches.Apply();
             // Generation is not logged here: the loader bumps it only after Load succeeds (so a
             // failed reload leaves the old module live), and it logs the real number itself.
             Mod.Log("module code up, waiting for first tick");
@@ -55,7 +55,7 @@ namespace BranteAccess.Module
 
         public void Dispose()
         {
-            FocusModePatches.Remove();
+            GameInputPatches.Remove();
             Mod.Log("module disposed (generation " + Mod.Host.ModuleGeneration + ")");
         }
 
@@ -63,11 +63,8 @@ namespace BranteAccess.Module
         // Registration labels are fallbacks - DisplayLabel resolves lang/<code>/settings.txt.
         private static void RegisterActions()
         {
-            InputManager.Register("focusmode", "Toggle focus mode", InputCategory.Global, FocusMode.Toggle)
-                .AddBinding(KeyCode.F10);
-
             // The UI navigation set (routed to the navigator via UiDispatcher; live only while a
-            // screen declares the UI category and focus mode is on).
+            // screen declares the UI category).
             InputManager.Register("ui.up", "Navigate up", InputCategory.UI)
                 .AddBinding(KeyCode.UpArrow).Repeating();
             InputManager.Register("ui.down", "Navigate down", InputCategory.UI)
@@ -158,8 +155,7 @@ namespace BranteAccess.Module
         public string DescribeNav()
         {
             var sb = new StringBuilder();
-            sb.Append("focus mode ").Append(FocusMode.Active ? "on" : "off")
-              .Append("; language ").Append(Localization.LocalizationManager.Language).Append('\n');
+            sb.Append("language ").Append(Localization.LocalizationManager.Language).Append('\n');
             var nav = Navigation.Active as GraphNavigator;
             var render = nav?.CurrentRender;
             var focusedNode = nav?.FocusedNode;

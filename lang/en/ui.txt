@@ -1,8 +1,6 @@
 # Brante Access - spoken/UI strings, English (the complete manifest; other languages
 # drop in as lang/<code>/ with the same keys). Format: key = value, '#' comments, \n = newline.
 
-focusmode.on = focus mode on
-focusmode.off = focus mode off
 
 screen.mainmenu = main menu
 

@@ -1,7 +1,5 @@
 # Brante Access - spoken/UI strings, German. Keys mirror lang/en/ui.txt (the manifest).
 
-focusmode.on = Fokusmodus ein
-focusmode.off = Fokusmodus aus
 
 screen.mainmenu = Hauptmenü
 

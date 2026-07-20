@@ -1,6 +1,5 @@
 # Brante Access - input action labels (bind.<action key>), Russian.
 
-bind.focusmode = Переключить режим фокуса
 bind.ui.up = Навигация вверх
 bind.ui.down = Навигация вниз
 bind.ui.left = Навигация влево

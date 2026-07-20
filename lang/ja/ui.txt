@@ -2,8 +2,6 @@
 # Comparison templates put the value BEFORE the operator ({value}{op}) because Japanese
 # comparators are postfix counters (3以上, 3未満); the en word order would be ungrammatical.
 
-focusmode.on = フォーカスモード オン
-focusmode.off = フォーカスモード オフ
 
 screen.mainmenu = メインメニュー
 

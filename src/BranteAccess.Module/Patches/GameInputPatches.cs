@@ -4,13 +4,13 @@ using HarmonyLib;
 namespace BranteAccess.Module.Patches
 {
     /// <summary>
-    /// Suppresses the game's own keyboard while focus mode is on. Every game key read is a bare
-    /// Input.GetKeyDown inside a per-class Update body (complete survey of Assembly-CSharp,
-    /// 2026-07-18), so one shared prefix skips those bodies while <see cref="FocusMode.Active"/>;
-    /// off restores stock keys untouched. The mod's own actions re-invoke the same game handlers
-    /// (NextPage, ShowPauseMenu, Button_Click) so game logic and sounds still run.
+    /// Suppresses the game's own keyboard while one of our screens owns the surface. Every game
+    /// key read is a bare Input.GetKeyDown inside a per-class Update body (complete survey of
+    /// Assembly-CSharp, 2026-07-18), so one shared prefix skips those bodies. The mod's own
+    /// actions re-invoke the same game handlers (NextPage, ShowPauseMenu, Button_Click) so game
+    /// logic and sounds still run.
     /// </summary>
-    internal static class FocusModePatches
+    internal static class GameInputPatches
     {
         // Every listed Update body is INPUT-ONLY - skipping it removes nothing but key reads.
         // Deliberately not listed: NameRequestWindow.Update (also drives button interactable per
@@ -43,7 +43,7 @@ namespace BranteAccess.Module.Patches
         public static void Apply()
         {
             _harmony = new Harmony("BranteAccess.Module." + Guid.NewGuid().ToString("N"));
-            var prefix = new HarmonyMethod(typeof(FocusModePatches), nameof(SkipWhileFocused));
+            var prefix = new HarmonyMethod(typeof(GameInputPatches), nameof(SkipWhileScreenActive));
             foreach (var type in InputOnlyUpdates)
             {
                 var update = AccessTools.Method(type, "Update");
@@ -52,7 +52,7 @@ namespace BranteAccess.Module.Patches
                         "no Update method on " + type.FullName + " - game update changed the input surface");
                 _harmony.Patch(update, prefix: prefix);
             }
-            Mod.Log("focus-mode patches on " + InputOnlyUpdates.Length
+            Mod.Log("game-input patches on " + InputOnlyUpdates.Length
                 + " game Update methods (harmony id " + _harmony.Id + ")");
         }
 
@@ -60,7 +60,7 @@ namespace BranteAccess.Module.Patches
         {
             if (_harmony == null) return;
             _harmony.UnpatchSelf();
-            Mod.Log("focus-mode patches removed (harmony id " + _harmony.Id + ")");
+            Mod.Log("game-input patches removed (harmony id " + _harmony.Id + ")");
             _harmony = null;
         }
 
@@ -68,7 +68,7 @@ namespace BranteAccess.Module.Patches
         // mod has no screen for yet) the game's own keys - Escape to pause, A/D paging - are the
         // only working keyboard, and dead keys are worse than stock keys. Once a screen claims
         // the surface, its actions own the keyboard and the game's reads stay skipped.
-        private static bool SkipWhileFocused()
-            => !(FocusMode.Active && Screens.ScreenManager.Current != null);
+        private static bool SkipWhileScreenActive()
+            => Screens.ScreenManager.Current == null;
     }
 }

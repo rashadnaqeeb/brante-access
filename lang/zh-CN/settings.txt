@@ -1,6 +1,5 @@
 # Brante Access - input action labels (bind.<action key>), Simplified Chinese.
 
-bind.focusmode = 切换焦点模式
 bind.ui.up = 向上导航
 bind.ui.down = 向下导航
 bind.ui.left = 向左导航

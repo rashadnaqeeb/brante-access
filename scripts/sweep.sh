@@ -228,15 +228,7 @@ press ui.back
 sleep 2.5
 check "credits skip returns to main menu" "main menu" "$(speech "$C")"
 
-# --- 6. focus mode toggles both ways ---
-C=$(cursor)
-press focusmode
-check "focus mode off spoken" "focus mode off" "$(speech "$C")"
-C=$(cursor)
-press focusmode
-check "focus mode on spoken" "focus mode on" "$(speech "$C")"
-
-# --- 7. no mod errors logged DURING this sweep (older ring-buffer content is not this run's) ---
+# --- 6. no mod errors logged DURING this sweep (older ring-buffer content is not this run's) ---
 ERRS=$(curl -s -m 5 "$BASE/log?since=$LOGC&grep=Error%3ABrante" | grep -c "Brante" || true)
 check "no mod error log lines" "0" "$ERRS"
 

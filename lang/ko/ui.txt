@@ -2,8 +2,6 @@
 # Comparison templates put the value BEFORE the operator ({value} {op}) because Korean
 # comparators are postfix (3 이상, 3 미만); the en word order would be ungrammatical.
 
-focusmode.on = 포커스 모드 켬
-focusmode.off = 포커스 모드 끔
 
 screen.mainmenu = 메인 메뉴
 

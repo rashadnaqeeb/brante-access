@@ -1,7 +1,5 @@
 # Brante Access - spoken/UI strings, Russian. Keys mirror lang/en/ui.txt (the manifest).
 
-focusmode.on = режим фокуса включен
-focusmode.off = режим фокуса выключен
 
 screen.mainmenu = главное меню
 

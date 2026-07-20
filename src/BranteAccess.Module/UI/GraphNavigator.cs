@@ -163,7 +163,7 @@ namespace BranteAccess.Module.UI
             if (_lastSpokenKey == null || !_lastSpokenKey.Equals(node.Id))
             {
                 // Queued (not interrupting): landings follow the screen name / preceding feedback.
-                if (FocusMode.Active) Speak(GraphAnnouncer.Compose(_lastSpokenNode, node));
+                Speak(GraphAnnouncer.Compose(_lastSpokenNode, node));
                 _lastSpokenKey = node.Id;
                 _lastSpokenNode = node;
             }
@@ -199,7 +199,7 @@ namespace BranteAccess.Module.UI
                 if (!string.Equals(_liveValues[i], v))
                 {
                     _liveValues[i] = v;
-                    if (!string.IsNullOrEmpty(v) && FocusMode.Active) Speak(v, interrupt: false);
+                    if (!string.IsNullOrEmpty(v)) Speak(v, interrupt: false);
                 }
             }
         }
@@ -472,7 +472,7 @@ namespace BranteAccess.Module.UI
         public override void TickTypeahead()
         {
             if (Screen == null || Screen.CapturesRawInput || !Screen.AllowsTypeahead
-                || !FocusMode.Active || _graph?.CurrentNode == null)
+                || _graph?.CurrentNode == null)
             {
                 if (_search.IsSearchActive || _search.HasBuffer) ClearSearch(announce: false);
                 _lastTypeaheadScreen = Screen;

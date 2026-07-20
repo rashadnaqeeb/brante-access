@@ -1,6 +1,5 @@
 # Brante Access - input action labels (bind.<action key>), Turkish.
 
-bind.focusmode = Odak modunu değiştir
 bind.ui.up = Yukarı git
 bind.ui.down = Aşağı git
 bind.ui.left = Sola git

@@ -36,7 +36,7 @@ namespace BranteAccess.Module.Screens
             yield return new ElementAction(ActionIds.Back, null, _ => Skip());
         }
 
-        // Mirrors the controller's Update key branch, which focus mode suppresses.
+        // Mirrors the controller's Update key branch, which GameInputPatches suppresses.
         private static void Skip()
         {
             var ctrl = Controller();

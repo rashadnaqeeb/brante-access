@@ -2,8 +2,6 @@
 # (the manifest). Differs from es-ES where the game itself differs (Configuraciones,
 # Modo Iron Man) and uses the Enter key name.
 
-focusmode.on = modo foco activado
-focusmode.off = modo foco desactivado
 
 screen.mainmenu = menú principal
 

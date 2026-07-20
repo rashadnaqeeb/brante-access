@@ -836,3 +836,9 @@ closing it.
   HUD button announces only the game's HUD.WillOpen{n} tooltip line, never the window's name -
   the game's TooltipEventHandler withholds the name term until Unlocked, so the mod's speech
   surface matches the sighted text surface exactly.
+- **Focus mode toggle removed** (2026-07-20, user directive): the F10 toggle, the `focusmode`
+  action, the FocusMode flag, and the focusmode.on/off + bind.focusmode strings (all 14
+  languages) are gone - needing to toggle was a dev concept; the mod's keyboard ownership is
+  unconditional. FocusModePatches renamed GameInputPatches; its predicate is now just
+  `ScreenManager.Current == null` (stand down only where the mod has no screen). Earlier
+  entries mentioning FocusMode/F10 describe the pre-removal design.

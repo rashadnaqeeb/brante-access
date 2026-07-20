@@ -1,6 +1,5 @@
 # Brante Access - input action labels (bind.<action key>), Japanese.
 
-bind.focusmode = フォーカスモード切り替え
 bind.ui.up = 上へ移動
 bind.ui.down = 下へ移動
 bind.ui.left = 左へ移動

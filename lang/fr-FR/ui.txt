@@ -1,7 +1,5 @@
 # Brante Access - spoken/UI strings, French. Keys mirror lang/en/ui.txt (the manifest).
 
-focusmode.on = mode focus activé
-focusmode.off = mode focus désactivé
 
 screen.mainmenu = menu principal
 

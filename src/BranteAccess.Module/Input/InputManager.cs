@@ -10,11 +10,10 @@ namespace BranteAccess.Module.Input
     /// Registry + per-frame poll, ticked from the module's Tick. Actions live in CATEGORIES
     /// (<see cref="InputCategory"/>): each frame the live categories come from
     /// <see cref="ActiveCategoriesProvider"/> (the screen stack, once built; until then the default
-    /// is UI while focus mode is on) plus Global, which is always live. Within the live set an
-    /// identical chord in two categories resolves to the higher-priority (earlier) one - its lower
-    /// twin is SHADOWED. UI-category presses go to <see cref="UiDispatcher"/> (the navigator, once
-    /// built) first; every other category, or an unconsumed UI press, fires the action's own
-    /// handler. With focus mode off only Global is live, so the game keeps its own keys.
+    /// is UI always live) plus Global, which is always live. Within the live set an identical
+    /// chord in two categories resolves to the higher-priority (earlier) one - its lower twin is
+    /// SHADOWED. UI-category presses go to <see cref="UiDispatcher"/> (the navigator, once built)
+    /// first; every other category, or an unconsumed UI press, fires the action's own handler.
     /// Ported from wotr-access.
     /// </summary>
     public static class InputManager
@@ -24,10 +23,10 @@ namespace BranteAccess.Module.Input
 
         /// <summary>Fills the frame's live categories in priority order (Global is appended by the
         /// manager itself). Replaced by the screen stack when it lands; the default is the
-        /// pre-screen-stack world: UI live whenever focus mode is on.</summary>
+        /// pre-screen-stack world: UI always live.</summary>
         public static Action<List<InputCategory>> ActiveCategoriesProvider = cats =>
         {
-            if (FocusMode.Active) cats.Add(InputCategory.UI);
+            cats.Add(InputCategory.UI);
         };
 
         /// <summary>Routes a UI-category press into the active navigator; returns true if consumed.

@@ -3,8 +3,6 @@
 # shared {name} {op} {value} template stays prefix-ordered; en az / en fazla read naturally
 # in that position too.
 
-focusmode.on = odak modu açık
-focusmode.off = odak modu kapalı
 
 screen.mainmenu = ana menü
 

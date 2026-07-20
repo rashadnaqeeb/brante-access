@@ -13,7 +13,7 @@ namespace BranteAccess.Module.Screens
 {
     /// <summary>
     /// The in-game pause window (UIManager.PauseWindow, toggled by the game's Escape read that
-    /// focus mode suppresses - our Back action and the scene screen's Escape run the same
+    /// GameInputPatches suppresses - our Back action and the scene screen's Escape run the same
     /// ShowPauseMenu handler). Rows in the game's visual order off WindowPause's serialized
     /// references: Music/Sound sliders (immediate volume, same percent style as Settings), the
     /// Hidden Consequences and Animated Illustrations toggles, then Quit to Main Menu (the

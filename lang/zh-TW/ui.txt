@@ -1,8 +1,6 @@
 # Brante Access - spoken/UI strings, Traditional Chinese. Keys mirror lang/en/ui.txt
 # (the manifest).
 
-focusmode.on = 焦點模式開
-focusmode.off = 焦點模式關
 
 screen.mainmenu = 主選單
 

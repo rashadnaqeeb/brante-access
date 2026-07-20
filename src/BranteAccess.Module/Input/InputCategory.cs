@@ -11,10 +11,9 @@ namespace BranteAccess.Module.Input
     /// </summary>
     public enum InputCategory
     {
-        /// <summary>Always live, even when focus mode is off (focus toggle itself, dev reload).</summary>
+        /// <summary>Always live regardless of what the screen stack declares.</summary>
         Global,
-        /// <summary>Screen/menu navigation - live while focus mode is on (later: while the focused
-        /// screen declares it).</summary>
+        /// <summary>Screen/menu navigation - live while the focused screen declares it.</summary>
         UI,
     }
 }

@@ -36,8 +36,8 @@ namespace BranteAccess.Module.UI
         /// <summary>Per-frame hook for typed-character input (type-ahead search).</summary>
         public virtual void TickTypeahead() { }
 
-        /// <summary>Announce the current focus in full (the container hierarchy down to the element) -
-        /// e.g. when focus mode engages.</summary>
+        /// <summary>Announce the current focus in full (the container hierarchy down to the
+        /// element).</summary>
         public abstract void AnnounceCurrent();
 
         /// <summary>A screen closed (stack pop without KeepStateOnPop, or a child page removed): drop

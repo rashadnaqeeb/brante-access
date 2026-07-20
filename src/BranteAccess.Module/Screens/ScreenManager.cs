@@ -41,12 +41,11 @@ namespace BranteAccess.Module.Screens
             }
         }
 
-        /// <summary>InputManager's ActiveCategoriesProvider: with focus mode on, the union of every
-        /// active screen's declared categories, focus-first, stopping at the first Exclusive screen
-        /// (a modal owns the keyboard). Global is appended by InputManager itself.</summary>
+        /// <summary>InputManager's ActiveCategoriesProvider: the union of every active screen's
+        /// declared categories, focus-first, stopping at the first Exclusive screen (a modal owns
+        /// the keyboard). Global is appended by InputManager itself.</summary>
         public static void ProvideCategories(List<InputCategory> cats)
         {
-            if (!FocusMode.Active) return;
             foreach (var screen in FocusedFirst())
             {
                 foreach (var c in screen.InputCategories)

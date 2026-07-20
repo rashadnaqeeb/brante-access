@@ -22,7 +22,7 @@ namespace BranteAccess.Module.Screens
     /// triggers all run). A new page re-homes focus SILENTLY; the queued delivery announcement is
     /// the speech, spoken once per page off model state (the pager's own page index), no matter
     /// what advanced it. Escape opens the game's pause window - the game's own Escape read lives
-    /// in UIManager.Update, which focus mode suppresses while a screen is active. Rows read the
+    /// in UIManager.Update, which GameInputPatches suppresses while a screen is active. Rows read the
     /// pager's serialized I2 keys through the game's own substitution helper at speech time
     /// (hero name, el-honorific), with the block's character name prefixed where the game shows
     /// a portrait.

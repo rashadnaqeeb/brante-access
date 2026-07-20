@@ -7,7 +7,7 @@ namespace BranteAccess.Module.Screens
     /// <summary>
     /// The two voiceover cutscenes (CutsceneIntro: logo intro, any key skips; ChapterCutscene:
     /// chapter narration, Space/Enter/Escape skip). Their content is the AUDIO narration and
-    /// their Updates stay UNPATCHED (see FocusModePatches) so the game's own skip keys work -
+    /// their Updates stay UNPATCHED (see GameInputPatches) so the game's own skip keys work -
     /// this screen only announces what is playing and how to skip, and claims NO input category
     /// so every key reaches the game untouched.
     /// </summary>

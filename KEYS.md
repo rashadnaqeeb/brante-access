@@ -1,15 +1,11 @@
 # Brante Access - Key Reference
 
 Generated from the mod's actual input registrations (ModModule.RegisterActions) and
-cross-checked against the live bindings dump. One global key, one navigation set.
+cross-checked against the live bindings dump. One navigation set; the mod owns the
+keyboard whenever it has a screen for the current surface, and stands down to the
+game's stock keys everywhere else (cutscene skips, text entry).
 
-## Global
-
-- F10: toggle focus mode. Focus mode on means the mod owns the keyboard and speaks;
-  off means the game's stock keys work untouched (A/D page text, Escape pauses,
-  any key skips cutscenes). The toggle announces its new state.
-
-## Navigation (focus mode on, any screen)
+## Navigation (any screen)
 
 - Up and Down arrows: previous and next item. Held keys repeat at your OS keyboard rate.
 - Left and Right arrows: same as Up and Down where a row layout calls for it
@@ -32,7 +28,7 @@ cross-checked against the live bindings dump. One global key, one navigation set
 
 ## Type-ahead search
 
-With focus mode on, typing letters starts a search within the current control group.
+Typing letters starts a search within the current control group.
 Space is allowed once a search has begun. Up and Down move through the matches, and
 focus follows each match as it speaks, so Enter activates it as usual. Escape clears
 the search (the next Escape is Back as usual).

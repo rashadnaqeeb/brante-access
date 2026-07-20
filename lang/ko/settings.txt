@@ -1,6 +1,5 @@
 # Brante Access - input action labels (bind.<action key>), Korean.
 
-bind.focusmode = 포커스 모드 전환
 bind.ui.up = 위로 이동
 bind.ui.down = 아래로 이동
 bind.ui.left = 왼쪽으로 이동

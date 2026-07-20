@@ -1,6 +1,5 @@
 # Brante Access - input action labels (bind.<action key>), English.
 
-bind.focusmode = Toggle focus mode
 bind.ui.up = Navigate up
 bind.ui.down = Navigate down
 bind.ui.left = Navigate left
