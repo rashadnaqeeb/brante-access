@@ -11,6 +11,8 @@ using ConsequenceSceneController = _Scripts.AMVCC.Controllers.ConsequenceSceneCo
 using ParameterButtonChanger = _Scripts.AMVCC.Views.ParameterButtonChanger;
 using SceneConsequenceGenerator = _Scripts.AMVCC.Views.Windows.SceneConsequenceGenerator;
 using UniversalParametersGenerator = _Scripts.AMVCC.Views.Windows.Popup.UniversalParametersGenerator;
+using SceneStateMachine = Assets._Scripts.AMVCC.Core.SceneStateMachine.SceneStateMachine;
+using SceneStates = Assets._Scripts.AMVCC.Core.SceneStateMachine.SceneStates;
 
 namespace BranteAccess.Module.Screens
 {
@@ -71,6 +73,7 @@ namespace BranteAccess.Module.Screens
         private int _spokenPage;
         private bool _entryPending;
         private string _spokenStatsSig;
+        private SceneStates _scenePhase;
 
         // The consequence pager only activates after a choice resolves - while it is active it IS
         // the story surface (the game hides the setup pager), so it wins.
@@ -114,6 +117,10 @@ namespace BranteAccess.Module.Screens
         public override void OnPush()
         {
             _entryPending = true;
+            // Baseline the phase watch so entering mid-phase (a save loaded into resolve) is not
+            // itself a flip - a spurious silent seat here would eat the entry announcement.
+            var machine = Object.FindObjectOfType<SceneStateMachine>();
+            if (machine != null) _scenePhase = machine.GetCurrentState();
         }
 
         public override void OnPop()
@@ -128,6 +135,28 @@ namespace BranteAccess.Module.Screens
             var tc = Pager();
             if (tc == null) return;
             int page = PageIndex(tc);
+
+            // A phase flip into resolve (the choice panel deactivating) or hide (the scene fading
+            // out) removes the focused button, and the navigator's focus recovery would land on the
+            // newest transcript row and announce it - re-reading text the player already heard, on
+            // every scene transition. On this screen that landing is a re-home, and re-homes are
+            // silent: seat it here, before this frame's EnsureFocus reconciles (the pump runs
+            // OnUpdate first, and a pending focus applies after reconcile but before the differ
+            // speaks), so the next delivery announcement stays the only speech. The game flips the
+            // phase in the same call stack that deactivates the panels, so the flip is never seen
+            // later than the vanished button.
+            var machine = Object.FindObjectOfType<SceneStateMachine>();
+            if (machine != null)
+            {
+                var phase = machine.GetCurrentState();
+                if (phase != _scenePhase)
+                {
+                    _scenePhase = phase;
+                    if (phase == SceneStates.SceneState_GAME_RESOLVE
+                        || phase == SceneStates.SceneState_HIDE_ANIMATION)
+                        Navigation.FocusNode(PageId(tc, page), announce: false);
+                }
+            }
 
             // A pager swap. On screen entry the navigator's own focus-seat announcement reads the
             // current row - delivery must not repeat it. Mid-screen (choice resolved into the
