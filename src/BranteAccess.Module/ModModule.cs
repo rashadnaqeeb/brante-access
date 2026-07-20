@@ -134,6 +134,7 @@ namespace BranteAccess.Module
                 new ChapterFinalScreen(),
                 new DeathScreen(),
                 new InterludeScreen(),
+                new CaseOfYearPopupScreen(),
                 new SceneScreen(),
                 new LiveTimelineScreen(),
                 new WindowShellScreen(),

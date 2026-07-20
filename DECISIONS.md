@@ -915,3 +915,29 @@ closing it.
   same audio-only skip there, so the wait was always full-length; the narration simply
   keeps playing. Per user, shipped compile-checked without a live repro (game closed);
   first new-game flow next session confirms.
+- **Offline rework batch: conversion book flat, CaseOfYear popup dedicated** (2026-07-20, user
+  directive: "fix whatever you can without being able to confirm live... just fix offline and
+  commit", reload allowed, driving forbidden to protect the live save): the audit's two real
+  gaps built without live verification. The chapter-transition conversion book
+  (ParametersConvertationPanelComponent) gets the chapter books' flat-list treatment inside
+  InterludeScreen's post-close phase - every era page's folded parameter rows behind per-page
+  regions, the visible page following focus through the game's own pager clicks, arrows
+  dropped, the panel's ARRIVAL delivered once (page flips no longer re-deliver the whole
+  panel). Where the conversion book's Continue lives is unknown offline, so both paths are
+  built: buttons on a pager page activate after landing their page, buttons outside the pager
+  sweep visible-gated. CaseOfYearPopupController gets a dedicated transcript screen (twin of
+  the interlude main phase): under the generic sweep a multi-page case would page silently;
+  its NextPage is UNGUARDED past the last block (decompile ground truth), so the newest row
+  withholds Enter on the last block and the close row is the way on. The interlude's verified
+  settle logic is extracted to UI/SettledDelivery (same behavior, now shared with the case
+  screen). Live verify pends the next chapter transition / case beat.
+- **Death book reworked to the transcript pattern** (2026-07-20, user directive on a live
+  lesser death: "down arrow shouldn't progress you through it... press enter on the last line
+  to continue" - the game-wide scene UX, not the flat book): delivered pages accumulate as
+  rows, Enter on the newest turns via the game's RightButton_Click, the arrow stops are gone.
+  Past rows are a model read, not a cache: the game itself re-renders any page from
+  _textBlock[i].SpeechByKey through the pager's own InsertCharacterName on a backward turn,
+  so rows re-derive the same way at speech time; only the NEWEST row reads the live TMP,
+  because the fourth-death resolve rewrites it after Start (the settle/rewrite delivery
+  machinery is unchanged). Page ids are qualified by pager instance for the fourth-death
+  trial's same-frame scene reloads.

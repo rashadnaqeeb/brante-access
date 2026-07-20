@@ -38,31 +38,38 @@ namespace BranteAccess.Module.UI
                 // Continue, so the backdrop would only add a bare unlabeled stop.
                 if (btn.gameObject.name == "back"
                     && string.IsNullOrEmpty(UiWidgets.LabelText(btn.gameObject))) continue;
-                var bt = btn;
-                b.AddItem(ControlId.Referenced(bt, idPrefix + ":btn:" + bt.GetInstanceID()),
-                    new NodeVtable
-                    {
-                        ControlType = ControlTypes.Button,
-                        Announcements = new[]
-                        {
-                            new NodeAnnouncement(() => ButtonLabel(bt.gameObject),
-                                kind: AnnouncementKinds.Label),
-                            new NodeAnnouncement(
-                                () => UiWidgets.Interactable(bt.gameObject)
-                                    ? null : Loc.T("state.unavailable"),
-                                kind: AnnouncementKinds.Enabled),
-                        },
-                        OnActivate = () =>
-                        {
-                            if (!UiWidgets.Interactable(bt.gameObject))
-                            {
-                                Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
-                                return;
-                            }
-                            UiWidgets.Click(bt.gameObject);
-                        },
-                    });
+                AddButton(b, btn, idPrefix);
             }
+        }
+
+        // One swept button node - shared with screens that hand-build part of a surface but
+        // sweep its loose buttons (the interlude's conversion book).
+        internal static void AddButton(GraphBuilder b, UnityEngine.UI.Button btn, string idPrefix)
+        {
+            var bt = btn;
+            b.AddItem(ControlId.Referenced(bt, idPrefix + ":btn:" + bt.GetInstanceID()),
+                new NodeVtable
+                {
+                    ControlType = ControlTypes.Button,
+                    Announcements = new[]
+                    {
+                        new NodeAnnouncement(() => ButtonLabel(bt.gameObject),
+                            kind: AnnouncementKinds.Label),
+                        new NodeAnnouncement(
+                            () => UiWidgets.Interactable(bt.gameObject)
+                                ? null : Loc.T("state.unavailable"),
+                            kind: AnnouncementKinds.Enabled),
+                    },
+                    OnActivate = () =>
+                    {
+                        if (!UiWidgets.Interactable(bt.gameObject))
+                        {
+                            Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
+                            return;
+                        }
+                        UiWidgets.Click(bt.gameObject);
+                    },
+                });
         }
 
         // The panel's readable content as one string (rows in hierarchy order, button labels

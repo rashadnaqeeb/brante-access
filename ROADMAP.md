@@ -623,6 +623,13 @@ go to DECISIONS.md, not to the user.
       "= 0 (Indifference)") with per-panel Continue chaining to the next panel and out; the
       year-increment "Childhood / 4 Years" and CaseOfYear "Brother and Sister's Sacrament /
       Year 1122" popups spoken via the generic popup sweep and dismissed by Enter.)
+      (2026-07-20 CaseOfYear promoted from the generic sweep to a dedicated
+      CaseOfYearPopupScreen on the interlude's transcript pattern - a multi-page case would
+      page SILENTLY under the sweep. Page text mirrors the controller's own plain
+      GetTranslation (no name substitution on this controller); the game's NextPage is
+      unguarded past the last block, so the newest row withholds Enter there and the close
+      row is the way on; post-close stat panels settle-delivered like the interlude's.
+      Built offline at user direction, hot-reloaded; live verify pends the next case beat.)
 - [x] verified - Parameters conversion panel (chapter transition stat conversion)
       (2026-07-18: reached live at the chapter II to III transition (EnableConvertationParams
       interlude "Leaving Home"). Covered by the InterludeScreen post-close PanelSweep with
@@ -636,6 +643,13 @@ go to DECISIONS.md, not to the user.
       alone. All 7 pages traversed over HTTP, one delivery per page swap, adult skills revealed
       one per page, last page's Continue (game's own click) closed into the chapter III start
       book. Zero mod errors logged.)
+      (2026-07-20 reworked OFFLINE to the chapter books' flat-list pattern: title/description
+      rows then every era page's folded parameter rows behind per-page regions, the visible
+      page follows focus through the game's own pager clicks, arrows dropped, the panel
+      arrival delivered once with silent re-seat (page flips no longer re-deliver). Settle
+      logic extracted to UI/SettledDelivery, shared with CaseOfYearPopupScreen. Built and
+      hot-reloaded, /nav sane on the live death screen; live verify pends the next chapter
+      transition.)
 - [x] verified - Death windows: standard death, fourth-death continue flow, GameOverWindow +
       restart/continue popup
       (2026-07-19 fourth-death trial VERIFIED end to end over HTTP: FourthDeath_* scenes loop
