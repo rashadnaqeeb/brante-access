@@ -1,0 +1,17 @@
+# Brante Access - input action labels (bind.<action key>), Simplified Chinese.
+
+bind.focusmode = 切换焦点模式
+bind.ui.up = 向上导航
+bind.ui.down = 向下导航
+bind.ui.left = 向左导航
+bind.ui.right = 向右导航
+bind.ui.next = 下一控件组
+bind.ui.prev = 上一控件组
+bind.ui.activate = 激活
+bind.ui.secondary = 次要操作
+bind.ui.back = 返回
+bind.ui.tooltip = 读取工具提示
+bind.ui.home = 第一项
+bind.ui.end = 最后一项
+bind.ui.regionPrev = 上一区域
+bind.ui.regionNext = 下一区域

@@ -1,0 +1,98 @@
+# Brante Access - spoken/UI strings, Italian. Keys mirror lang/en/ui.txt (the manifest).
+
+focusmode.on = modalità focus attiva
+focusmode.off = modalità focus disattivata
+
+screen.mainmenu = menu principale
+
+nav.position = {index} di {count}
+nav.expanded = espanso
+nav.collapsed = compresso
+nav.no_tooltip = nessun suggerimento
+nav.no_details = nessun dettaglio
+search.no_match = nessuna corrispondenza {text}
+search.cleared = ricerca cancellata
+
+role.button = pulsante
+role.toggle = interruttore
+role.slider = cursore
+role.radiobutton = pulsante radio
+role.combobox = casella combinata
+role.tab = scheda
+role.edit = campo editazione
+
+state.unavailable = non disponibile
+state.selected = selezionato
+state.on = attivo
+state.off = disattivo
+state.none = nessuno
+state.unavailable_reason = non disponibile, {reason}
+
+settings.percent = {value} per cento
+settings.resolution_unavailable = non disponibile, solo in modalità finestra
+
+edit.start = modifica, Invio conferma
+edit.blank = vuoto
+edit.space = spazio
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = non disponibile, il nome richiede almeno 2 lettere
+
+choice.unavailable = non disponibile, richiede {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} da {min} a {max}
+choice.req.relation = {name}, relazione {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = non {req}
+choice.op.more = più di
+choice.op.less = meno di
+choice.op.equal = esattamente
+choice.op.moreequal = almeno
+choice.op.lessequal = al massimo
+choice.op.not = non
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, soddisfatta
+choice.cond.notmet = {row}, non soddisfatta
+choice.cond.any = una delle condizioni, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, relazione {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = da {min} a {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = filmato, narrazione parlata, un tasto qualsiasi salta
+cutscene.chapter = filmato, narrazione parlata, Invio salta
+
+chapterpicture.hint = Invio continua
+
+pager.next = pagina successiva
+pager.prev = pagina precedente
+
+screen.credits = crediti
+
+# "Uomo di Ferro" is the game's own Italian name for the Iron Man mode.
+screen.chapterselect = selezione capitolo
+chapterselect.locked = non disponibile, non ancora raggiunto
+chapterselect.ironman = non disponibile, modalità Uomo di Ferro
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} di {max}
+
+member.selected = {name} selezionato
+
+destiny.achieved = raggiunto
+destiny.notachieved = non raggiunto
+
+map.province = {name}, provincia
+
+mainmenu.continue = Continua
+mainmenu.newgame = Nuova partita
+mainmenu.credits = Crediti
+mainmenu.settings = Impostazioni
+mainmenu.quit = Esci

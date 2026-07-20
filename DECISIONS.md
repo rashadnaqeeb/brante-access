@@ -5,6 +5,30 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Full translation of the mod manifest (2026-07-20, user-directed)
+
+- **Locale folders are named by I2 language code** (ru, de, fr-FR, it, es-ES, es-US, pl, tr,
+  ja, ko, zh-CN, zh-TW) **except pt-BR, whose I2 code is empty in the shipped language source**
+  (verified live). Because of that gap the mod resolves the folder from the I2 language NAME
+  via a complete 14-entry map in LocalizationManager; the I2 code remains only as a fallback
+  for languages a future game update might add.
+- **Game vocabulary reused in translations** where the game names the concept: Iron Man mode
+  (es-ES "Modo Duro", pl "Żelazny Człowiek", tr "Demir Adam", it "Uomo di Ferro", pt-BR
+  "Homem de Ferro", zh-TW "鐵人格鬥者"; Russian has no Iron Man name - its UI frames the
+  feature as "Возврат к главам"/"Запрещен", so the Russian string says chapter returns are
+  forbidden), the relation stat (de "Verbindung"), Settings/Quit/Main-menu words from the
+  game's own terms.
+- **Comparator word order is a per-language template decision**: ja/ko templates are
+  {value}{op} because their comparators are postfix counters (3以上, 3 이상); Turkish keeps
+  prefix order using the spoken math-symbol forms (büyüktür/küçüktür/eşittir) plus
+  en az / en fazla. This is exactly what the "word order lives in {0} templates" rule exists
+  for - no code changed for it.
+- **Role words follow NVDA's localized control vocabulary** per language (e.g. de
+  "Schaltfläche"/"Auswahlschalter", pl "lista rozwijana", zh-CN "编辑框") - expert
+  screen-reader users already know these exact words.
+- **Key names stay untranslated where the physical key is meant** (Enter), except languages
+  whose standard keyboards label it otherwise (es-ES "Intro"; de "Eingabe").
+
 ## Endgame closure calls (2026-07-19 evening, Phases 6/7/9)
 
 - **The "silent GameOver entry" investigation split into one artifact and one real bug.**

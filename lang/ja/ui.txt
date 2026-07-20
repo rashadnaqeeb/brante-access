@@ -1,0 +1,100 @@
+# Brante Access - spoken/UI strings, Japanese. Keys mirror lang/en/ui.txt (the manifest).
+# Comparison templates put the value BEFORE the operator ({value}{op}) because Japanese
+# comparators are postfix counters (3以上, 3未満); the en word order would be ungrammatical.
+
+focusmode.on = フォーカスモード オン
+focusmode.off = フォーカスモード オフ
+
+screen.mainmenu = メインメニュー
+
+nav.position = {count}中{index}
+nav.expanded = 展開
+nav.collapsed = 折りたたみ
+nav.no_tooltip = ツールチップなし
+nav.no_details = 詳細なし
+search.no_match = 一致なし {text}
+search.cleared = 検索クリア
+
+role.button = ボタン
+role.toggle = トグル
+role.slider = スライダー
+role.radiobutton = ラジオボタン
+role.combobox = コンボボックス
+role.tab = タブ
+role.edit = エディット
+
+state.unavailable = 利用不可
+state.selected = 選択
+state.on = オン
+state.off = オフ
+state.none = なし
+state.unavailable_reason = 利用不可、{reason}
+
+settings.percent = {value}パーセント
+settings.resolution_unavailable = 利用不可、ウィンドウモードのみ
+
+edit.start = 編集中、Enterで確定
+edit.blank = 空欄
+edit.space = スペース
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = 利用不可、名前は2文字以上
+
+choice.unavailable = 利用不可、必要条件 {req}
+choice.req.param = {name} {value}{op}
+choice.req.param_range = {name} {min}から{max}
+choice.req.relation = {name}の関係 {value}{op}
+choice.req.status = {name} {status}
+choice.req.not = {req}ではない
+choice.op.more = 超
+choice.op.less = 未満
+choice.op.equal = ちょうど
+choice.op.moreequal = 以上
+choice.op.lessequal = 以下
+choice.op.not = 以外
+
+tooltip.section = {title}、{rows}
+choice.cond.now = {row}、{now} {current}
+choice.cond.met = {row}、達成
+choice.cond.notmet = {row}、未達成
+choice.cond.any = いずれか、{rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}の関係 {delta}
+choice.cons.set = {name}、{value}
+
+param.scale.single = {value}、{text}
+param.scale.range = {min}から{max}、{text}
+param.scale.now = {now}、{row}
+
+cutscene.intro = カットシーン、音声ナレーション、任意のキーでスキップ
+cutscene.chapter = カットシーン、音声ナレーション、Enterでスキップ
+
+chapterpicture.hint = Enterで続行
+
+pager.next = 次のページ
+pager.prev = 前のページ
+
+screen.credits = クレジット
+
+# 「アイアンマン」 is the game's own Japanese name for the Iron Man mode.
+screen.chapterselect = 章選択
+chapterselect.locked = 利用不可、未到達
+chapterselect.ironman = 利用不可、アイアンマンモード
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}、{max}中{value}
+
+member.selected = {name}を選択
+
+destiny.achieved = 達成
+destiny.notachieved = 未達成
+
+map.province = {name}、州
+
+mainmenu.continue = 続きから
+mainmenu.newgame = 新しいゲーム
+mainmenu.credits = クレジット
+mainmenu.settings = 設定
+mainmenu.quit = 終了

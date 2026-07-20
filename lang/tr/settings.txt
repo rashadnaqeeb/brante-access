@@ -1,0 +1,17 @@
+# Brante Access - input action labels (bind.<action key>), Turkish.
+
+bind.focusmode = Odak modunu değiştir
+bind.ui.up = Yukarı git
+bind.ui.down = Aşağı git
+bind.ui.left = Sola git
+bind.ui.right = Sağa git
+bind.ui.next = Sonraki denetim grubu
+bind.ui.prev = Önceki denetim grubu
+bind.ui.activate = Etkinleştir
+bind.ui.secondary = İkincil eylem
+bind.ui.back = Geri
+bind.ui.tooltip = İpucunu oku
+bind.ui.home = İlk öğe
+bind.ui.end = Son öğe
+bind.ui.regionPrev = Önceki bölge
+bind.ui.regionNext = Sonraki bölge

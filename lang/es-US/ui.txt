@@ -1,0 +1,99 @@
+# Brante Access - spoken/UI strings, Spanish (Latin America). Keys mirror lang/en/ui.txt
+# (the manifest). Differs from es-ES where the game itself differs (Configuraciones,
+# Modo Iron Man) and uses the Enter key name.
+
+focusmode.on = modo foco activado
+focusmode.off = modo foco desactivado
+
+screen.mainmenu = menú principal
+
+nav.position = {index} de {count}
+nav.expanded = expandido
+nav.collapsed = contraído
+nav.no_tooltip = sin información emergente
+nav.no_details = sin detalles
+search.no_match = sin coincidencia {text}
+search.cleared = búsqueda borrada
+
+role.button = botón
+role.toggle = interruptor
+role.slider = deslizador
+role.radiobutton = botón de opción
+role.combobox = cuadro combinado
+role.tab = pestaña
+role.edit = cuadro de edición
+
+state.unavailable = no disponible
+state.selected = seleccionado
+state.on = activado
+state.off = desactivado
+state.none = ninguno
+state.unavailable_reason = no disponible, {reason}
+
+settings.percent = {value} por ciento
+settings.resolution_unavailable = no disponible, solo en modo ventana
+
+edit.start = edición, Enter acepta
+edit.blank = vacío
+edit.space = espacio
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = no disponible, el nombre necesita al menos 2 letras
+
+choice.unavailable = no disponible, requiere {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} {min} a {max}
+choice.req.relation = {name}, relación {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = no {req}
+choice.op.more = más de
+choice.op.less = menos de
+choice.op.equal = exactamente
+choice.op.moreequal = al menos
+choice.op.lessequal = como máximo
+choice.op.not = no
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, cumplida
+choice.cond.notmet = {row}, no cumplida
+choice.cond.any = una de las condiciones, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, relación {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = {min} a {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = cinemática, narración hablada, cualquier tecla omite
+cutscene.chapter = cinemática, narración hablada, Enter omite
+
+chapterpicture.hint = Enter continúa
+
+pager.next = página siguiente
+pager.prev = página anterior
+
+screen.credits = créditos
+
+screen.chapterselect = selección de capítulo
+chapterselect.locked = no disponible, aún no alcanzado
+chapterselect.ironman = no disponible, Modo Iron Man
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} de {max}
+
+member.selected = {name} seleccionado
+
+destiny.achieved = logrado
+destiny.notachieved = no logrado
+
+map.province = {name}, provincia
+
+mainmenu.continue = Continuar
+mainmenu.newgame = Nueva partida
+mainmenu.credits = Créditos
+mainmenu.settings = Configuraciones
+mainmenu.quit = Salir

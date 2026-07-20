@@ -1,0 +1,99 @@
+# Brante Access - spoken/UI strings, Brazilian Portuguese. Keys mirror lang/en/ui.txt
+# (the manifest).
+
+focusmode.on = modo de foco ativado
+focusmode.off = modo de foco desativado
+
+screen.mainmenu = menu principal
+
+nav.position = {index} de {count}
+nav.expanded = expandido
+nav.collapsed = recolhido
+nav.no_tooltip = sem dica
+nav.no_details = sem detalhes
+search.no_match = sem correspondência {text}
+search.cleared = pesquisa limpa
+
+role.button = botão
+role.toggle = alternância
+role.slider = controle deslizante
+role.radiobutton = botão de opção
+role.combobox = caixa de combinação
+role.tab = guia
+role.edit = caixa de edição
+
+state.unavailable = indisponível
+state.selected = selecionado
+state.on = ativado
+state.off = desativado
+state.none = nenhum
+state.unavailable_reason = indisponível, {reason}
+
+settings.percent = {value} por cento
+settings.resolution_unavailable = indisponível, apenas no modo janela
+
+edit.start = edição, Enter confirma
+edit.blank = vazio
+edit.space = espaço
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = indisponível, o nome precisa de pelo menos 2 letras
+
+choice.unavailable = indisponível, requer {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} {min} a {max}
+choice.req.relation = {name}, relação {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = não {req}
+choice.op.more = mais de
+choice.op.less = menos de
+choice.op.equal = exatamente
+choice.op.moreequal = pelo menos
+choice.op.lessequal = no máximo
+choice.op.not = não
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, alcançada
+choice.cond.notmet = {row}, não alcançada
+choice.cond.any = uma das condições, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, relação {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = {min} a {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = cena, narração falada, qualquer tecla pula
+cutscene.chapter = cena, narração falada, Enter pula
+
+chapterpicture.hint = Enter continua
+
+pager.next = próxima página
+pager.prev = página anterior
+
+screen.credits = créditos
+
+# "Homem de Ferro" is the game's own Portuguese name for the Iron Man mode.
+screen.chapterselect = seleção de capítulo
+chapterselect.locked = indisponível, ainda não alcançado
+chapterselect.ironman = indisponível, modo Homem de Ferro
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} de {max}
+
+member.selected = {name} selecionado
+
+destiny.achieved = alcançado
+destiny.notachieved = não alcançado
+
+map.province = {name}, província
+
+mainmenu.continue = Continuar
+mainmenu.newgame = Novo jogo
+mainmenu.credits = Créditos
+mainmenu.settings = Configurações
+mainmenu.quit = Sair

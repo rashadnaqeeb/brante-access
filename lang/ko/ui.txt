@@ -1,0 +1,100 @@
+# Brante Access - spoken/UI strings, Korean. Keys mirror lang/en/ui.txt (the manifest).
+# Comparison templates put the value BEFORE the operator ({value} {op}) because Korean
+# comparators are postfix (3 이상, 3 미만); the en word order would be ungrammatical.
+
+focusmode.on = 포커스 모드 켬
+focusmode.off = 포커스 모드 끔
+
+screen.mainmenu = 메인 메뉴
+
+nav.position = {count} 중 {index}
+nav.expanded = 확장됨
+nav.collapsed = 축소됨
+nav.no_tooltip = 툴팁 없음
+nav.no_details = 세부 정보 없음
+search.no_match = 일치 없음 {text}
+search.cleared = 검색 지움
+
+role.button = 버튼
+role.toggle = 토글
+role.slider = 슬라이더
+role.radiobutton = 라디오 버튼
+role.combobox = 콤보박스
+role.tab = 탭
+role.edit = 편집창
+
+state.unavailable = 사용 불가
+state.selected = 선택됨
+state.on = 켬
+state.off = 끔
+state.none = 없음
+state.unavailable_reason = 사용 불가, {reason}
+
+settings.percent = {value}퍼센트
+settings.resolution_unavailable = 사용 불가, 창 모드 전용
+
+edit.start = 편집 중, Enter로 확인
+edit.blank = 빈칸
+edit.space = 공백
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = 사용 불가, 이름은 2자 이상
+
+choice.unavailable = 사용 불가, 필요 조건 {req}
+choice.req.param = {name} {value} {op}
+choice.req.param_range = {name} {min}에서 {max}
+choice.req.relation = {name} 관계 {value} {op}
+choice.req.status = {name} {status}
+choice.req.not = {req} 아님
+choice.op.more = 초과
+choice.op.less = 미만
+choice.op.equal = 일치
+choice.op.moreequal = 이상
+choice.op.lessequal = 이하
+choice.op.not = 아님
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, 충족
+choice.cond.notmet = {row}, 미충족
+choice.cond.any = 다음 중 하나, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name} 관계 {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = {min}에서 {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = 컷신, 음성 내레이션, 아무 키나 건너뜀
+cutscene.chapter = 컷신, 음성 내레이션, Enter로 건너뜀
+
+chapterpicture.hint = Enter로 계속
+
+pager.next = 다음 페이지
+pager.prev = 이전 페이지
+
+screen.credits = 크레딧
+
+# "철인 모드" is the game's own Korean name for the Iron Man mode.
+screen.chapterselect = 챕터 선택
+chapterselect.locked = 사용 불가, 미도달
+chapterselect.ironman = 사용 불가, 철인 모드
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {max} 중 {value}
+
+member.selected = {name} 선택됨
+
+destiny.achieved = 달성
+destiny.notachieved = 미달성
+
+map.province = {name}, 지방
+
+mainmenu.continue = 계속
+mainmenu.newgame = 새 게임
+mainmenu.credits = 크레딧
+mainmenu.settings = 설정
+mainmenu.quit = 나가기

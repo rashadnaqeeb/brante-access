@@ -1,0 +1,99 @@
+# Brante Access - spoken/UI strings, Simplified Chinese. Keys mirror lang/en/ui.txt
+# (the manifest).
+
+focusmode.on = 焦点模式开
+focusmode.off = 焦点模式关
+
+screen.mainmenu = 主菜单
+
+nav.position = 第{index}，共{count}
+nav.expanded = 已展开
+nav.collapsed = 已折叠
+nav.no_tooltip = 无工具提示
+nav.no_details = 无详细信息
+search.no_match = 无匹配 {text}
+search.cleared = 搜索已清除
+
+role.button = 按钮
+role.toggle = 切换按钮
+role.slider = 滑块
+role.radiobutton = 单选按钮
+role.combobox = 组合框
+role.tab = 选项卡
+role.edit = 编辑框
+
+state.unavailable = 不可用
+state.selected = 已选择
+state.on = 开
+state.off = 关
+state.none = 无
+state.unavailable_reason = 不可用，{reason}
+
+settings.percent = 百分之{value}
+settings.resolution_unavailable = 不可用，仅窗口模式
+
+edit.start = 编辑中，按 Enter 确认
+edit.blank = 空白
+edit.space = 空格
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = 不可用，名字至少2个字母
+
+choice.unavailable = 不可用，需要 {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} {min}到{max}
+choice.req.relation = 与{name}的关系 {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = 非 {req}
+choice.op.more = 大于
+choice.op.less = 小于
+choice.op.equal = 恰好
+choice.op.moreequal = 至少
+choice.op.lessequal = 至多
+choice.op.not = 非
+
+tooltip.section = {title}，{rows}
+choice.cond.now = {row}，{now} {current}
+choice.cond.met = {row}，已满足
+choice.cond.notmet = {row}，未满足
+choice.cond.any = 其中一项，{rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = 与{name}的关系 {delta}
+choice.cons.set = {name}，{value}
+
+param.scale.single = {value}，{text}
+param.scale.range = {min}到{max}，{text}
+param.scale.now = {now}，{row}
+
+cutscene.intro = 过场动画，语音旁白，按任意键跳过
+cutscene.chapter = 过场动画，语音旁白，按 Enter 跳过
+
+chapterpicture.hint = 按 Enter 继续
+
+pager.next = 下一页
+pager.prev = 上一页
+
+screen.credits = 制作人员
+
+# "铁人模式" is the game's own Simplified Chinese name for the Iron Man mode.
+screen.chapterselect = 章节选择
+chapterselect.locked = 不可用，未到达
+chapterselect.ironman = 不可用，铁人模式
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}，{value}，共{max}
+
+member.selected = {name} 已选择
+
+destiny.achieved = 已达成
+destiny.notachieved = 未达成
+
+map.province = {name}，行省
+
+mainmenu.continue = 继续
+mainmenu.newgame = 新游戏
+mainmenu.credits = 制作人员
+mainmenu.settings = 设置
+mainmenu.quit = 退出

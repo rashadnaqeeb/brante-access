@@ -1,0 +1,98 @@
+# Brante Access - spoken/UI strings, Russian. Keys mirror lang/en/ui.txt (the manifest).
+
+focusmode.on = режим фокуса включен
+focusmode.off = режим фокуса выключен
+
+screen.mainmenu = главное меню
+
+nav.position = {index} из {count}
+nav.expanded = развернуто
+nav.collapsed = свернуто
+nav.no_tooltip = нет подсказки
+nav.no_details = нет подробностей
+search.no_match = нет совпадений {text}
+search.cleared = поиск очищен
+
+role.button = кнопка
+role.toggle = переключатель
+role.slider = ползунок
+role.radiobutton = радиокнопка
+role.combobox = поле со списком
+role.tab = вкладка
+role.edit = редактор
+
+state.unavailable = недоступно
+state.selected = выбрано
+state.on = включено
+state.off = выключено
+state.none = нет
+state.unavailable_reason = недоступно, {reason}
+
+settings.percent = {value} процентов
+settings.resolution_unavailable = недоступно, только для оконного формата экрана
+
+edit.start = редактирование, Enter подтвердить
+edit.blank = пусто
+edit.space = пробел
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = недоступно, имя не короче 2 букв
+
+choice.unavailable = недоступно, требуется {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} от {min} до {max}
+choice.req.relation = {name}, отношение {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = не {req}
+choice.op.more = больше
+choice.op.less = меньше
+choice.op.equal = ровно
+choice.op.moreequal = не менее
+choice.op.lessequal = не более
+choice.op.not = не
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, выполнено
+choice.cond.notmet = {row}, не выполнено
+choice.cond.any = одно из условий, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, отношение {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = от {min} до {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = ролик, озвученное повествование, любая клавиша пропускает
+cutscene.chapter = ролик, озвученное повествование, Enter пропускает
+
+chapterpicture.hint = Enter продолжить
+
+pager.next = следующая страница
+pager.prev = предыдущая страница
+
+screen.credits = титры
+
+screen.chapterselect = выбор главы
+chapterselect.locked = недоступно, глава не достигнута
+# The Russian game names the Iron Man feature "Возврат к главам" with state "Запрещен".
+chapterselect.ironman = недоступно, возврат к главам запрещен
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} из {max}
+
+member.selected = {name} выбрано
+
+destiny.achieved = достигнуто
+destiny.notachieved = не достигнуто
+
+map.province = {name}, провинция
+
+mainmenu.continue = Продолжить
+mainmenu.newgame = Новая игра
+mainmenu.credits = Титры
+mainmenu.settings = Настройки
+mainmenu.quit = Выйти

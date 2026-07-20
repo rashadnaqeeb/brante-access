@@ -1,0 +1,98 @@
+# Brante Access - spoken/UI strings, Polish. Keys mirror lang/en/ui.txt (the manifest).
+
+focusmode.on = tryb fokusu włączony
+focusmode.off = tryb fokusu wyłączony
+
+screen.mainmenu = menu główne
+
+nav.position = {index} z {count}
+nav.expanded = rozwinięte
+nav.collapsed = zwinięte
+nav.no_tooltip = brak podpowiedzi
+nav.no_details = brak szczegółów
+search.no_match = brak dopasowania {text}
+search.cleared = wyszukiwanie wyczyszczone
+
+role.button = przycisk
+role.toggle = przełącznik
+role.slider = suwak
+role.radiobutton = przycisk opcji
+role.combobox = lista rozwijana
+role.tab = karta
+role.edit = pole edycji
+
+state.unavailable = niedostępne
+state.selected = wybrane
+state.on = włączone
+state.off = wyłączone
+state.none = brak
+state.unavailable_reason = niedostępne, {reason}
+
+settings.percent = {value} procent
+settings.resolution_unavailable = niedostępne, tylko w trybie okna
+
+edit.start = edycja, Enter zatwierdza
+edit.blank = puste
+edit.space = spacja
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = niedostępne, imię wymaga co najmniej 2 liter
+
+choice.unavailable = niedostępne, wymaga {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} od {min} do {max}
+choice.req.relation = {name}, relacja {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = nie {req}
+choice.op.more = więcej niż
+choice.op.less = mniej niż
+choice.op.equal = dokładnie
+choice.op.moreequal = co najmniej
+choice.op.lessequal = najwyżej
+choice.op.not = nie
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, spełniony
+choice.cond.notmet = {row}, niespełniony
+choice.cond.any = jeden z warunków, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, relacja {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = od {min} do {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = przerywnik, narracja mówiona, dowolny klawisz pomija
+cutscene.chapter = przerywnik, narracja mówiona, Enter pomija
+
+chapterpicture.hint = Enter kontynuuje
+
+pager.next = następna strona
+pager.prev = poprzednia strona
+
+screen.credits = twórcy
+
+# "Żelazny Człowiek" is the game's own Polish name for the Iron Man mode.
+screen.chapterselect = wybór rozdziału
+chapterselect.locked = niedostępne, jeszcze nieosiągnięte
+chapterselect.ironman = niedostępne, tryb Żelazny Człowiek
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} z {max}
+
+member.selected = {name}, wybrano
+
+destiny.achieved = osiągnięte
+destiny.notachieved = nieosiągnięte
+
+map.province = {name}, prowincja
+
+mainmenu.continue = Kontynuuj
+mainmenu.newgame = Nowa gra
+mainmenu.credits = Twórcy
+mainmenu.settings = Ustawienia
+mainmenu.quit = Wyjście

@@ -1,0 +1,17 @@
+# Brante Access - input action labels (bind.<action key>), Russian.
+
+bind.focusmode = Переключить режим фокуса
+bind.ui.up = Навигация вверх
+bind.ui.down = Навигация вниз
+bind.ui.left = Навигация влево
+bind.ui.right = Навигация вправо
+bind.ui.next = Следующая группа элементов
+bind.ui.prev = Предыдущая группа элементов
+bind.ui.activate = Активировать
+bind.ui.secondary = Дополнительное действие
+bind.ui.back = Назад
+bind.ui.tooltip = Прочитать подсказку
+bind.ui.home = Первый элемент
+bind.ui.end = Последний элемент
+bind.ui.regionPrev = Предыдущая область
+bind.ui.regionNext = Следующая область

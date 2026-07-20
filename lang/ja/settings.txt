@@ -1,0 +1,17 @@
+# Brante Access - input action labels (bind.<action key>), Japanese.
+
+bind.focusmode = フォーカスモード切り替え
+bind.ui.up = 上へ移動
+bind.ui.down = 下へ移動
+bind.ui.left = 左へ移動
+bind.ui.right = 右へ移動
+bind.ui.next = 次のコントロールグループ
+bind.ui.prev = 前のコントロールグループ
+bind.ui.activate = 決定
+bind.ui.secondary = 補助アクション
+bind.ui.back = 戻る
+bind.ui.tooltip = ツールチップを読む
+bind.ui.home = 先頭の項目
+bind.ui.end = 末尾の項目
+bind.ui.regionPrev = 前の領域
+bind.ui.regionNext = 次の領域

@@ -1,0 +1,101 @@
+# Brante Access - spoken/UI strings, Turkish. Keys mirror lang/en/ui.txt (the manifest).
+# Comparison operators use the spoken math-symbol forms (buyuktur/kucuktur/esittir) so the
+# shared {name} {op} {value} template stays prefix-ordered; en az / en fazla read naturally
+# in that position too.
+
+focusmode.on = odak modu açık
+focusmode.off = odak modu kapalı
+
+screen.mainmenu = ana menü
+
+nav.position = {count} içinden {index}
+nav.expanded = genişletildi
+nav.collapsed = daraltıldı
+nav.no_tooltip = ipucu yok
+nav.no_details = ayrıntı yok
+search.no_match = eşleşme yok {text}
+search.cleared = arama temizlendi
+
+role.button = düğme
+role.toggle = geçiş düğmesi
+role.slider = kaydırıcı
+role.radiobutton = seçenek düğmesi
+role.combobox = seçim kutusu
+role.tab = sekme
+role.edit = yazı alanı
+
+state.unavailable = kullanılamaz
+state.selected = seçili
+state.on = açık
+state.off = kapalı
+state.none = yok
+state.unavailable_reason = kullanılamaz, {reason}
+
+settings.percent = yüzde {value}
+settings.resolution_unavailable = kullanılamaz, yalnızca pencere modunda
+
+edit.start = düzenleme, Enter onaylar
+edit.blank = boş
+edit.space = boşluk
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = kullanılamaz, ad en az 2 harf olmalı
+
+choice.unavailable = kullanılamaz, gereken {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} {min} ile {max} arası
+choice.req.relation = {name} ilişkisi {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = {req} değil
+choice.op.more = büyüktür
+choice.op.less = küçüktür
+choice.op.equal = eşittir
+choice.op.moreequal = en az
+choice.op.lessequal = en fazla
+choice.op.not = değil
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, karşılandı
+choice.cond.notmet = {row}, karşılanmadı
+choice.cond.any = koşullardan biri, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name} ilişkisi {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = {min} ile {max} arası, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = ara sahne, sesli anlatım, herhangi bir tuş atlar
+cutscene.chapter = ara sahne, sesli anlatım, Enter atlar
+
+chapterpicture.hint = Enter devam eder
+
+pager.next = sonraki sayfa
+pager.prev = önceki sayfa
+
+screen.credits = jenerik
+
+# "Demir Adam" is the game's own Turkish name for the Iron Man mode.
+screen.chapterselect = bölüm seçimi
+chapterselect.locked = kullanılamaz, henüz ulaşılmadı
+chapterselect.ironman = kullanılamaz, Demir Adam modu
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {max} üzerinden {value}
+
+member.selected = {name} seçildi
+
+destiny.achieved = başarıldı
+destiny.notachieved = başarılmadı
+
+map.province = {name}, eyalet
+
+mainmenu.continue = Devam et
+mainmenu.newgame = Yeni oyun
+mainmenu.credits = Jenerik
+mainmenu.settings = Ayarlar
+mainmenu.quit = Çıkış

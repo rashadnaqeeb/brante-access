@@ -1,0 +1,17 @@
+# Brante Access - input action labels (bind.<action key>), Italian.
+
+bind.focusmode = Attiva o disattiva modalità focus
+bind.ui.up = Naviga in su
+bind.ui.down = Naviga in giù
+bind.ui.left = Naviga a sinistra
+bind.ui.right = Naviga a destra
+bind.ui.next = Gruppo di controlli successivo
+bind.ui.prev = Gruppo di controlli precedente
+bind.ui.activate = Attiva
+bind.ui.secondary = Azione secondaria
+bind.ui.back = Indietro
+bind.ui.tooltip = Leggi suggerimento
+bind.ui.home = Primo elemento
+bind.ui.end = Ultimo elemento
+bind.ui.regionPrev = Regione precedente
+bind.ui.regionNext = Regione successiva

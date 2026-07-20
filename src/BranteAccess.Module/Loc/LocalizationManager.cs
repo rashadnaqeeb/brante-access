@@ -11,8 +11,9 @@ namespace BranteAccess.Module.Localization
     /// <see cref="Message.LocalizationResolver"/>). One file per table under
     /// <c>lang/&lt;code&gt;/&lt;table&gt;.txt</c> - flat <c>key = value</c> lines ('#' comments,
     /// <c>\n</c> escapes; the game ships no JSON library, so no JSON). The language follows the
-    /// game's live I2 locale code ("en"/"ru"/...); English is always loaded as the fallback, so a
-    /// missing key reads in English, not as a raw key.
+    /// game's live I2 language NAME through a complete mod-side map (the I2 CODE is unusable as
+    /// the key: "Portuguese - Brazil" ships with an empty code, verified live). English is always
+    /// loaded as the fallback, so a missing key reads in English, not as a raw key.
     ///
     /// The game locale is polled every frame (<see cref="Tick"/>) and reloaded on change - a
     /// mid-session language swap must apply immediately (hard-learned in the reference mods).
@@ -22,6 +23,28 @@ namespace BranteAccess.Module.Localization
     internal static class LocalizationManager
     {
         private const string Fallback = "en";
+
+        // I2 language name -> lang/ folder. All 14 shipped languages (Languages enum /
+        // GameManager.SetGameLanguage). Folder names are the I2 codes except pt-BR, whose I2
+        // code is empty in the shipped language source.
+        private static readonly Dictionary<string, string> FolderByGameLanguage =
+            new Dictionary<string, string>
+            {
+                ["English"] = "en",
+                ["Russian"] = "ru",
+                ["Korean"] = "ko",
+                ["Portuguese - Brazil"] = "pt-BR",
+                ["Japanese"] = "ja",
+                ["Simplified Chinese"] = "zh-CN",
+                ["Chinese (Traditional)"] = "zh-TW",
+                ["German"] = "de",
+                ["French (France)"] = "fr-FR",
+                ["Italian"] = "it",
+                ["Spanish (Spain)"] = "es-ES",
+                ["Spanish (Latin Americas)"] = "es-US",
+                ["Polish"] = "pl",
+                ["Turkish"] = "tr",
+            };
 
         // table -> (key -> template). _tables = current language; _fallbackTables = English.
         private static readonly Dictionary<string, Dictionary<string, string>> _tables =
@@ -93,6 +116,11 @@ namespace BranteAccess.Module.Localization
             // corrects it once ready.
             try
             {
+                var name = GameLoc.CurrentLanguage;
+                if (!string.IsNullOrEmpty(name) && FolderByGameLanguage.TryGetValue(name, out var folder))
+                    return folder;
+                // A language the map does not know (a future game update): the I2 code matches our
+                // folder naming for every current language that has one.
                 var code = GameLoc.CurrentLanguageCode;
                 return string.IsNullOrEmpty(code) ? Fallback : code;
             }

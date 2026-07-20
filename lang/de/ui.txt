@@ -1,0 +1,98 @@
+# Brante Access - spoken/UI strings, German. Keys mirror lang/en/ui.txt (the manifest).
+
+focusmode.on = Fokusmodus ein
+focusmode.off = Fokusmodus aus
+
+screen.mainmenu = Hauptmenü
+
+nav.position = {index} von {count}
+nav.expanded = erweitert
+nav.collapsed = reduziert
+nav.no_tooltip = kein Tooltip
+nav.no_details = keine Details
+search.no_match = kein Treffer {text}
+search.cleared = Suche gelöscht
+
+role.button = Schaltfläche
+role.toggle = Umschalter
+role.slider = Schieberegler
+role.radiobutton = Auswahlschalter
+role.combobox = Kombinationsfeld
+role.tab = Registerkarte
+role.edit = Eingabefeld
+
+state.unavailable = nicht verfügbar
+state.selected = ausgewählt
+state.on = ein
+state.off = aus
+state.none = keine
+state.unavailable_reason = nicht verfügbar, {reason}
+
+settings.percent = {value} Prozent
+settings.resolution_unavailable = nicht verfügbar, nur im Fenstermodus
+
+edit.start = Bearbeiten, Eingabe bestätigt
+edit.blank = leer
+edit.space = Leerzeichen
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = nicht verfügbar, Name braucht mindestens 2 Buchstaben
+
+# "Verbindung" is the game's own German word for the relation stat.
+choice.unavailable = nicht verfügbar, benötigt {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} {min} bis {max}
+choice.req.relation = {name}, Verbindung {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = nicht {req}
+choice.op.more = mehr als
+choice.op.less = weniger als
+choice.op.equal = genau
+choice.op.moreequal = mindestens
+choice.op.lessequal = höchstens
+choice.op.not = nicht
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, erfüllt
+choice.cond.notmet = {row}, nicht erfüllt
+choice.cond.any = eine der Bedingungen, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, Verbindung {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = {min} bis {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = Zwischensequenz, gesprochene Erzählung, beliebige Taste überspringt
+cutscene.chapter = Zwischensequenz, gesprochene Erzählung, Eingabe überspringt
+
+chapterpicture.hint = Eingabe setzt fort
+
+pager.next = nächste Seite
+pager.prev = vorherige Seite
+
+screen.credits = Credits
+
+screen.chapterselect = Kapitelauswahl
+chapterselect.locked = nicht verfügbar, noch nicht erreicht
+chapterselect.ironman = nicht verfügbar, Iron-Man-Modus
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} von {max}
+
+member.selected = {name} ausgewählt
+
+destiny.achieved = erreicht
+destiny.notachieved = nicht erreicht
+
+map.province = {name}, Provinz
+
+mainmenu.continue = Fortsetzen
+mainmenu.newgame = Neues Spiel
+mainmenu.credits = Credits
+mainmenu.settings = Einstellungen
+mainmenu.quit = Beenden

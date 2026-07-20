@@ -93,6 +93,14 @@ go to DECISIONS.md, not to the user.
       pass-through translated a term from the game's 17552-term list; live language swap
       en->ru->en followed by the per-frame poll within 1s each way, and with no lang/ru dir the
       mod string fell back to English, not a raw key)
+- [x] verified - Full translations of the mod string manifest (ui + settings tables) into all 13
+      non-English game languages, with the locale resolved from the game's I2 language NAME
+      (user-directed 2026-07-20. lang/{ru,de,fr-FR,it,es-ES,es-US,pt-BR,pl,tr,ja,ko,zh-CN,zh-TW},
+      key parity with lang/en verified by diff for all 26 files; live sweep cycled all 14
+      languages via GameManager.SetGameLanguage and read back 5 strings each through
+      Message.Localized - all resolved in-language incl. pt-BR (whose I2 code is empty - hence
+      the name map in LocalizationManager) and the ja/ko postfix comparator templates; zero
+      missing-string warnings in the log; language restored to English after)
 - [x] verified - uGUI adapter helpers: read TMP text under a node, invoke Button handlers, gate on
       CanvasGroup/interactable visibility (the visibility-gate primitives)
       (Game/UiWidgets: LabelText sweeps TMP then legacy Text, Visible walks the CanvasGroup

@@ -1,0 +1,97 @@
+# Brante Access - spoken/UI strings, French. Keys mirror lang/en/ui.txt (the manifest).
+
+focusmode.on = mode focus activé
+focusmode.off = mode focus désactivé
+
+screen.mainmenu = menu principal
+
+nav.position = {index} sur {count}
+nav.expanded = développé
+nav.collapsed = réduit
+nav.no_tooltip = pas d'infobulle
+nav.no_details = pas de détails
+search.no_match = aucun résultat {text}
+search.cleared = recherche effacée
+
+role.button = bouton
+role.toggle = bascule
+role.slider = curseur
+role.radiobutton = bouton radio
+role.combobox = liste déroulante
+role.tab = onglet
+role.edit = zone d'édition
+
+state.unavailable = indisponible
+state.selected = sélectionné
+state.on = activé
+state.off = désactivé
+state.none = aucun
+state.unavailable_reason = indisponible, {reason}
+
+settings.percent = {value} pour cent
+settings.resolution_unavailable = indisponible, uniquement en mode fenêtré
+
+edit.start = édition, Entrée valide
+edit.blank = vide
+edit.space = espace
+
+namerequest.name_row = {prefix} {value} {postfix}
+namerequest.start_unavailable = indisponible, le nom requiert au moins 2 lettres
+
+choice.unavailable = indisponible, requiert {req}
+choice.req.param = {name} {op} {value}
+choice.req.param_range = {name} {min} à {max}
+choice.req.relation = {name}, relation {op} {value}
+choice.req.status = {name} {status}
+choice.req.not = non {req}
+choice.op.more = plus de
+choice.op.less = moins de
+choice.op.equal = exactement
+choice.op.moreequal = au moins
+choice.op.lessequal = au plus
+choice.op.not = pas
+
+tooltip.section = {title}, {rows}
+choice.cond.now = {row}, {now} {current}
+choice.cond.met = {row}, remplie
+choice.cond.notmet = {row}, non remplie
+choice.cond.any = une des conditions, {rows}
+choice.cons.param = {name} {delta}
+choice.cons.relation = {name}, relation {delta}
+choice.cons.set = {name}, {value}
+
+param.scale.single = {value}, {text}
+param.scale.range = {min} à {max}, {text}
+param.scale.now = {now}, {row}
+
+cutscene.intro = cinématique, narration parlée, toute touche passe
+cutscene.chapter = cinématique, narration parlée, Entrée passe
+
+chapterpicture.hint = Entrée continue
+
+pager.next = page suivante
+pager.prev = page précédente
+
+screen.credits = crédits
+
+screen.chapterselect = sélection du chapitre
+chapterselect.locked = indisponible, pas encore atteint
+chapterselect.ironman = indisponible, mode Iron Man
+
+hud.region = HUD
+hud.pair = {label} {value}
+
+character.deaths = {label}, {value} sur {max}
+
+member.selected = {name} sélectionné
+
+destiny.achieved = atteint
+destiny.notachieved = non atteint
+
+map.province = {name}, province
+
+mainmenu.continue = Continuer
+mainmenu.newgame = Nouvelle partie
+mainmenu.credits = Crédits
+mainmenu.settings = Paramètres
+mainmenu.quit = Quitter
