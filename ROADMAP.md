@@ -659,6 +659,19 @@ go to DECISIONS.md, not to the user.
       hint (the whole screen is the control - unusual enough to earn one). Enter runs the
       game's OnPointerClick (hide animation, sfx, Bolt advance). Verified live: "Chapter I.
       Childhood, Enter continues" spoken, Enter advanced to ChildhoodChapterStart.)
+- [ ] todo - Intro cutscene skip: dead air between the skip keypress and the next screen
+      (user hit it live 2026-07-20, new game: skipped Cutscene_1 and got total silence long
+      enough to report "completely lost speech"; speech resumed only when chapter select
+      announced. Mechanism confirmed from log + /gui during the window: CutsceneIntro.Update
+      stops the voiceover on any key and hands off to the opaque Bolt TalismanFlowMachine
+      ("Click"), which runs the logo/transition sequence with Cutscene_1 still loaded - the
+      whole time CutsceneScreen (entry announcement only) says nothing and its IsActive
+      suppresses SceneScreen, so the player gets zero confirmation the skip registered.
+      Fix direction: CutsceneScreen watches the cutscene's own skip state (CutsceneIntro
+      _block field or voiceover no longer playing) and announces the skip acknowledgment
+      once; repro the full skip path over HTTP to learn whether the Bolt graph also waits
+      on a second keypress at the logo, and check ChapterCutscene for the same gap.
+      Needs a new-game drive - do not run while the user is mid-session.)
 - [x] verified - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
       (2026-07-19: intro Cutscene_1 dev-loaded - entry announces "cutscene, spoken narration,
       any key skips" and the scene carries zero text components (the game's own VOICED narration
