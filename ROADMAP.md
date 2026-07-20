@@ -662,16 +662,28 @@ go to DECISIONS.md, not to the user.
 - [ ] todo - Intro cutscene skip: dead air between the skip keypress and the next screen
       (user hit it live 2026-07-20, new game: skipped Cutscene_1 and got total silence long
       enough to report "completely lost speech"; speech resumed only when chapter select
-      announced. Mechanism confirmed from log + /gui during the window: CutsceneIntro.Update
-      stops the voiceover on any key and hands off to the opaque Bolt TalismanFlowMachine
-      ("Click"), which runs the logo/transition sequence with Cutscene_1 still loaded - the
-      whole time CutsceneScreen (entry announcement only) says nothing and its IsActive
-      suppresses SceneScreen, so the player gets zero confirmation the skip registered.
-      Fix direction: CutsceneScreen watches the cutscene's own skip state (CutsceneIntro
-      _block field or voiceover no longer playing) and announces the skip acknowledgment
-      once; repro the full skip path over HTTP to learn whether the Bolt graph also waits
-      on a second keypress at the logo, and check ChapterCutscene for the same gap.
-      Needs a new-game drive - do not run while the user is mid-session.)
+      announced minutes later. Decompile diagnosis (2026-07-20): the game's intro "skip" is
+      AUDIO-ONLY by design - CutsceneIntro.Update on any key stops the voiceover AudioSource,
+      marks a scene shown, fires the Bolt "Click", and nothing anywhere in the assembly
+      touches the PlayableDirector timeline that drives the visuals (zero references in the
+      whole decompile); the real advance is CutsceneSceneLoader.LoadScene, which has no code
+      caller (asset-side animation event at the transition's natural end). So the visuals
+      always run full length, sighted players watch the ink/logo animation, and a blind
+      player gets dead air for the whole remaining duration. Live timing matched: the flow
+      advanced minutes after the skip, at natural end. SUSPECTED GAME BUG on top: the skip
+      marks GameManager.OpenedSceneName's IsShowed, but the game preloads the Intro scene
+      under the cutscene (log: "Loading of Intro has been started" before the skip), so the
+      skip marked the INTRO EVENT shown and fired a spurious Click into the story graph -
+      and in the user's run the At The End of Time event never played (cutscene straight to
+      chapter select), while the 2026-07-18 no-skip run played it. Fix direction: CutsceneScreen
+      announces the true skip semantics on the skip keypress (narration silenced, cutscene
+      still playing) keyed off the cutscene's own model state (_block/voiceover), and
+      announces nothing false about skipping; verify by repro whether skipping really eats
+      the intro event (and which mechanism: spurious Click vs wrong IsShowed) - if so,
+      DECISIONS.md call on whether the mod compensates. ChapterCutscene differs: its skip
+      IS the full end-of-cutscene handler (same body as the natural-end path), so chapter
+      cutscenes advance immediately - intro only. Needs a new-game drive - do not run while
+      the user is mid-session.)
 - [x] verified - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
       (2026-07-19: intro Cutscene_1 dev-loaded - entry announces "cutscene, spoken narration,
       any key skips" and the scene carries zero text components (the game's own VOICED narration
