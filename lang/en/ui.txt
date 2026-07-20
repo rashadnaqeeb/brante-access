@@ -111,7 +111,7 @@ hud.pair = {label} {value}
 # parameter, out of the skull strip's length)
 character.deaths = {label}, {value} of {max}
 
-# Family and Relations windows (member names are the game's live tile texts)
+# Relations window (member names are the game's live tile texts)
 member.selected = {name} selected
 
 # Destiny window (the game marks an achieved objective only by color)

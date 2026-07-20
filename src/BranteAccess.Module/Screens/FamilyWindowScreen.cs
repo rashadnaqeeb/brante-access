@@ -12,23 +12,23 @@ using GameLoc = I2.Loc.LocalizationManager;
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The Family window as a browsable tree, shaped by the game's own layout: the tile row
-    /// containers under FamilyTree ARE the generations (grandfather row, parents row, hero's
-    /// row), read top row first, left to right within a row. Up/Down walks members in that
-    /// order with positions restarting per generation; each member row folds on everything the
-    /// game's per-character info panel shows (name and role from the live tile, then estate,
-    /// relation value with the game's relation word, any set status), re-read from the model at
-    /// speech time. A non-hero member is an expandable group: Right expands and steps into the
-    /// info panel's description paragraph and the status detail behind the game's help icon;
-    /// Left collapses. Space still reads the same detail in one go. Enter runs the tile's own
-    /// button: the game marks the member selected and fills its visual panel; the hero tile
-    /// opens the Character window (the game's own redirect - it tracks no model data for the
-    /// hero, so the hero row is a plain item).
+    /// The Family window laid out as the visual tree: the tile row containers under FamilyTree
+    /// ARE the generations (grandfather row, parents row, hero's row), navigated as a grid -
+    /// Left/Right walks a generation, Up/Down moves between generations holding the column. A
+    /// row speaks what its tile shows: name and role, plus the game's selected marker. Enter
+    /// runs the tile's own button (the game marks the member selected and fills its info panel)
+    /// and opens that panel as a browsable sub-screen (<see cref="FamilyMemberInfoScreen"/>),
+    /// closed with Escape; the hero tile instead opens the Character window (the game's own
+    /// redirect - it tracks no model data for the hero).
     /// </summary>
     public sealed class FamilyWindowScreen : Screen
     {
         public override string Key => "window:family";
         public override int Layer => 10;
+
+        // All generation rows share one row key: vertical moves hold the column, so Down/Up
+        // round-trips instead of snapping to a generation's first tile.
+        private const string GenerationRowKey = "family:gen";
 
         public override bool IsActive()
         {
@@ -43,36 +43,6 @@ namespace BranteAccess.Module.Screens
         {
             var w = GameUi.OpenedWindow;
             return w == null ? null : w.GetComponent<FamilyWindow>();
-        }
-
-        // Selecting a tile changes no focus, so the state change is the delivery: watch the
-        // game's own selected-member marker and speak it once per change. Seeded on focus so
-        // entering the window stays quiet about a pre-existing selection.
-        private FamilyTile _spokenSelected;
-
-        private static FamilyTile SelectedMember()
-        {
-            var wm = Window();
-            if (wm == null) return null;
-            foreach (var t in wm.Characters)
-                if (IsSelected(t)) return t;
-            return null;
-        }
-
-        public override void OnFocus()
-        {
-            base.OnFocus();
-            _spokenSelected = SelectedMember();
-        }
-
-        public override void OnUpdate()
-        {
-            var selected = SelectedMember();
-            if (selected == _spokenSelected) return;
-            _spokenSelected = selected;
-            if (selected != null)
-                Mod.Speech.Speak(Loc.T("member.selected",
-                    new { name = Readouts.Collapse(Tile(selected).Name.text) }));
         }
 
         public override void Build(GraphBuilder b)
@@ -116,69 +86,39 @@ namespace BranteAccess.Module.Screens
                 tiles.Sort((a, b) =>
                     a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
 
+                // One structural level per generation: silent (empty label), but it keeps each
+                // lone tile's position group to its own generation.
                 b.PushContext("", role: null, positions: true);
+                b.StartRow(GenerationRowKey);
                 foreach (var member in tiles)
                 {
                     var tile = member;
                     var isHero = tile.CharacterObject.Name == CharacterList.Hero;
-                    var id = ControlId.Referenced(tile,
-                        "family:member:" + tile.CharacterObject.Name);
-                    var vtable = new NodeVtable
-                    {
-                        ControlType = ControlTypes.Button,
-                        Announcements = new[]
+                    b.AddItem(ControlId.Referenced(tile,
+                        "family:member:" + tile.CharacterObject.Name),
+                        new NodeVtable
                         {
-                            new NodeAnnouncement(() => MemberLabel(tile),
-                                kind: AnnouncementKinds.Label),
-                            new NodeAnnouncement(() => IsSelected(tile)
-                                    ? Loc.T("state.selected") : null,
-                                kind: AnnouncementKinds.Selected),
-                        },
-                        SearchText = () => Tile(tile).Name.text,
-                        OnTooltip = isHero ? (System.Action)null
-                            : () => Mod.Speech.Speak(Readouts.CharacterDetail(tile.CharacterObject)),
-                        OnActivate = () => UiWidgets.Click(tile.gameObject),
-                    };
-
-                    if (isHero)
-                    {
-                        b.AddItem(id, vtable);
-                        continue;
-                    }
-
-                    b.BeginGroup(id, vtable);
-                    // Children built only while expanded (the model calls stay off the
-                    // per-frame path for collapsed members).
-                    if (b.IsExpanded(id))
-                    {
-                        var co = tile.CharacterObject;
-                        // Structural ids only: a child sharing the tile reference would win the
-                        // header's tier-1 focus match and yank focus off the child every rebuild.
-                        if (!string.IsNullOrEmpty(Readouts.CharacterDescriptionText(co)))
-                            b.AddItem(ControlId.Structural(id.StructuralKey + ":description"),
-                                new NodeVtable
-                                {
-                                    Announcements = new[]
-                                    {
-                                        new NodeAnnouncement(
-                                            () => Readouts.CharacterDescriptionText(co)),
-                                    },
-                                    ExcludeFromSearch = true,
-                                });
-                        if (Readouts.CharacterStatusDetail(co) != null)
-                            b.AddItem(ControlId.Structural(id.StructuralKey + ":status"),
-                                new NodeVtable
-                                {
-                                    Announcements = new[]
-                                    {
-                                        new NodeAnnouncement(
-                                            () => Readouts.CharacterStatusDetail(co)),
-                                    },
-                                    ExcludeFromSearch = true,
-                                });
-                    }
-                    b.EndGroup();
+                            ControlType = ControlTypes.Button,
+                            Announcements = new[]
+                            {
+                                new NodeAnnouncement(() => MemberLabel(tile),
+                                    kind: AnnouncementKinds.Label),
+                                new NodeAnnouncement(() => IsSelected(tile)
+                                        ? Loc.T("state.selected") : null,
+                                    kind: AnnouncementKinds.Selected),
+                            },
+                            SearchText = () => Tile(tile).Name.text,
+                            OnTooltip = isHero ? (System.Action)null
+                                : () => Mod.Speech.Speak(
+                                    Readouts.CharacterDetail(tile.CharacterObject)),
+                            OnActivate = () =>
+                            {
+                                UiWidgets.Click(tile.gameObject);
+                                if (!isHero) PushChild(new FamilyMemberInfoScreen(tile));
+                            },
+                        });
                 }
+                b.EndRow();
                 b.PopContext();
             }
 
@@ -202,23 +142,13 @@ namespace BranteAccess.Module.Screens
             return btn != null && !btn.interactable;
         }
 
-        // Everything the game's info panel shows for the member, folded onto the row: tile
-        // name and role, then estate, relation (the panel's own signed value + word format,
-        // labeled with the game's Relations term), and the status word when one is set (the
-        // game shows a bare dash and hides its help icon for CharacterStatus.Good).
-        private static string MemberLabel(FamilyTile member)
+        // What the tile itself shows: name and role. Everything else lives in the member info
+        // sub-screen, like the sighted panel.
+        internal static string MemberLabel(FamilyTile member)
         {
             var tile = Tile(member);
             var parts = new List<string> { Readouts.Collapse(tile.Name.text) };
             if (tile.WhoIs != null) parts.Add(tile.WhoIs.text);
-            if (member.CharacterObject.Name != CharacterList.Hero)
-            {
-                var co = member.CharacterObject;
-                parts.Add(Readouts.CharacterEstate(co));
-                parts.Add(Readouts.CharacterRelationPair(co));
-                var status = Readouts.CharacterStatusWord(co);
-                if (status != null) parts.Add(status);
-            }
             return string.Join(", ", parts.ToArray());
         }
 
@@ -227,6 +157,54 @@ namespace BranteAccess.Module.Screens
         public override IEnumerable<ElementAction> GetActions()
         {
             yield return new ElementAction(ActionIds.Back, null, _ => HudBar.ClickBack());
+        }
+    }
+
+    /// <summary>
+    /// A family member's info panel as browsable rows - what the game fills on the window's
+    /// right page for the selected member: the description paragraph, estate (the panel shows
+    /// the bare estate word; the game has no header term for it), relation, and status with the
+    /// detail the game renders behind its status help icon. Opened by Enter on a member tile;
+    /// Escape returns to the tree.
+    /// </summary>
+    public sealed class FamilyMemberInfoScreen : Screen
+    {
+        private readonly FamilyTile _member;
+
+        public FamilyMemberInfoScreen(FamilyTile member) { _member = member; }
+
+        public override string Key => "window:family:member";
+        public override int Layer => 11;
+
+        // Lifetime is parent-managed (a child screen is never polled; the Family screen's pop
+        // disposes it).
+        public override bool IsActive() => true;
+
+        public override Message ScreenName
+            => Message.MaybeRaw(FamilyWindowScreen.MemberLabel(_member));
+
+        public override void Build(GraphBuilder b)
+        {
+            var co = _member.CharacterObject;
+            b.PushContext("", role: null, positions: true);
+            if (!string.IsNullOrEmpty(Readouts.CharacterDescriptionText(co)))
+                b.AddLabel(ControlId.Structural("family:info:description"),
+                    () => Readouts.CharacterDescriptionText(co));
+            b.AddLabel(ControlId.Structural("family:info:estate"),
+                () => Readouts.CharacterEstate(co));
+            b.AddLabel(ControlId.Structural("family:info:relation"),
+                () => Readouts.CharacterRelationPair(co));
+            b.AddLabel(ControlId.Structural("family:info:status"),
+                () => Readouts.CharacterStatusPair(co));
+            b.PopContext();
+        }
+
+        public override string HelpText() => GameUi.WindowHelp();
+
+        public override IEnumerable<ElementAction> GetActions()
+        {
+            yield return new ElementAction(ActionIds.Back, null,
+                _ => ParentScreen.RemoveChild(this));
         }
     }
 }

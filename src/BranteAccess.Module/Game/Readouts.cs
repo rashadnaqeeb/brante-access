@@ -363,6 +363,38 @@ namespace BranteAccess.Module.Game
             });
         }
 
+        /// <summary>The game renders a bare dash as a row's whole value where nothing is set -
+        /// readers voice the dash character, so it maps to the mod's none word. Dashes inside
+        /// game prose are untouched (the check is whole-value).</summary>
+        public static string DashAsNone(string value)
+        {
+            var v = value.Trim();
+            return v == "—" || v == "–" || v == "-" ? Loc.T("state.none") : value;
+        }
+
+        /// <summary>The status readout the Family window's info panel renders: the game's Status
+        /// label with the status word - plus, when a non-Good status is set, the detail the game
+        /// renders behind its help icon.</summary>
+        public static string CharacterStatusPair(_Scripts.AMVCC.Models.Static.Character co)
+        {
+            var pm = _Scripts.Managers.ParametersManager.Instance;
+            var status = pm.GetCharacterStatus(co,
+                _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+            var key = pm.GetCharacterStatusKey(co, status);
+            var value = status == CharacterStatus.Good
+                ? DashAsNone(GameLoc.GetTranslation(key))
+                : Loc.T("tooltip.section", new
+                {
+                    title = GameLoc.GetTranslation(key),
+                    rows = GameLoc.GetTranslation(key + ".Description"),
+                });
+            return Loc.T("hud.pair", new
+            {
+                label = GameLoc.GetTranslation("Status"),
+                value,
+            });
+        }
+
         /// <summary>The character's description paragraph plus the status title and detail the
         /// game renders behind its help-icon tooltip when a status is set.</summary>
         public static string CharacterDetail(_Scripts.AMVCC.Models.Static.Character co)

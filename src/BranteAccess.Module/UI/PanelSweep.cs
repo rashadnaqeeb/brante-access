@@ -168,14 +168,7 @@ namespace BranteAccess.Module.UI
             return path;
         }
 
-        // The game renders a bare dash as a row's whole value where a status has cleared -
-        // readers voice the dash character, so it gets the mod's none word. Dashes inside
-        // game prose are untouched (the check is whole-row).
-        private static string Spoken(string value)
-        {
-            var v = value.Trim();
-            return v == "—" || v == "–" || v == "-" ? Loc.T("state.none") : value;
-        }
+        private static string Spoken(string value) => Game.Readouts.DashAsNone(value);
 
         // A button's label is spoken by the button node, not as a separate row.
         private static bool IsRow(Component text, string value)

@@ -360,6 +360,33 @@ go to DECISIONS.md, not to the user.
       seat, full walk, expand/descend/collapse/ascend, both detail children on Amalia
       (TRUE DEATH), select delivery, hero redirect, Tab to HUD and back, clean reopen.
       sweep.sh 59/59 after.)
+- [x] verified - Family window as a visual-layout grid with an Enter info sub-screen (user,
+      2026-07-20: replace the expandable-group tree - lay members out as the visual tree,
+      Enter opens a menu with all the extra info, Escape closes it)
+      (2026-07-20: generations are now StartRow grid rows sharing one row key - Left/Right
+      walks a generation ("Robert Brante, Father, 2 of 3"), Up/Down moves between
+      generations holding the column (Robert down = hero, up = Robert). Member rows slimmed
+      to what the tile shows (name + role + selected). Enter clicks the tile (the game
+      selects and fills its panel) and pushes FamilyMemberInfoScreen - the first PushChild
+      drill-in: screen name "Robert Brante, Father", then description / estate / relation /
+      status rows ("1 of 4".."4 of 4"), Escape pops back ("Family" + the member row with
+      selected state). Status row always present like the panel: "Status TRUE DEATH, <help
+      icon detail>" for a set status, "Status none" for Good (the game renders a bare dash;
+      new shared Readouts.DashAsNone, also now used by PanelSweep). The selection watcher
+      is gone - Enter's delivery is the info screen itself, member.selected is now
+      Relations-only. Hero tile stays a plain click (Character window redirect, verified).
+      Verified live on the chapter V save: full grid walk, info open/browse/escape on
+      Robert, Gloria (Status none), Amalia (TRUE DEATH detail), reopen lands on the
+      game-selected member. sweep.sh 37/37 after.)
+- [x] verified - HUD bar skips blank locked buttons (user, 2026-07-20: focus landed on a
+      bunch of blank buttons that only said "unavailable")
+      (2026-07-20: the game authors WillOpen tooltip terms for chapters 2-5 only; a locked
+      button outside that set - Character/Family/Destiny/Home in the prologue, all
+      ChapterToUnlock=1 - renders as a bare darkened slot with no name and no tooltip, so
+      HudBar now emits no node for it (BlankLocked). Locked buttons WITH a term still speak
+      the game's own unlock line. Verified live on the Allarick chapter 1 intro: bar = info
+      row + Settings + five "Will unlock in Chapter ..." buttons, the four blank slots
+      gone; chapter V bar unaffected (all unlocked).)
 - [x] verified - Relations window (relation tooltips folded; RelationPopup still pending)
       (2026-07-18: RelationsWindowScreen on the Family-window pattern - tile rows with
       role/estate/relation/status folded on via the shared Readouts character helpers,

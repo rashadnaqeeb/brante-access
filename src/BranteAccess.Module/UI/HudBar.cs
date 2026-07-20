@@ -46,6 +46,10 @@ namespace BranteAccess.Module.UI
             foreach (var btn in Buttons(hud))
             {
                 var go = btn.gameObject;
+                // A locked button whose unlock chapter has no WillOpen term is presented by
+                // the game as a bare darkened slot - no name, no tooltip. Nothing is visually
+                // readable there, so the bar emits no node for it.
+                if (BlankLocked(go)) continue;
                 b.AddItem(ControlId.Referenced(btn, "hud:btn:" + go.name),
                     new NodeVtable
                     {
@@ -111,6 +115,15 @@ namespace BranteAccess.Module.UI
             var term = GameLoc.GetTranslation(go.name);
             if (!string.IsNullOrEmpty(term)) return term;
             return UiWidgets.LabelText(go) ?? go.name;
+        }
+
+        // A locked button the game authors no WillOpen tooltip line for (the terms cover
+        // chapters 2 through 5 only): visually a blank darkened slot.
+        private static bool BlankLocked(GameObject go)
+        {
+            var hb = go.GetComponent<HudButtonBehavior>();
+            return hb != null && !hb.Unlocked
+                && string.IsNullOrEmpty(GameLoc.GetTranslation("HUD.WillOpen" + hb.ChapterToUnlock));
         }
 
         // The game's own lock reason for a not-yet-unlocked window button, null when open.

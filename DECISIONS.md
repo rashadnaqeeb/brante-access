@@ -240,6 +240,46 @@ stream of questions.
   rows, so the screen reads nothing there. The interlude timeline is a separate controller
   and a separate ROADMAP item.
 
+## Family window grid + info sub-screen judgment calls (2026-07-20)
+
+Supersedes the 2026-07-19 flattened-treeview design below: the user directed the layout to
+mirror the visual tree exactly, with Enter opening a menu of the extra info and Escape
+closing it.
+
+- **Generations are grid rows sharing one row key**: StartRow("family:gen") per generation
+  makes Left/Right walk a generation and Up/Down move between generations preserving the
+  column position (Down then Up round-trips), which is the closest audible analogue of the
+  visual layout. Columns only approximate the drawn tree (tile counts differ per row and
+  the connecting lines are an opaque sprite), so no parent/child column mapping is claimed.
+- **Member rows speak what the tile shows** (name, role, selected) - estate, relation,
+  status, and the description move to the info sub-screen, like the sighted panel. Space
+  keeps the one-keypress description+status readout on the row itself.
+- **Enter = the game's own click plus PushChild(FamilyMemberInfoScreen)** - first use of the
+  child-screen chain. The click keeps the sighted panel in sync and runs the game's select
+  logic and sound; the sub-screen reads the same model calls at speech time. Escape
+  (ActionIds.Back) removes the child; the Family screen's kept state re-lands on the member.
+- **The selection watcher is removed**: every selection change is now our own Enter, whose
+  delivery is the info screen itself - "X selected" on top of it would be pure redundancy.
+  The row still carries the selected-state part (spoken on focus, and it makes reopening
+  land on the game-selected member via the stop-landing heuristic). member.selected stays
+  for the Relations window.
+- **Status row is always present, like the panel**: "Status <term>" via hud.pair; a set
+  status folds the game's help-icon detail on (tooltip.section); CharacterStatus.Good
+  translates to a bare dash, which maps to state.none through the new shared
+  Readouts.DashAsNone (PanelSweep's private copy now delegates to it).
+- **Info sub-screen rows are read-only labels in panel content, mod order**: description
+  first (the marquee content - Enter then immediately hears it), then estate (bare word;
+  the game has no Estate header term), relation (the game's Relation label), status.
+
+## HUD bar blank locked buttons (2026-07-20)
+
+- **Skip = exactly "nothing visually readable"**: the game authors HUD.WillOpen terms for
+  chapters 2-5 only; a locked button whose ChapterToUnlock has no term (the prologue's
+  Character/Family/Destiny/Home, all ChapterToUnlock=1) renders as a darkened icon slot
+  with no name and no tooltip - a sighted player learns nothing, so the bar emits no node.
+  Locked buttons with a term keep speaking the game's own unlock line, and names are still
+  never spoken while locked (the game withholds them until unlock).
+
 ## Family window tree redesign judgment calls (2026-07-19)
 
 - **Flattened treeview, not a 2D grid**: the user asked for the family tree to be "browsable
