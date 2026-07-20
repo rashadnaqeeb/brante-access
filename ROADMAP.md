@@ -934,7 +934,17 @@ go to DECISIONS.md, not to the user.
       join/button reads now localize-aware). Their own first-open confirmation rides the
       Release-smoke restart; the pattern is proven on the five screens above.
 
-## Phase 9 - Wrap-up (personal-only mod: no installer, no player docs, per DECISIONS.md)
+## Phase 9 - Wrap-up (originally descoped to personal-only; release packaging added 2026-07-20 by user directive, see DECISIONS.md)
+
+- [x] verified - Release packaging: one-zip install (BepInEx + Release plugin + lang + prism +
+      player docs + licenses) via scripts/package.proj, package.ps1 wrapper; v1.0.0 tagged and
+      published on GitHub
+      (2026-07-20: the actual artifact extracted into the game install and launched with
+      BRANTE_NO_SPEECH=1 - "Brante Access 1.0.0 host up; module generation 1", 34 screens
+      registered, zero errors after settle, dev port refused (compiled out). Zip contents
+      byte-compared clean: BepInEx files identical to the vendored zip minus changelog.txt,
+      all three dlls identical to the Release bins, prism.dll identical to vendored, 28/28
+      lang files. Debug deploy restored and test residue removed afterwards.)
 
 - [x] verified - Release build profile: dev server compiled out; verify the Release deploy still
       speaks and navigates (one smoke pass)

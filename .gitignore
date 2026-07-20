@@ -9,5 +9,8 @@ obj/
 # Local machine overrides (game path etc.)
 Directory.Build.local.props
 
+# Release packaging output (scripts/package.proj)
+artifacts/
+
 # Scratch
 *.log

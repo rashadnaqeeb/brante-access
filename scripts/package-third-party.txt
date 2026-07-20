@@ -1,0 +1,16 @@
+Third-party components bundled in this package
+==============================================
+
+BepInEx 5.4.23.5 - Unity plugin framework and loader
+  Files: winhttp.dll, doorstop_config.ini, .doorstop_version, BepInEx\core
+  License: LGPL-2.1 (BepInEx__lgpl-2.1.txt in this folder)
+  Source: https://github.com/BepInEx/BepInEx
+
+Prism v0.16.7 - native screen reader and TTS library
+  Files: prism.dll
+  License: MPL-2.0, with bundled components under their own licenses
+  (see the prism subfolder in this folder, including its NOTICE)
+  Source: https://github.com/ethindp/prism
+
+Everything else (BranteAccess dlls, the lang folder, these docs) is the mod
+itself: MIT licensed, see BranteAccess__LICENSE.txt in this folder.

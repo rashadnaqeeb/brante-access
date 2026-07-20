@@ -1,0 +1,79 @@
+<Project DefaultTargets="Package">
+
+  <!-- Builds the player release zip: BepInEx (from the vendored zip) + the Release plugin +
+       prism.dll + docs and licenses, laid out so extracting the archive into the game folder
+       is the entire install. Compiling still needs a game install for the Managed reference
+       dlls (pass -p:GameDir=... to override the default Steam path); the BepInEx reference
+       dlls come from the vendored zip, so packaging works without BepInEx installed in the
+       game. Run via package.ps1 (resolves GameDir) or:
+         dotnet msbuild scripts\package.proj -t:Package -p:GameDir="..." -->
+
+  <PropertyGroup>
+    <RepoRoot>$(MSBuildThisFileDirectory)..\</RepoRoot>
+    <GameDir Condition="'$(GameDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\The Life and Suffering of Sir Brante</GameDir>
+    <ManagedDir>$(GameDir)\The Life and Suffering of Sir Brante_Data\Managed</ManagedDir>
+    <!-- Single source of truth for the version: the BepInPlugin constant. -->
+    <ModVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(RepoRoot)src\BranteAccess\Plugin.cs')), '(?&lt;=const string Version = ")[0-9.]+').Value)</ModVersion>
+    <StageDir>$(RepoRoot)artifacts\stage\</StageDir>
+    <PluginStageDir>$(StageDir)BepInEx\plugins\BranteAccess\</PluginStageDir>
+    <ZipPath>$(RepoRoot)artifacts\BranteAccess-$(ModVersion).zip</ZipPath>
+  </PropertyGroup>
+
+  <Target Name="Package">
+    <Error Condition="!Exists('$(ManagedDir)\Assembly-CSharp.dll')"
+           Text="Game not found at $(GameDir) (needed for reference dlls). Pass -p:GameDir=... or set BRANTE_GAME and use package.ps1." />
+    <Error Condition="'$(ModVersion)' == ''" Text="Could not read the Version constant from Plugin.cs." />
+
+    <RemoveDir Directories="$(StageDir)" />
+
+    <!-- BepInEx loader, verbatim from the vendored zip, minus its changelog (a bare
+         changelog.txt in the game root would read as the game's or the mod's). The extracted
+         core dir doubles as the BepInEx reference path for the build below. -->
+    <ItemGroup>
+      <BepInExZip Include="$(RepoRoot)third_party\bepinex\BepInEx_win_x64_*.zip" />
+    </ItemGroup>
+    <Error Condition="'@(BepInExZip)' == ''" Text="Vendored BepInEx zip not found under third_party\bepinex." />
+    <Unzip SourceFiles="@(BepInExZip)" DestinationFolder="$(StageDir)" />
+    <Delete Files="$(StageDir)changelog.txt" />
+
+    <MSBuild Projects="$(RepoRoot)src\BranteAccess\BranteAccess.csproj;$(RepoRoot)src\BranteAccess.Module\BranteAccess.Module.csproj"
+             Targets="Restore"
+             Properties="Configuration=Release;GameDir=$(GameDir);BepInExCoreDir=$(StageDir)BepInEx\core" />
+    <MSBuild Projects="$(RepoRoot)src\BranteAccess\BranteAccess.csproj;$(RepoRoot)src\BranteAccess.Module\BranteAccess.Module.csproj"
+             Targets="Build"
+             Properties="Configuration=Release;GameDir=$(GameDir);BepInExCoreDir=$(StageDir)BepInEx\core" />
+
+    <Copy SourceFiles="$(RepoRoot)src\BranteAccess\bin\Release\BranteAccess.dll;$(RepoRoot)src\BranteAccess\bin\Release\BranteAccess.Core.dll"
+          DestinationFolder="$(PluginStageDir)" />
+    <Copy SourceFiles="$(RepoRoot)src\BranteAccess.Module\bin\Release\BranteAccess.Module.dll"
+          DestinationFolder="$(PluginStageDir)module\" />
+
+    <!-- Locale manifest (mod-authored strings; the module reads lang\ at load). -->
+    <ItemGroup>
+      <PkgLang Include="$(RepoRoot)lang\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PkgLang)" DestinationFiles="@(PkgLang->'$(PluginStageDir)lang\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <!-- Native speech lib beside the game exe so P/Invoke resolves it. -->
+    <Copy SourceFiles="$(RepoRoot)third_party\prism\prism.dll" DestinationFolder="$(StageDir)" />
+
+    <!-- Player docs at the archive root, readable before (and after) extracting. -->
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)package-readme.txt" DestinationFiles="$(StageDir)BranteAccess-README.txt" />
+    <Copy SourceFiles="$(RepoRoot)KEYS.md" DestinationFiles="$(StageDir)BranteAccess-KEYS.txt" />
+
+    <!-- Licenses for everything redistributed. The LGPL-2.1 text shipped for BepInEx is the
+         same canonical text prism vendors for the NVDA controller client. -->
+    <ItemGroup>
+      <PrismLic Include="$(RepoRoot)third_party\prism\LICENSES\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PrismLic)" DestinationFolder="$(PluginStageDir)licenses\prism\" />
+    <Copy SourceFiles="$(RepoRoot)third_party\prism\NOTICE" DestinationFiles="$(PluginStageDir)licenses\prism\NOTICE.txt" />
+    <Copy SourceFiles="$(RepoRoot)third_party\prism\LICENSES\nvdaController__lgpl-2.1.txt" DestinationFiles="$(PluginStageDir)licenses\BepInEx__lgpl-2.1.txt" />
+    <Copy SourceFiles="$(RepoRoot)LICENSE" DestinationFiles="$(PluginStageDir)licenses\BranteAccess__LICENSE.txt" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)package-third-party.txt" DestinationFiles="$(PluginStageDir)licenses\THIRD-PARTY.txt" />
+
+    <ZipDirectory SourceDirectory="$(StageDir)" DestinationFile="$(ZipPath)" Overwrite="true" />
+    <Message Text="Release package: $(ZipPath)" Importance="high" />
+  </Target>
+
+</Project>

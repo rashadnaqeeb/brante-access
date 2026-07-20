@@ -862,3 +862,15 @@ closing it.
   state only speaks on the shown page - an inactive panel misreports every button as
   unavailable. Gotcha reconfirmed: this Unity's GetComponentInParent skips inactive
   objects - the under-a-button text exclusion walks transforms explicitly.
+- **Public release packaging** (2026-07-20, user directive): reverses the Phase 9
+  "personal-only mod: no installer, no player docs" descope - the user asked for a one-zip
+  release a player extracts straight into the game folder. `scripts/package.proj` (run via
+  `package.ps1`, or `dotnet msbuild scripts\package.proj`) stages the vendored BepInEx zip
+  (its extracted core doubles as the build's BepInEx reference path, so packaging needs only
+  the game's Managed dlls, not BepInEx installed in the game), the Release plugin + lang/,
+  prism.dll, player docs at the archive root (package-readme.txt as BranteAccess-README.txt,
+  KEYS.md as BranteAccess-KEYS.txt), and redistribution licenses (LGPL-2.1 text for BepInEx,
+  prism's LICENSES + NOTICE, the mod's MIT) into `artifacts/BranteAccess-<version>.zip`.
+  Version is read from Plugin.cs's BepInPlugin constant - the single source. BepInEx's
+  changelog.txt is dropped from the package (a bare changelog.txt in the game root would
+  read as the game's or the mod's).

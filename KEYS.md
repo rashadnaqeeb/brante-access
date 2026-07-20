@@ -25,6 +25,9 @@ game's stock keys everywhere else (cutscene skips, text entry).
   current item in full.
 - Ctrl plus Up and Ctrl plus Down: previous and next region on screens that group
   their rows.
+- Ctrl plus V: toggle verbosity. Concise drops the control role word and the item
+  position from navigation readouts; verbose, the default, keeps them. The setting
+  persists across sessions.
 
 ## Type-ahead search
 

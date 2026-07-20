@@ -13,6 +13,10 @@ This mod was developed entirely by Claude (Anthropic's AI, via Claude Code) with
 - Speech output through Prism (JAWS/NVDA), with SAPI and clipboard fallbacks.
 - Uses the game's own localized text and its own click handlers, so game logic, sounds, and localization stay intact.
 
+## Installing
+
+Download the latest `BranteAccess-<version>.zip` from the [Releases page](https://github.com/rashadnaqeeb/brante-access/releases) and extract it straight into the game folder (the one containing `The Life and Suffering of Sir Brante.exe`). That is the whole install: the zip bundles BepInEx, the plugin, and the speech library. Full steps and the key reference are in the `BranteAccess-README.txt` and `BranteAccess-KEYS.txt` files inside the zip.
+
 ## How it is built
 
 - The game runs on Unity 2018.3 with the Mono backend, which makes it patchable with [BepInEx 5](https://github.com/BepInEx/BepInEx) and Harmony.
@@ -30,6 +34,8 @@ Requires the game (Steam or GOG) and the .NET SDK.
 4. Launch the game.
 
 If Windows blocks the scripts, run them as `powershell -ExecutionPolicy Bypass -File .\setup-bepinex.ps1` (and the same for `build.ps1`).
+
+To build the distributable zip instead, run `package.ps1`: it makes a Release build (dev server compiled out) and writes `artifacts\BranteAccess-<version>.zip`, laid out to extract straight into the game folder. It only reads the game install for reference assemblies and does not need BepInEx installed there.
 
 `ROADMAP.md` tracks feature status and `DECISIONS.md` records the judgment calls made during development.
 
