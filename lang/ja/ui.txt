@@ -84,7 +84,6 @@ hud.pair = {label} {value}
 
 character.deaths = {label}、{max}中{value}
 
-member.selected = {name}を選択
 
 destiny.achieved = 達成
 destiny.notachieved = 未達成

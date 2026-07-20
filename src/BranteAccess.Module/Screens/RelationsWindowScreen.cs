@@ -17,9 +17,11 @@ namespace BranteAccess.Module.Screens
     /// estate, relation value with the game's relation word, and any set status, all re-read
     /// from the model at speech time (the same ParametersManager calls the game's own select
     /// handler makes). Space reads the description paragraph plus the status detail behind
-    /// the page's help icon. Enter runs the tile's own button: the game marks the character
-    /// selected and fills its visual page. The game's empty-state placeholder text is the
-    /// sole row when no one has been met yet.
+    /// the page's help icon. Enter runs the tile's own button (the game marks the character
+    /// selected and fills its visual page) and opens that page as a browsable sub-screen
+    /// (<see cref="CharacterInfoScreen"/>), closed with Escape - the same flow as the Family
+    /// window. The game's empty-state placeholder text is the sole row when no one has been
+    /// met yet.
     /// </summary>
     public sealed class RelationsWindowScreen : Screen
     {
@@ -55,36 +57,6 @@ namespace BranteAccess.Module.Screens
                     && !helper.CharacterObjects.Find(co => co.Name == cm.Character).IsFamily)
                     count++;
             return count;
-        }
-
-        // Selecting a tile changes no focus, so the state change is the delivery: watch the
-        // game's own selected-character marker and speak it once per change. Seeded on focus
-        // so entering the window stays quiet about a pre-existing selection.
-        private CharacterTile _spokenSelected;
-
-        private static CharacterTile SelectedCharacter()
-        {
-            var wm = Window();
-            if (wm == null) return null;
-            foreach (var t in Tiles(wm))
-                if (IsSelected(t)) return t;
-            return null;
-        }
-
-        public override void OnFocus()
-        {
-            base.OnFocus();
-            _spokenSelected = SelectedCharacter();
-        }
-
-        public override void OnUpdate()
-        {
-            var selected = SelectedCharacter();
-            if (selected == _spokenSelected) return;
-            _spokenSelected = selected;
-            if (selected != null)
-                Mod.Speech.Speak(Loc.T("member.selected",
-                    new { name = Readouts.Collapse(Tile(selected).Name.text) }));
         }
 
         public override void Build(GraphBuilder b)
@@ -134,7 +106,12 @@ namespace BranteAccess.Module.Screens
                         SearchText = () => Tile(tile).Name.text,
                         OnTooltip = () =>
                             Mod.Speech.Speak(Readouts.CharacterDetail(tile.CharacterObject)),
-                        OnActivate = () => UiWidgets.Click(tile.gameObject),
+                        OnActivate = () =>
+                        {
+                            UiWidgets.Click(tile.gameObject);
+                            PushChild(new CharacterInfoScreen(tile,
+                                "window:relations:member", () => MemberName(tile)));
+                        },
                     });
             }
             b.PopContext();
@@ -150,6 +127,17 @@ namespace BranteAccess.Module.Screens
         {
             var btn = tile.GetComponent<UnityEngine.UI.Button>();
             return btn != null && !btn.interactable;
+        }
+
+        // The sub-screen's name, matching the game page's header: tile name, then the role -
+        // the same first parts the row label leads with.
+        private static string MemberName(CharacterTile tile)
+        {
+            var parts = new List<string> { Readouts.Collapse(Tile(tile).Name.text) };
+            var role = GameLoc.GetTranslation(
+                System.Enum.GetName(typeof(WhoIsEnum), tile.CharacterObject.WhoIs));
+            if (!string.IsNullOrEmpty(role)) parts.Add(role);
+            return string.Join(", ", parts.ToArray());
         }
 
         // Everything the game's character page shows, folded onto the row: tile name, then the

@@ -81,7 +81,6 @@ hud.pair = {label} {value}
 
 character.deaths = {label}, {value} sur {max}
 
-member.selected = {name} sélectionné
 
 destiny.achieved = atteint
 destiny.notachieved = non atteint

@@ -17,7 +17,7 @@ namespace BranteAccess.Module.Screens
     /// Left/Right walks a generation, Up/Down moves between generations holding the column. A
     /// row speaks what its tile shows: name and role, plus the game's selected marker. Enter
     /// runs the tile's own button (the game marks the member selected and fills its info panel)
-    /// and opens that panel as a browsable sub-screen (<see cref="FamilyMemberInfoScreen"/>),
+    /// and opens that panel as a browsable sub-screen (<see cref="CharacterInfoScreen"/>),
     /// closed with Escape; the hero tile instead opens the Character window (the game's own
     /// redirect - it tracks no model data for the hero).
     /// </summary>
@@ -114,7 +114,8 @@ namespace BranteAccess.Module.Screens
                             OnActivate = () =>
                             {
                                 UiWidgets.Click(tile.gameObject);
-                                if (!isHero) PushChild(new FamilyMemberInfoScreen(tile));
+                                if (!isHero) PushChild(new CharacterInfoScreen(tile,
+                                    "window:family:member", () => MemberLabel(tile)));
                             },
                         });
                 }
@@ -157,56 +158,6 @@ namespace BranteAccess.Module.Screens
         public override IEnumerable<ElementAction> GetActions()
         {
             yield return new ElementAction(ActionIds.Back, null, _ => HudBar.ClickBack());
-        }
-    }
-
-    /// <summary>
-    /// A family member's info panel as browsable rows - what the game fills on the window's
-    /// right page for the selected member: the description paragraph, estate (the panel shows
-    /// the bare estate word; the game has no header term for it), relation, and status with the
-    /// detail the game renders behind its status help icon. Opened by Enter on a member tile;
-    /// Escape returns to the tree.
-    /// </summary>
-    public sealed class FamilyMemberInfoScreen : Screen
-    {
-        private readonly FamilyTile _member;
-
-        public FamilyMemberInfoScreen(FamilyTile member) { _member = member; }
-
-        public override string Key => "window:family:member";
-        public override int Layer => 11;
-
-        // Lifetime is parent-managed (a child screen is never polled; the Family screen's pop
-        // disposes it).
-        public override bool IsActive() => true;
-
-        public override Message ScreenName
-            => Message.MaybeRaw(FamilyWindowScreen.MemberLabel(_member));
-
-        public override void Build(GraphBuilder b)
-        {
-            var co = _member.CharacterObject;
-            b.PushContext("", role: null, positions: true);
-            if (!string.IsNullOrEmpty(Readouts.CharacterDescriptionText(co)))
-                b.AddLabel(ControlId.Structural("family:info:description"),
-                    () => Readouts.CharacterDescriptionText(co));
-            b.AddLabel(ControlId.Structural("family:info:estate"),
-                () => Readouts.CharacterEstate(co));
-            b.AddLabel(ControlId.Structural("family:info:relation"),
-                () => Readouts.CharacterRelationPair(co));
-            b.AddLabel(ControlId.Structural("family:info:status"),
-                () => Readouts.CharacterStatusPair(co));
-            b.PopContext();
-        }
-
-        // No HelpText override: the rows carry the panel's full content already, and the base
-        // null keeps Space honest ("no tooltip") instead of reciting the Family window's
-        // what-this-is blurb inside a single member's panel.
-
-        public override IEnumerable<ElementAction> GetActions()
-        {
-            yield return new ElementAction(ActionIds.Back, null,
-                _ => ParentScreen.RemoveChild(this));
         }
     }
 }

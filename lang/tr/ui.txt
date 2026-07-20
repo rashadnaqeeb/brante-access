@@ -85,7 +85,6 @@ hud.pair = {label} {value}
 
 character.deaths = {label}, {max} üzerinden {value}
 
-member.selected = {name} seçildi
 
 destiny.achieved = başarıldı
 destiny.notachieved = başarılmadı
