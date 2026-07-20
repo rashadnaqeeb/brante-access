@@ -556,7 +556,17 @@ go to DECISIONS.md, not to the user.
       no text child) replaced by one button row per UnlockedItemBehaviour labeled with the
       game's own unlock text; verified live at Peace Time start: "'Occupation' screen is
       now available, button", Enter opened the Occupation window, Escape returned to the
-      book with the page redelivered.)
+      book with the page redelivered.
+      2026-07-20 reworked to ONE flat list (user: pager buttons + jump-back-to-top were
+      confusing): every page's rows inline - page title row (title/position/description),
+      then its objectives/parameters/unlocks - ending in Begin Chapter at the bottom; the
+      game's visible page follows focus via per-page regions (OnUpdate turns the game's own
+      pager until the shown page matches the focused row's page); Ctrl+Up/Down jumps a page
+      at a time; pager button nodes removed. Verified live at Childhood start: 17 downs
+      walked all 5 pages' rows one keypress each, page synced exactly at each title row
+      crossing (page 1 at down 6, page 2 at down 9, page 3 at down 12, begin page at
+      bottom), Deaths row trimmed, region jumps landed on title rows, End+Enter began the
+      chapter into scene 01.01.01. User-tested same day.)
 - [x] verified - Chapter final window (stats summary pages)
       (2026-07-18: ChapterFinalScreen - epilogue text rows (second prefab text deduped),
       page title/position/description row, timeline rows folding event + branch + year from

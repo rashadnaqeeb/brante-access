@@ -850,3 +850,15 @@ closing it.
   prefs.txt (module statics reset every hot reload, so an unpersisted toggle would silently
   revert); default verbose. The chapter start/final page deliveries keep their "n of m" -
   that is content position in a pager delivery, not a navigation announcement.
+- **Chapter start book flattened; the visible page follows focus** (2026-07-20, user
+  directive: pager buttons + jump-back-to-top were confusing): all pages' rows build as one
+  list from every panel (inactive panels' components hold their model text, so rows read
+  fine before their page shows), each page's rows tagged with a per-page RegionKey; the
+  screen's OnUpdate reads Navigation.FocusedRegionKey (new accessor beside FocusedStopKey)
+  and clicks the game's own Prev/Next until the shown page matches - the game's visuals,
+  dots and tooltips stay coherent, and Ctrl+Up/Down page jumps come free with regions. Page
+  flips are silent: the row focus lands on is the speech. Button activation re-syncs the
+  page first (the click path needs the panel active and raycastable), and the unavailable
+  state only speaks on the shown page - an inactive panel misreports every button as
+  unavailable. Gotcha reconfirmed: this Unity's GetComponentInParent skips inactive
+  objects - the under-a-button text exclusion walks transforms explicitly.

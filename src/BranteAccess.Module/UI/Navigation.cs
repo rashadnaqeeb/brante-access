@@ -41,5 +41,8 @@ namespace BranteAccess.Module.UI
 
         /// <summary>The Tab-stop the focused node belongs to, or null.</summary>
         public static object FocusedStopKey => Active?.FocusedStopKey;
+
+        /// <summary>The region the focused node belongs to, or null.</summary>
+        public static object FocusedRegionKey => Active?.FocusedRegionKey;
     }
 }

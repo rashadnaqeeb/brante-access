@@ -56,6 +56,10 @@ namespace BranteAccess.Module.UI
         /// where focus is).</summary>
         public virtual object FocusedStopKey => null;
 
+        /// <summary>The region (within a stop) the focused node belongs to, or null (screen logic
+        /// that follows focus section by section - a paged surface syncing its visible page).</summary>
+        public virtual object FocusedRegionKey => null;
+
         // interrupt: true for focus MOVES (so held key-repeat reads the item you land on instead of
         // backing up a queue); false for screen-entry / landing readouts (house style: queued).
         protected static void Speak(string text, bool interrupt = false)

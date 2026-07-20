@@ -93,6 +93,8 @@ namespace BranteAccess.Module.UI
 
         public override object FocusedStopKey => _graph?.CurrentNode?.StopKey;
 
+        public override object FocusedRegionKey => _graph?.CurrentNode?.RegionKey;
+
         /// <summary>The live render + focused node id (dev-server inspection - the /nav dump).</summary>
         internal GraphRender CurrentRender => _graph?.Current;
         internal GraphNode FocusedNode => _graph?.CurrentNode;
