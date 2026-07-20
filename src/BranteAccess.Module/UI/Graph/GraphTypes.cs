@@ -135,6 +135,13 @@ namespace BranteAccess.Module.UI.Graph
         /// <summary>Set when this node's announcements already include its list position, so the
         /// announcer doesn't append the auto-stamped one.</summary>
         public bool SpeaksOwnPosition;
+
+        /// <summary>Set on transcript-style rows whose text arrives by a delivery announcement:
+        /// when the focused control vanishes from the render (a Continue button on a scene
+        /// transition, a resolving choice panel) and nearest-survivor recovery lands here, the
+        /// landing stays silent - the row's text was already heard, and a teardown re-home is a
+        /// re-home, not news.</summary>
+        public bool SilentRecovery;
     }
 
     /// <summary>A directed edge to another node, with an optional spoken transition line (a "lane

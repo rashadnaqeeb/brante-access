@@ -164,10 +164,22 @@ namespace BranteAccess.Module.UI
 
             if (_lastSpokenKey == null || !_lastSpokenKey.Equals(node.Id))
             {
-                // Queued (not interrupting): landings follow the screen name / preceding feedback.
-                Speak(GraphAnnouncer.Compose(_lastSpokenNode, node));
-                _lastSpokenKey = node.Id;
-                _lastSpokenNode = node;
+                // Recovery onto a SilentRecovery row (the spoken control vanished from the render
+                // and the fallback landed here) rebaselines without speaking - the row's text was
+                // already delivered.
+                if (_lastSpokenKey != null && node.Vtable.SilentRecovery
+                    && !_graph.Current.Nodes.ContainsKey(_lastSpokenKey))
+                {
+                    _lastSpokenKey = node.Id;
+                    _lastSpokenNode = node;
+                }
+                else
+                {
+                    // Queued (not interrupting): landings follow the screen name / preceding feedback.
+                    Speak(GraphAnnouncer.Compose(_lastSpokenNode, node));
+                    _lastSpokenKey = node.Id;
+                    _lastSpokenNode = node;
+                }
             }
 
             WatchLive(node);

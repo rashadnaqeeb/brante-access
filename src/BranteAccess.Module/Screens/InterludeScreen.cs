@@ -162,6 +162,7 @@ namespace BranteAccess.Module.Screens
                     b.AddItem(PageId(p, page), new NodeVtable
                     {
                         ControlType = ControlTypes.Text,
+                        SilentRecovery = true,
                         Announcements = new[]
                         {
                             new NodeAnnouncement(() => PageText(Popup(), page),
