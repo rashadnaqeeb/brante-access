@@ -9,16 +9,21 @@ using DeathChoiceButton = _Scripts.AMVCC.Views.Windows.Death.DeathChoiceButtonBe
 using SimplePageTurner = _Scripts.AMVCC.Views.Windows.Death.SimplePageTurner;
 using UniversalPageTurner = _Scripts.AMVCC.Views.Windows.Death.UniversalPageTurner;
 using ResolveBehaviour = _Scripts.AMVCC.Views.Windows.Death.ResolveBehaviour;
+using TextBlock = _Scripts.AMVCC.Controllers.TextBlock;
 
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The death window (a scene loaded on a death trigger): a book like the chapter start -
-    /// one current-page row read live from the active pager's own text, page turns delivered
-    /// once each off the pager's page index, prev/next as the game's own arrow buttons. The
-    /// setup pager ends in death-choice buttons (their descriptions are hover-only for sighted
-    /// players - folded onto the button); a chosen consequence swaps in the resolve pager,
-    /// delivered like any new content, ending in the game's Continue back to the story.
+    /// The death window (a scene loaded on a death trigger), spoken with the transcript
+    /// pattern like the event scene and interlude: delivered pages accumulate as rows, Enter
+    /// on the newest turns the page through the game's own pager (bounds-guarded, sound), a
+    /// new page re-homes silently with the delivery announcement as the speech. Past rows
+    /// re-derive their text the way the game itself does when paging back (block key through
+    /// its own InsertCharacterName), the newest row reads the live text (the fourth-death
+    /// resolve rewrites it after Start). The setup pager ends in death-choice buttons (their
+    /// descriptions are hover-only for sighted players - folded onto the button); a chosen
+    /// consequence swaps in the resolve pager, delivered like any new content, ending in the
+    /// game's Continue back to the story.
     /// </summary>
     public sealed class DeathScreen : Screen
     {
@@ -59,10 +64,10 @@ namespace BranteAccess.Module.Screens
             .GetField("_pageIndex", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo MainTextField = typeof(SimplePageTurner)
             .GetField("_mainText_TMP", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo LeftButtonField = typeof(SimplePageTurner)
-            .GetField("_leftButton", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo RightButtonField = typeof(SimplePageTurner)
-            .GetField("_rightButton", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo TextBlockField = typeof(SimplePageTurner)
+            .GetField("_textBlock", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo InsertNameMethod = typeof(SimplePageTurner)
+            .GetMethod("InsertCharacterName", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo ResolveContinueField = typeof(ResolveBehaviour)
             .GetField("_continueButton", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -106,8 +111,20 @@ namespace BranteAccess.Module.Screens
         private static string PageText(SimplePageTurner t)
             => ((TMPro.TextMeshProUGUI)MainTextField.GetValue(t)).text;
 
-        private static UnityEngine.UI.Button PagerButton(SimplePageTurner t, FieldInfo field)
-            => ((GameObject)field.GetValue(t)).GetComponent<UnityEngine.UI.Button>();
+        // A past page's text the way the game itself re-renders it on a backward turn: the
+        // block key through the pager's own name-substitution helper - a model read, not a
+        // cache (the same call rebuilds the same words every time).
+        private static string DerivedText(SimplePageTurner t, int page)
+        {
+            var blocks = (System.Collections.Generic.List<TextBlock>)TextBlockField.GetValue(t);
+            return (string)InsertNameMethod.Invoke(t, new object[] { blocks[page].SpeechByKey });
+        }
+
+        // Structural and qualified by pager instance: the fourth-death trial reloads its
+        // scene per judgment question synchronously (no pop frame) - a bare page index would
+        // reconcile onto the new pager's identical key and swallow the new content's re-seat.
+        private static ControlId PageId(SimplePageTurner t, int page) =>
+            ControlId.Structural("death:" + t.GetInstanceID() + ":page:" + page);
 
         public override void OnPop()
         {
@@ -144,7 +161,7 @@ namespace BranteAccess.Module.Screens
                 _pendingText = null;
                 // Screen entry: the navigator's seat announcement reads the page. A mid-screen
                 // swap (setup to resolve) is new content - delivered below once it settles,
-                // with a silent re-seat onto the page row.
+                // with a silent re-seat onto its newest row.
                 _spokenText = entry ? text : null;
                 _pendingSeat = !entry;
                 return;
@@ -154,6 +171,9 @@ namespace BranteAccess.Module.Screens
                 _spokenPage = page;
                 _spokenText = text;
                 _pendingText = null;
+                // The new page's row joined the transcript this frame: re-home silently, the
+                // delivery announcement is the speech.
+                Navigation.FocusNode(PageId(t, page), announce: false);
                 Mod.Speech.Speak(text);
                 return;
             }
@@ -170,7 +190,7 @@ namespace BranteAccess.Module.Screens
             if (_pendingSeat)
             {
                 _pendingSeat = false;
-                Navigation.FocusNode(ControlId.Structural("death:page"), announce: false);
+                Navigation.FocusNode(PageId(t, page), announce: false);
             }
             Mod.Speech.Speak(text);
         }
@@ -180,25 +200,32 @@ namespace BranteAccess.Module.Screens
             var t = Turner();
             if (t == null) return;
 
+            int pages = PageIndex(t);
             b.PushContext("", role: null, positions: false);
-            var pageId = ControlId.Structural("death:page");
-            b.AddItem(pageId, new NodeVtable
+            for (int i = 0; i <= pages; i++)
             {
-                ControlType = ControlTypes.Text,
-                Announcements = new[]
+                int page = i;
+                bool newest = page == pages;
+                b.AddItem(PageId(t, page), new NodeVtable
                 {
-                    new NodeAnnouncement(() => PageText(Turner()), kind: AnnouncementKinds.Label),
-                },
-                // Enter turns forward through the game's own pager (bounds-guarded, sound).
-                OnActivate = () => Turner().RightButton_Click(),
-            });
-            b.SetStart(pageId);
+                    ControlType = ControlTypes.Text,
+                    SilentRecovery = true,
+                    Announcements = new[]
+                    {
+                        // The newest page reads the live text (the game rewrites it in the
+                        // fourth-death resolve); settled rows re-derive from their block.
+                        new NodeAnnouncement(
+                            () => page == PageIndex(t) ? PageText(t) : DerivedText(t, page),
+                            kind: AnnouncementKinds.Label),
+                    },
+                    // Enter turns forward through the game's own pager (bounds-guarded,
+                    // sound); on the final page it is the guard's no-op - what follows
+                    // (choices, Continue) sits below as rows.
+                    OnActivate = !newest ? (System.Action)null : () => t.RightButton_Click(),
+                });
+            }
+            b.SetStart(PageId(t, pages));
             b.PopContext();
-
-            Arrow(b, PagerButton(t, LeftButtonField), "death:prev", "pager.prev",
-                () => Turner().LeftButton_Click());
-            Arrow(b, PagerButton(t, RightButtonField), "death:next", "pager.next",
-                () => Turner().RightButton_Click());
 
             // Death choices (revealed by the game on the setup pager's last page). The
             // description only exists on hover for sighted players - folded onto the button.
@@ -264,33 +291,6 @@ namespace BranteAccess.Module.Screens
             if (string.IsNullOrEmpty(choice.ButtonDesriptionKey)) return label;
             var desc = I2.Loc.LocalizationManager.GetTranslation(choice.ButtonDesriptionKey);
             return string.IsNullOrEmpty(desc) ? label : label + ". " + desc;
-        }
-
-        // The pager arrows are image-only buttons - the label is mod-authored; the game's own
-        // interactable state (bounds) gates them.
-        private void Arrow(GraphBuilder b, UnityEngine.UI.Button btn, string id, string labelKey,
-            System.Action click)
-        {
-            b.AddItem(ControlId.Referenced(btn, id), new NodeVtable
-            {
-                ControlType = ControlTypes.Button,
-                Announcements = new[]
-                {
-                    new NodeAnnouncement(() => Loc.T(labelKey), kind: AnnouncementKinds.Label),
-                    new NodeAnnouncement(
-                        () => btn.interactable ? null : Loc.T("state.unavailable"),
-                        kind: AnnouncementKinds.Enabled),
-                },
-                OnActivate = () =>
-                {
-                    if (!btn.interactable)
-                    {
-                        Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
-                        return;
-                    }
-                    click();
-                },
-            });
         }
     }
 }

@@ -267,6 +267,16 @@ go to DECISIONS.md, not to the user.
       re-seat). The prefab shows placeholder title/text ("New Text" + Russian block) that the
       game rewrites a beat after ShowDeathPopup; title and current-page rewrites re-deliver,
       verified: "First Death" then the English page 0 spoken after the placeholders.)
+      (2026-07-20 reworked to the TRANSCRIPT pattern at user direction on a live lesser
+      death: down arrow must not advance - Enter on the last line is the game-wide UX.
+      Delivered pages accumulate as rows; past rows re-derive from _textBlock keys through
+      the pager's own InsertCharacterName (the same call the game makes on a backward turn -
+      a model read, not a cache), the newest row reads the live TMP (fourth-death resolve
+      rewrites it after Start), Enter on newest turns via RightButton_Click, arrow stops
+      dropped, page ids qualified by pager instance for the trial's same-frame scene
+      reloads. Verified on the live lesser death after hot-reload: /nav shows all 10 pages
+      as rows with correct derived text plus the 6 choices; user confirmed. Enter-advance
+      and the resolve swap ride the user's playthrough.)
 - [x] verified - In-scene tooltips reachable by keyboard: condition tooltip (requirements),
       consequence tooltip, parameter value tooltip
       (2026-07-18: Space/F1 on a choice speaks the game's two hover tooltips composed from the
