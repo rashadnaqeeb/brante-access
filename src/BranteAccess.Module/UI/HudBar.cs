@@ -10,8 +10,8 @@ using GameLoc = I2.Loc.LocalizationManager;
 namespace BranteAccess.Module.UI
 {
     /// <summary>
-    /// The HUD bar as a Tab-stop: a year/chapter status row, then the window buttons in one
-    /// left-to-right row. Button labels are the game's own I2 terms keyed by the button
+    /// The HUD bar as a Tab-stop: a year/chapter status row, then the window buttons as a
+    /// vertical list (screen order, left to right). Button labels are the game's own I2 terms keyed by the button
     /// object's name (the same lookup the game's hover tooltip does); a still-locked button
     /// announces only the game's own HUD.WillOpen{chapter} reason, never its name - the game
     /// hides a locked button's name until unlock. Activation goes through the
@@ -42,7 +42,6 @@ namespace BranteAccess.Module.UI
 
             b.AddLabel(ControlId.Structural("hud:info"), () => Info(hud));
 
-            b.StartRow();
             foreach (var btn in Buttons(hud))
             {
                 var go = btn.gameObject;
@@ -79,7 +78,6 @@ namespace BranteAccess.Module.UI
                         },
                     });
             }
-            b.EndRow();
             b.PopContext();
         }
 
