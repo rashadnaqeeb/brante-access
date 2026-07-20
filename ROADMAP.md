@@ -378,6 +378,17 @@ go to DECISIONS.md, not to the user.
       Verified live on the chapter V save: full grid walk, info open/browse/escape on
       Robert, Gloria (Status none), Amalia (TRUE DEATH detail), reopen lands on the
       game-selected member. sweep.sh 37/37 after.)
+- [x] verified - Family info sub-screen: Space no longer recites the window blurb (user,
+      2026-07-20: "the tooltips on space are catching the wrong thing" plus "check all text
+      is displayed including the expanded thing")
+      (2026-07-20: the sub-screen inherited HelpText() => GameUi.WindowHelp(), so Space on
+      any info row spoke the Family window's what-this-is line; override removed - rows have
+      no hidden detail, Space now says "no tooltip", tree-row Space still reads the member
+      description+status. Completeness audited live for all six non-hero members (Gregor,
+      Robert, Lydia, Amalia, Stephan, Gloria): every visible RightPage text (WhoIs, Name,
+      Estate, Status label+value, Relations label+value, full Description) is spoken by the
+      screen name plus the four rows, and Amalia's status row speaks the TRUE DEATH help-icon
+      description inline - the "expanded thing" a sighted player only gets by hovering.)
 - [x] verified - HUD bar skips blank locked buttons (user, 2026-07-20: focus landed on a
       bunch of blank buttons that only said "unavailable")
       (2026-07-20: the game authors WillOpen tooltip terms for chapters 2-5 only; a locked

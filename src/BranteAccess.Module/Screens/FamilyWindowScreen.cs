@@ -199,7 +199,9 @@ namespace BranteAccess.Module.Screens
             b.PopContext();
         }
 
-        public override string HelpText() => GameUi.WindowHelp();
+        // No HelpText override: the rows carry the panel's full content already, and the base
+        // null keeps Space honest ("no tooltip") instead of reciting the Family window's
+        // what-this-is blurb inside a single member's panel.
 
         public override IEnumerable<ElementAction> GetActions()
         {

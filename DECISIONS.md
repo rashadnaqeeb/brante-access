@@ -270,6 +270,11 @@ closing it.
 - **Info sub-screen rows are read-only labels in panel content, mod order**: description
   first (the marquee content - Enter then immediately hears it), then estate (bare word;
   the game has no Estate header term), relation (the game's Relation label), status.
+- **The info sub-screen has no HelpText** (2026-07-20 bug fix): inheriting the Family
+  window's WindowHelp made Space recite the window's what-this-is blurb inside a member's
+  panel - wrong scope. The rows already carry the panel's full content including the status
+  help-icon detail, so Space honestly says "no tooltip"; window help stays reachable on the
+  tree behind Escape.
 
 ## HUD bar blank locked buttons (2026-07-20)
 
