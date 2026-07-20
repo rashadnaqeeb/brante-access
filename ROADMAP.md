@@ -659,7 +659,7 @@ go to DECISIONS.md, not to the user.
       hint (the whole screen is the control - unusual enough to earn one). Enter runs the
       game's OnPointerClick (hide animation, sfx, Bolt advance). Verified live: "Chapter I.
       Childhood, Enter continues" spoken, Enter advanced to ChildhoodChapterStart.)
-- [ ] todo - Intro cutscene skip: dead air between the skip keypress and the next screen
+- [x] built - Intro cutscene skip: dead air between the skip keypress and the next screen
       (user hit it live 2026-07-20, new game: skipped Cutscene_1 and got total silence long
       enough to report "completely lost speech"; speech resumed only when chapter select
       announced minutes later. Decompile diagnosis (2026-07-20): the game's intro "skip" is
@@ -668,22 +668,21 @@ go to DECISIONS.md, not to the user.
       touches the PlayableDirector timeline that drives the visuals (zero references in the
       whole decompile); the real advance is CutsceneSceneLoader.LoadScene, which has no code
       caller (asset-side animation event at the transition's natural end). So the visuals
-      always run full length, sighted players watch the ink/logo animation, and a blind
-      player gets dead air for the whole remaining duration. Live timing matched: the flow
-      advanced minutes after the skip, at natural end. SUSPECTED GAME BUG on top: the skip
-      marks GameManager.OpenedSceneName's IsShowed, but the game preloads the Intro scene
-      under the cutscene (log: "Loading of Intro has been started" before the skip), so the
-      skip marked the INTRO EVENT shown and fired a spurious Click into the story graph -
-      and in the user's run the At The End of Time event never played (cutscene straight to
-      chapter select), while the 2026-07-18 no-skip run played it. Fix direction: CutsceneScreen
-      announces the true skip semantics on the skip keypress (narration silenced, cutscene
-      still playing) keyed off the cutscene's own model state (_block/voiceover), and
-      announces nothing false about skipping; verify by repro whether skipping really eats
-      the intro event (and which mechanism: spurious Click vs wrong IsShowed) - if so,
-      DECISIONS.md call on whether the mod compensates. ChapterCutscene differs: its skip
-      IS the full end-of-cutscene handler (same body as the natural-end path), so chapter
-      cutscenes advance immediately - intro only. Needs a new-game drive - do not run while
-      the user is mid-session.)
+      always run full length and a blind player gets dead air for the whole remaining
+      duration. Live timing matched: the flow advanced minutes after the skip, at natural
+      end. GAME BUG on top: the skip marks GameManager.OpenedSceneName's IsShowed, but the
+      game preloads the Intro scene under the cutscene, so the skip marked the INTRO EVENT
+      shown and fired a spurious Click into the story graph - the user's run never played
+      At The End of Time (cutscene straight to chapter select); the 2026-07-18 no-skip run
+      played it. RESOLUTION (user directive 2026-07-20, see DECISIONS.md): the intro
+      cutscene is now unskippable under the mod - CutsceneIntro.Update added to the
+      GameInputPatches suppression list, cutscene.intro loses its "any key skips" clause in
+      all 14 languages, the narration plays whole and the scene self-advances. Scoped to
+      the intro only: ChapterCutscene's key read is the only code path that ends a chapter
+      cutscene and its skip advances immediately - it keeps skip and announcement. Built
+      compile-checked (clean solution build); user waived live verification, game closed -
+      the next session's new-game flow confirms the announcement and that a keypress
+      during the intro no longer eats the intro event.)
 - [x] verified - Chapter cutscenes + intro cutscene: narration text spoken, skip works, no dead air
       (2026-07-19: intro Cutscene_1 dev-loaded - entry announces "cutscene, spoken narration,
       any key skips" and the scene carries zero text components (the game's own VOICED narration

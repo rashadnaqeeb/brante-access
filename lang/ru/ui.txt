@@ -62,7 +62,7 @@ param.scale.single = {value}, {text}
 param.scale.range = от {min} до {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = ролик, озвученное повествование, любая клавиша пропускает
+cutscene.intro = ролик, озвученное повествование
 cutscene.chapter = ролик, озвученное повествование, Enter пропускает
 
 chapterpicture.hint = Enter продолжить

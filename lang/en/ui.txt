@@ -80,8 +80,8 @@ param.scale.single = {value}, {text}
 param.scale.range = {min} to {max}, {text}
 param.scale.now = {now}, {row}
 
-# Voiceover cutscenes (the game's own skip keys stay live; the hint is the content)
-cutscene.intro = cutscene, spoken narration, any key skips
+# Voiceover cutscenes (intro: unskippable under the mod, self-advances; chapter: the game's skip keys stay live)
+cutscene.intro = cutscene, spoken narration
 cutscene.chapter = cutscene, spoken narration, Enter skips
 
 # Chapter title splash (the title is the game's own localized text; the whole screen is the

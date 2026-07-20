@@ -64,7 +64,7 @@ param.scale.single = {value}、{text}
 param.scale.range = {min}から{max}、{text}
 param.scale.now = {now}、{row}
 
-cutscene.intro = カットシーン、音声ナレーション、任意のキーでスキップ
+cutscene.intro = カットシーン、音声ナレーション
 cutscene.chapter = カットシーン、音声ナレーション、Enterでスキップ
 
 chapterpicture.hint = Enterで続行

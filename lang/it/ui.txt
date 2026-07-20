@@ -62,7 +62,7 @@ param.scale.single = {value}, {text}
 param.scale.range = da {min} a {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = filmato, narrazione parlata, un tasto qualsiasi salta
+cutscene.intro = filmato, narrazione parlata
 cutscene.chapter = filmato, narrazione parlata, Invio salta
 
 chapterpicture.hint = Invio continua

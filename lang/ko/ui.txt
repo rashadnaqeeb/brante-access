@@ -64,7 +64,7 @@ param.scale.single = {value}, {text}
 param.scale.range = {min}에서 {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = 컷신, 음성 내레이션, 아무 키나 건너뜀
+cutscene.intro = 컷신, 음성 내레이션
 cutscene.chapter = 컷신, 음성 내레이션, Enter로 건너뜀
 
 chapterpicture.hint = Enter로 계속

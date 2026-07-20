@@ -15,13 +15,18 @@ namespace BranteAccess.Module.Patches
         // Every listed Update body is INPUT-ONLY - skipping it removes nothing but key reads.
         // Deliberately not listed: NameRequestWindow.Update (also drives button interactable per
         // frame; handled with text entry in Phase 3), GameManager.Update and the Console toggle
-        // (dev-gated developer keys the mod leaves alone), and the two cutscene classes
-        // (ChapterCutscene, CutsceneIntro): their key reads ARE the accessible path - a voiceover
-        // plays and any key / Enter skips; suppressing them left the player trapped in the
-        // cutscene with no keyboard at all (found live in the new-game flow). CutsceneScreen
-        // announces them; the game handles the keys.
+        // (dev-gated developer keys the mod leaves alone), and ChapterCutscene: its Enter/Space/
+        // Escape read IS both the accessible skip and the only code path that ever ends the
+        // cutscene (LoadScene is called from that branch alone) - suppressing it traps the player
+        // permanently. CutsceneIntro IS listed (user directive 2026-07-20, see DECISIONS.md): the
+        // game's intro "skip" only silences the voiceover - nothing stops the visual timeline
+        // (zero PlayableDirector references in the assembly; the advance is an animation event at
+        // the transition's natural end) - and its mark-shown writes OpenedSceneName, which the
+        // Intro-scene preload has already clobbered, so a skip eats the At The End of Time event.
+        // The cutscene self-advances at its natural end; the voiceover is the content.
         private static readonly Type[] InputOnlyUpdates =
         {
+            typeof(CutsceneIntro),
             typeof(_Scripts.AMVCC.Controllers.TextController),
             typeof(_Scripts.Managers.UIManager),
             typeof(_Scripts.AMVCC.Views.Windows.ChapterFinal.ChapterFinalWindowController),

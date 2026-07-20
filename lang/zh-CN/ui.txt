@@ -63,7 +63,7 @@ param.scale.single = {value}，{text}
 param.scale.range = {min}到{max}，{text}
 param.scale.now = {now}，{row}
 
-cutscene.intro = 过场动画，语音旁白，按任意键跳过
+cutscene.intro = 过场动画，语音旁白
 cutscene.chapter = 过场动画，语音旁白，按 Enter 跳过
 
 chapterpicture.hint = 按 Enter 继续

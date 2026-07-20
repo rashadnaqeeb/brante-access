@@ -65,7 +65,7 @@ param.scale.single = {value}, {text}
 param.scale.range = {min} ile {max} arası, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = ara sahne, sesli anlatım, herhangi bir tuş atlar
+cutscene.intro = ara sahne, sesli anlatım
 cutscene.chapter = ara sahne, sesli anlatım, Enter atlar
 
 chapterpicture.hint = Enter devam eder

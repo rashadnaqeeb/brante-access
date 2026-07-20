@@ -63,7 +63,7 @@ param.scale.single = {value}, {text}
 param.scale.range = {min} a {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = cena, narração falada, qualquer tecla pula
+cutscene.intro = cena, narração falada
 cutscene.chapter = cena, narração falada, Enter pula
 
 chapterpicture.hint = Enter continua

@@ -62,7 +62,7 @@ param.scale.single = {value}, {text}
 param.scale.range = {min} a {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = cinemática, narración hablada, cualquier tecla omite
+cutscene.intro = cinemática, narración hablada
 cutscene.chapter = cinemática, narración hablada, Intro omite
 
 chapterpicture.hint = Intro continúa

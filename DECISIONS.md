@@ -896,3 +896,22 @@ closing it.
   Version is read from Plugin.cs's BepInPlugin constant - the single source. BepInEx's
   changelog.txt is dropped from the package (a bare changelog.txt in the game root would
   read as the game's or the mod's).
+- **Intro cutscene made unskippable; skip promise removed** (2026-07-20, user directive after
+  hitting the dead-air skip live: "just not allow for or announce the possibility of skipping
+  a cutscene"): CutsceneIntro.Update joins the GameInputPatches suppression list and
+  cutscene.intro drops its "any key skips" clause in all 14 languages. Ground truth from the
+  decompile: the game's intro "skip" only stops the voiceover AudioSource - nothing in the
+  assembly touches the PlayableDirector timeline (zero references), the advance is an
+  asset-side animation event at the transition's natural end, so a "skipping" player waits
+  the full visual length in silence anyway; worse, the handler marks
+  GameManager.OpenedSceneName as shown, which the game's own Intro-scene preload has already
+  repointed at the Intro event, so skipping also ate the At The End of Time scene (observed
+  live: cutscene straight to chapter select; the 2026-07-18 no-skip run played it).
+  Scoped to the INTRO cutscene only, not blanket: ChapterCutscene's Enter/Space/Escape read
+  is the only code path that ever ends a chapter cutscene (LoadScene is called from that
+  branch alone - suppressing it would trap the player permanently) and its skip is the real
+  end-of-cutscene handler, verified advancing immediately at chapter V. Side effect
+  accepted: the boot-time Cutscene_1 (before the main menu) is likewise unskippable now -
+  same audio-only skip there, so the wait was always full-length; the narration simply
+  keeps playing. Per user, shipped compile-checked without a live repro (game closed);
+  first new-game flow next session confirms.

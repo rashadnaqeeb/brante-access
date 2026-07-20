@@ -62,7 +62,7 @@ param.scale.single = {value}, {text}
 param.scale.range = od {min} do {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = przerywnik, narracja mówiona, dowolny klawisz pomija
+cutscene.intro = przerywnik, narracja mówiona
 cutscene.chapter = przerywnik, narracja mówiona, Enter pomija
 
 chapterpicture.hint = Enter kontynuuje

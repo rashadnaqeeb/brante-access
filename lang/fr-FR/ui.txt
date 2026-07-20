@@ -62,7 +62,7 @@ param.scale.single = {value}, {text}
 param.scale.range = {min} à {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = cinématique, narration parlée, toute touche passe
+cutscene.intro = cinématique, narration parlée
 cutscene.chapter = cinématique, narration parlée, Entrée passe
 
 chapterpicture.hint = Entrée continue

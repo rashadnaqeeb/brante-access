@@ -63,7 +63,7 @@ param.scale.single = {value}, {text}
 param.scale.range = {min} bis {max}, {text}
 param.scale.now = {now}, {row}
 
-cutscene.intro = Zwischensequenz, gesprochene Erzählung, beliebige Taste überspringt
+cutscene.intro = Zwischensequenz, gesprochene Erzählung
 cutscene.chapter = Zwischensequenz, gesprochene Erzählung, Eingabe überspringt
 
 chapterpicture.hint = Eingabe setzt fort

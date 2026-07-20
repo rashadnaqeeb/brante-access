@@ -5,11 +5,13 @@ using BranteAccess.Module.Speech;
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The two voiceover cutscenes (CutsceneIntro: logo intro, any key skips; ChapterCutscene:
-    /// chapter narration, Space/Enter/Escape skip). Their content is the AUDIO narration and
-    /// their Updates stay UNPATCHED (see GameInputPatches) so the game's own skip keys work -
-    /// this screen only announces what is playing and how to skip, and claims NO input category
-    /// so every key reaches the game untouched.
+    /// The two voiceover cutscenes; their content is the AUDIO narration, and this screen claims
+    /// NO input category so every key reaches the game untouched. CutsceneIntro (logo intro) is
+    /// unskippable under the mod: the game's own "skip" is audio-only and eats the intro event
+    /// (see GameInputPatches), so its Update is suppressed and the announcement promises nothing -
+    /// the cutscene self-advances at its natural end. ChapterCutscene (chapter narration) keeps
+    /// the game's Space/Enter/Escape skip: that read is also the only code path that ends the
+    /// cutscene, and its skip is the real end-of-cutscene handler (advances immediately).
     /// </summary>
     public sealed class CutsceneScreen : Screen
     {
