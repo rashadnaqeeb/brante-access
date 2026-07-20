@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using BranteAccess.Module.Game;
 using BranteAccess.Module.Speech;
 using BranteAccess.Module.UI;
@@ -124,7 +125,11 @@ namespace BranteAccess.Module.Screens
 
             var active = ActivePanel(dw);
             if (active >= 0)
-                foreach (var category in Categories(dw, active))
+                // The categories share one on-screen column; sibling order is the order a
+                // sighted player scrolls through them (Chapter Outcomes sits first on the
+                // late-chapter panels, before Family and Occupation).
+                foreach (var category in Categories(dw, active)
+                    .OrderBy(c => c.transform.GetSiblingIndex()))
                 {
                     if (!category.activeInHierarchy) continue;
                     var header = CategoryHeader(category);
@@ -163,9 +168,11 @@ namespace BranteAccess.Module.Screens
             return null;
         }
 
+        // The game marks the state only as black-vs-gray text; without the state word a list
+        // of gray outcome titles reads as a list of things that happened.
         private static string ObjectiveLabel(ObjectiveInitializer oi)
-            => oi.ObjectiveName.text
-                + (oi.Objective.Unlocked ? ", " + Loc.T("destiny.achieved") : "");
+            => oi.ObjectiveName.text + ", "
+                + Loc.T(oi.Objective.Unlocked ? "destiny.achieved" : "destiny.notachieved");
 
         // Switching chapter tabs keeps focus on the tab, so the panel change is the delivery:
         // speak the newly shown chapter's tab label once per change, seeded on focus.

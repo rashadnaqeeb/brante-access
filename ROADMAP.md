@@ -398,6 +398,24 @@ go to DECISIONS.md, not to the user.
       the game's own unlock line. Verified live on the Allarick chapter 1 intro: bar = info
       row + Settings + five "Will unlock in Chapter ..." buttons, the four blank slots
       gone; chapter V bar unaffected (all unlocked).)
+- [x] verified - HUD window sighted-parity audit, all ten windows (user, 2026-07-20: "the
+      destiny screen seems like it's leaking a tun of spoilers. the various other screens
+      seem very confusing")
+      (2026-07-20: every window compared against its screenshot + live component state on
+      the chapter V save. Three fixed: Destiny objective rows now carry achieved/not achieved
+      (the game marks state only as black-vs-gray text - a gray "The Anizotte Massacre" read
+      as a fact without it) and categories read in on-screen sibling order (Chapter Outcomes
+      before Family before Occupation); Home's heir row moved below the household stats where
+      the game draws it; the Revolt window dropped its 33 invented victory-condition rows
+      (the prefab's win-condition panels are inactive unfilled placeholders and the side-icon
+      tooltip event has no broadcaster in the assembly - sighted players see conditions only
+      in the one-time side popup and Destiny, both already covered) and its side row now
+      pairs the game's own "Your side" header ("Your side: not chosen"). Condition helpers
+      moved into InsurrectionSidePopupScreen, their only real consumer; every reflected popup
+      field name re-verified resolving live. Verified by graph dump + speech readback on all
+      three windows; achieved-word branch exercised by flipping one objective in memory and
+      restoring it. Personality, Relations, Province, Occupation, Map, Settings audited
+      clean - spoken content matches the sighted surface.)
 - [x] verified - Relations window (relation tooltips folded; RelationPopup still pending)
       (2026-07-18: RelationsWindowScreen on the Family-window pattern - tile rows with
       role/estate/relation/status folded on via the shared Readouts character helpers,

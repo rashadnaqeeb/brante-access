@@ -114,8 +114,9 @@ character.deaths = {label}, {value} of {max}
 # Relations window (member names are the game's live tile texts)
 member.selected = {name} selected
 
-# Destiny window (the game marks an achieved objective only by color)
+# Destiny window (the game marks objective state only by color: black achieved, gray not)
 destiny.achieved = achieved
+destiny.notachieved = not achieved
 
 # Map window (the game distinguishes provinces from cities only by map layout)
 map.province = {name}, province

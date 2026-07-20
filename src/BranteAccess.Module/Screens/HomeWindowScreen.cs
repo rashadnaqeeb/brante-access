@@ -13,8 +13,9 @@ using GameLoc = I2.Loc.LocalizationManager;
 namespace BranteAccess.Module.Screens
 {
     /// <summary>
-    /// The House of Brante window: the heir row, then the household parameter rows with name,
-    /// value and segment folded on and the scale readout on Space. When the family has broken
+    /// The House of Brante window: the household parameter rows with name, value and segment
+    /// folded on and the scale readout on Space, then the heir row the game draws at the
+    /// bottom of the page. When the family has broken
     /// (chapter 3+ outcome), the game swaps in a panel with its own parameters plus the
     /// family-collapse objective - the same row sweep covers those parameters and the
     /// objective reads through the Destiny readout on Space.
@@ -54,23 +55,6 @@ namespace BranteAccess.Module.Screens
 
             b.PushContext("", role: null, positions: false);
 
-            if (UiWidgets.Visible(hw.Heir))
-            {
-                var heir = hw.Heir.GetComponent<HeirParameterComponent>();
-                b.AddItem(ControlId.Referenced(heir, "home:heir"), new NodeVtable
-                {
-                    ControlType = ControlTypes.Text,
-                    Announcements = new[]
-                    {
-                        new NodeAnnouncement(() => Loc.T("hud.pair", new
-                        {
-                            label = heir.Name.text,
-                            value = heir.TextValue.text,
-                        }), kind: AnnouncementKinds.Label),
-                    },
-                });
-            }
-
             ParameterRows.Add(b, hw, "home:parameter:");
 
             // The broken-family panel carries the collapse objective under its parameters.
@@ -89,6 +73,24 @@ namespace BranteAccess.Module.Screens
                         SearchText = () => oi.ObjectiveName.text,
                         OnTooltip = () => Mod.Speech.Speak(Readouts.ObjectiveDetails(oi)),
                     });
+            }
+
+            // The heir line sits at the bottom of the page, below the household stats.
+            if (UiWidgets.Visible(hw.Heir))
+            {
+                var heir = hw.Heir.GetComponent<HeirParameterComponent>();
+                b.AddItem(ControlId.Referenced(heir, "home:heir"), new NodeVtable
+                {
+                    ControlType = ControlTypes.Text,
+                    Announcements = new[]
+                    {
+                        new NodeAnnouncement(() => Loc.T("hud.pair", new
+                        {
+                            label = heir.Name.text,
+                            value = heir.TextValue.text,
+                        }), kind: AnnouncementKinds.Label),
+                    },
+                });
             }
 
             b.PopContext();

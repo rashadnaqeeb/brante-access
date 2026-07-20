@@ -285,6 +285,36 @@ closing it.
   Locked buttons with a term keep speaking the game's own unlock line, and names are still
   never spoken while locked (the game withholds them until unlock).
 
+## HUD window sighted-parity audit judgment calls (2026-07-20)
+
+- **Destiny objectives always carry a state word**: the game marks achieved-vs-not only as
+  black-vs-gray title text, invisible to speech - a gray "Dark Times" title read bare sounds
+  like something that happened (the user's "leaking a ton of spoilers" impression). The
+  titles themselves are NOT spoilers: the game deliberately shows every objective of the
+  active Post from chapter start, gray with hoverable description and conditions, as goals
+  to aim for. Parity is the state word, not hiding rows.
+- **Destiny categories read in sibling order, not field order**: the window's serialized
+  category fields (Person, Family, Work, Final) do not match the on-screen column; the
+  shared parent's sibling order does (Chapter Outcomes first on late chapters). Ordering by
+  GetSiblingIndex keeps the spoken order whatever the game shows, per panel, forever.
+- **Revolt window speaks only its sighted surface**: the previous build appended both sides'
+  full victory-condition trees (33 rows with live met state) sourced from the side popup's
+  model. No sighted player can see those in this window: the prefab's win-condition panels
+  are inactive unfilled placeholders (untranslated editor text, never touched by code) and
+  the side icons' tooltip is dead code (TooltipEventHandler listens for
+  "InsurrectionSideEnter"; no broadcaster exists in the assembly). Conditions stay where the
+  game really shows them - the one-time side popup (screen kept, helpers moved there) and
+  the Destiny objective hovers. Reading more than a sighted player sees is the same parity
+  bug as reading less.
+- **Home heir row last**: the game draws the heir line at the bottom of the page, below the
+  household stats; spoken order now matches.
+- **Popup smoke-test stopped at reflection**: force-showing the one-time side popup would
+  set its PlayerPrefs seen-flag and its close button broadcasts "CheckEventsInState" into a
+  live story scene - real risk to the user's playthrough for code that moved verbatim and
+  was already live-verified via the window's identical path. Every reflected field name was
+  instead re-verified resolving against the live type (missing fields throw loudly at first
+  use, per the class comment).
+
 ## Family window tree redesign judgment calls (2026-07-19)
 
 - **Flattened treeview, not a 2D grid**: the user asked for the family tree to be "browsable
