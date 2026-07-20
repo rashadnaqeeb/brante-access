@@ -41,6 +41,16 @@ namespace BranteAccess.Module.Game
             return null;
         }
 
+        /// <summary>The game's own global Escape read (UIManager.Update, suppressed while our
+        /// screens are active), replayed for screens without a Back action of their own: the
+        /// pause menu toggles exactly when the game itself would allow it - IsEscButtonBlocked
+        /// tracks GameState and is false only while RUNNING.</summary>
+        public static void GlobalEscape()
+        {
+            var m = Manager;
+            if (m != null && !m.IsEscButtonBlocked) m.ShowPauseMenu();
+        }
+
         /// <summary>PREGAME at the menu and pre-story scenes; RUNNING flips the instant a game
         /// begins (SetCharacterName / save load), BEFORE the menu scene unloads - screens gate on
         /// it to drop out early instead of speaking stale refocus lines mid-transition.

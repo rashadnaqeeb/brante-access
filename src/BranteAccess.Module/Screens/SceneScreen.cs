@@ -108,12 +108,6 @@ namespace BranteAccess.Module.Screens
             return text;
         }
 
-        public override IEnumerable<ElementAction> GetActions()
-        {
-            yield return new ElementAction(ActionIds.Back, null,
-                _ => _Scripts.Managers.UIManager.Initiate.ShowPauseMenu());
-        }
-
         public override void OnPush()
         {
             _entryPending = true;

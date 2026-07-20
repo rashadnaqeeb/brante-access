@@ -85,7 +85,9 @@ namespace BranteAccess.Module
                 .AddBinding(KeyCode.Return).AddBinding(KeyCode.KeypadEnter);
             InputManager.Register("ui.secondary", "Secondary action", InputCategory.UI)
                 .AddBinding(KeyCode.Backspace);
-            InputManager.Register("ui.back", "Back", InputCategory.UI)
+            // Unconsumed by the focused screen (no Back action), Escape falls through to the
+            // game's own global read, gated exactly as the game gates it.
+            InputManager.Register("ui.back", "Back", InputCategory.UI, GameUi.GlobalEscape)
                 .AddBinding(KeyCode.Escape);
             InputManager.Register("ui.tooltip", "Read tooltip", InputCategory.UI)
                 .AddBinding(KeyCode.Space).AddBinding(KeyCode.F1);

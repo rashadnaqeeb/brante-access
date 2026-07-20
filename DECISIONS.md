@@ -5,6 +5,28 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Escape falls through to the game's own gate (2026-07-20, user-reported)
+
+- **Found on the interlude popup: Escape was dead there** while a sighted vanilla player CAN
+  pause during interludes (UIManager.Update opens pause gated only on IsEscButtonBlocked,
+  verified False live mid-interlude). Cause: GameInputPatches suppresses UIManager.Update
+  whenever one of our screens is active, and Escape's replacement is the focused screen's
+  Back action - which InterludeScreen (and several other overlay screens) never declared.
+- **Fix is one global fallback, not per-screen wiring**: ui.back now carries a Performed
+  handler (GameUi.GlobalEscape) that InputManager already fires for any UI press the
+  navigator does not consume. It replays exactly the suppressed vanilla read: toggle pause
+  iff UIManager exists and IsEscButtonBlocked is false. Because it is gated on the very
+  flag vanilla gates on, every screen matches vanilla automatically - cutscenes, credits
+  and loading (flag true) stay Escape-dead as designed, and no future screen can reintroduce
+  the gap by forgetting a Back action.
+- **SceneScreen's own Back action removed** as redundant with the fallback - and it was
+  UNGATED ShowPauseMenu, so it could pause where vanilla blocks (pregame/resolve phases).
+  Screens whose surface has a specific vanilla Escape meaning (pause close, confirm cancel,
+  credits skip, window back) keep their Back actions, which consume before the fallback.
+- **Tab on the interlude was investigated and is correct**: one control group, and the HUD,
+  though drawn, is genuinely dead for mouse users too during event scenes (every
+  HudController click handler checks IsButtonsBlocked, True live) - nothing to reach.
+
 ## Full translation of the mod manifest (2026-07-20, user-directed)
 
 - **Locale folders are named by I2 language code** (ru, de, fr-FR, it, es-ES, es-US, pl, tr,
