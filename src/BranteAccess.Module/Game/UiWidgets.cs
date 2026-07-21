@@ -79,9 +79,11 @@ namespace BranteAccess.Module.Game
             return selectable != null && selectable.IsInteractable() && RaycastsReachable(go);
         }
 
-        /// <summary>Activate through the game's own pointer-click path (ExecuteEvents), so
-        /// Button.OnPointerClick runs its interactable check, transitions, sounds, and onClick
-        /// exactly as a mouse click would. False when the object handles no click (caller
+        /// <summary>Activate with the FULL pointer sequence a physical mouse press sends -
+        /// down, up, click - mirroring StandaloneInputModule. The game hides state writes on
+        /// IPointerDownHandler (KeyChapterParametersChanger seals the chapter 3 occupation
+        /// choice in OnPointerDown, not onClick); sending only the click silently skips them
+        /// and corrupts the playthrough. False when the object handles no click (caller
         /// speaks its "nothing to activate" feedback) or the game is blocking input to it
         /// (a mouse click could not reach it either).</summary>
         public static bool Click(GameObject go)
@@ -89,8 +91,12 @@ namespace BranteAccess.Module.Game
             if (go == null || !RaycastsReachable(go)) return false;
             var handler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(go);
             if (handler == null) return false;
-            ExecuteEvents.Execute(handler, new PointerEventData(EventSystem.current),
-                ExecuteEvents.pointerClickHandler);
+            var data = new PointerEventData(EventSystem.current);
+            var pressed = ExecuteEvents.ExecuteHierarchy(go, data, ExecuteEvents.pointerDownHandler);
+            if (pressed == null) pressed = handler;
+            data.pointerPress = pressed;
+            ExecuteEvents.Execute(pressed, data, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(handler, data, ExecuteEvents.pointerClickHandler);
             return true;
         }
 
