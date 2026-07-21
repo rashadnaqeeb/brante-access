@@ -10,6 +10,7 @@ using ChapterStartWindow = _Scripts.AMVCC.Views.Windows.ChapterStart.ChapterStar
 using ObjectiveInitializer = _Scripts.AMVCC.Views.Windows.Destiny.ObjectiveInitializer;
 using PanelType = _Scripts.AMVCC.Views.Windows.Components.PanelType;
 using ParameterComponent = _Scripts.AMVCC.Views.Windows.ParameterComponent;
+using ParameterGetSet = _Scripts.AMVCC.Views.Windows.ParameterGetSet;
 using TextMeshProLocalization = _Scripts.Localization.TextMeshProLocalization;
 
 namespace BranteAccess.Module.Screens
@@ -23,8 +24,9 @@ namespace BranteAccess.Module.Screens
     /// shown page matches the focused row's page - arrowing straight down walks the whole
     /// book with no pager stops and no jumping back to the top; Ctrl+Up/Down jumps a page at
     /// a time (regions). Objectives fold their tooltip description onto the row (it only
-    /// exists on hover for sighted players); parameters fold name, value and segment. Rows
-    /// on not-yet-shown pages read model fields, which exist while their panel is inactive.
+    /// exists on hover for sighted players), with the requirement rows on Space; parameters
+    /// fold name, value and segment, with the scale breakdown on Space. Rows on
+    /// not-yet-shown pages read model fields, which exist while their panel is inactive.
     /// </summary>
     public sealed class ChapterStartScreen : Screen
     {
@@ -181,7 +183,18 @@ namespace BranteAccess.Module.Screens
                 any = true;
                 var o = obj;
                 b.AddItem(ControlId.Referenced(o, "chapterstart:objective:" + o.GetInstanceID()),
-                    TextRow(() => o.ObjectiveName.text + ". " + o.ObjectiveDescription));
+                    new NodeVtable
+                    {
+                        ControlType = ControlTypes.Text,
+                        Announcements = new[]
+                        {
+                            new NodeAnnouncement(
+                                () => o.ObjectiveName.text + ". " + o.ObjectiveDescription,
+                                kind: AnnouncementKinds.Label),
+                        },
+                        SearchText = () => o.ObjectiveName.text,
+                        OnTooltip = () => Mod.Speech.Speak(Readouts.ObjectiveDetails(o)),
+                    });
             }
             if (any) return;
             foreach (var par in panel.GetComponentsInChildren<ParameterComponent>(true))
@@ -189,8 +202,19 @@ namespace BranteAccess.Module.Screens
                 if (!WouldShow(panel, par.transform)) continue;
                 any = true;
                 var pc = par;
+                var pgs = pc.GetComponent<ParameterGetSet>();
                 b.AddItem(ControlId.Referenced(pc, "chapterstart:parameter:" + pc.GetInstanceID()),
-                    TextRow(() => PanelSweep.ParameterLabel(pc)));
+                    new NodeVtable
+                    {
+                        ControlType = ControlTypes.Text,
+                        Announcements = new[]
+                        {
+                            new NodeAnnouncement(() => PanelSweep.ParameterLabel(pc),
+                                kind: AnnouncementKinds.Label),
+                        },
+                        OnTooltip = pgs == null ? (System.Action)null
+                            : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
+                    });
             }
             if (any) return;
             // A New Sections row is the unlock text plus an image-only icon that opens the
