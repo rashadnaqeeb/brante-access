@@ -17,7 +17,7 @@ namespace BranteAccess
     {
         public const string Guid = "com.rashadnaqeeb.branteaccess";
         public const string Name = "Brante Access";
-        public const string Version = "1.2.0";
+        public const string Version = "1.2.1";
 
         // Public (not internal) so /eval-compiled code, which lives in its own assembly, can reach
         // the speech pipeline: `Plugin.Instance.Speech.Speak("...")` is the standard smoke test.
