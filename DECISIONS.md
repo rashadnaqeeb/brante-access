@@ -5,6 +5,16 @@ reference mods (wotr-access, Non-Visual Calculus) unless Brante gives a reason n
 every deviation gets an entry here with the reason. The user reviews this file, not a
 stream of questions.
 
+## Cutscene subtitle speech respects the subtitles setting (2026-07-21, user-directed)
+
+- Cutscene subtitles are I2 terms on SubtitlesTextChanger (verified live: all 37 terms
+  translated in all 14 languages), the only in-language channel for the 12 languages with
+  no voice-over (audio falls back to English everywhere except Russian/English).
+- When ShowSubtitlesInCutscenes is off, the mod does NOT speak subtitle lines. The user
+  rejected reading the Keys list to bypass the setting: if a player turns a setting off,
+  they want it off. Same gate as the game's own view; the settings menu is accessible, so
+  turning it on is always in the player's reach.
+
 ## Escape falls through to the game's own gate (2026-07-20, user-reported)
 
 - **Found on the interlude popup: Escape was dead there** while a sighted vanilla player CAN

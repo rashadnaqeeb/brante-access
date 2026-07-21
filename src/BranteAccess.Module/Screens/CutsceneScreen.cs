@@ -12,6 +12,9 @@ namespace BranteAccess.Module.Screens
     /// the cutscene self-advances at its natural end. ChapterCutscene (chapter narration) keeps
     /// the game's Space/Enter/Escape skip: that read is also the only code path that ends the
     /// cutscene, and its skip is the real end-of-cutscene handler (advances immediately).
+    /// When the player has subtitles on, SubtitleSpeechPatches speaks each localized subtitle
+    /// line as the scene delivers it - the only in-language channel for the 12 languages whose
+    /// voiceover falls back to English audio.
     /// </summary>
     public sealed class CutsceneScreen : Screen
     {

@@ -721,6 +721,19 @@ go to DECISIONS.md, not to the user.
       is the content, accessible by design); chapter V entry cutscene exercised earlier the same
       day on the real story path (announce + Enter skip through our input layer). Both variants
       share CutsceneScreen.)
+- [x] built - Cutscene subtitle lines spoken on delivery, gated on the game's subtitles setting
+      (2026-07-21: SubtitleSpeechPatches - prefix/postfix on SubtitlesTextChanger.
+      OnSubtitleTextChange (called only by scene-side animation/Bolt events, so it is the
+      delivery signal); speaks the component's just-set localized text when the key index
+      advanced, which encodes the ShowSubtitlesInCutscenes gate (setting off = no subtitle
+      speech, user directive, DECISIONS.md). I2 coverage verified live earlier the same day:
+      all 37 subtitle terms translated in all 14 languages; voiceover audio exists only for
+      Russian/English, so subtitles are the only in-language channel elsewhere. Module builds
+      clean and deployed. Live verification deliberately left to the USER (their directive) -
+      expected: with subtitles on, each line speaks once as it appears in intro and chapter
+      cutscenes; with subtitles off, silence beyond the entry announcement. Note the 2026-07-19
+      intro dev-load saw zero text components - consistent with the subtitle object
+      self-deactivating in OnEnable when the setting was off; user run will confirm.)
 - [x] verified - Timeline (WindowLiveTimelineController / life timeline) readable
       (2026-07-19: LiveTimelineScreen - the LiveTimeline scene (game end, before the finals)
       was fully silent before (empty screen stack). Screen named by the hero's full name row;

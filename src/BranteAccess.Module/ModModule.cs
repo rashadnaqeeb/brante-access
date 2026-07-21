@@ -44,6 +44,7 @@ namespace BranteAccess.Module
             GraphAnnouncer.ExpandedStateText = expanded =>
                 Loc.T(expanded ? "nav.expanded" : "nav.collapsed");
             GameInputPatches.Apply();
+            SubtitleSpeechPatches.Apply();
             // Generation is not logged here: the loader bumps it only after Load succeeds (so a
             // failed reload leaves the old module live), and it logs the real number itself.
             Mod.Log("module code up, waiting for first tick");
@@ -60,6 +61,7 @@ namespace BranteAccess.Module
         public void Dispose()
         {
             GameInputPatches.Remove();
+            SubtitleSpeechPatches.Remove();
             Mod.Log("module disposed (generation " + Mod.Host.ModuleGeneration + ")");
         }
 
