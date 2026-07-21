@@ -70,6 +70,8 @@ cutscene.chapter = ara sahne, sesli anlatım, Enter atlar
 
 chapterpicture.hint = Enter devam eder
 
+yearpopup.summary = {year} yılı, {chapter}, {age}
+
 pager.next = sonraki sayfa
 pager.prev = önceki sayfa
 

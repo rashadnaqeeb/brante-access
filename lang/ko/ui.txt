@@ -69,6 +69,8 @@ cutscene.chapter = 컷신, 음성 내레이션, Enter로 건너뜀
 
 chapterpicture.hint = Enter로 계속
 
+yearpopup.summary = {year}년, {chapter}, {age}
+
 pager.next = 다음 페이지
 pager.prev = 이전 페이지
 

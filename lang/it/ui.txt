@@ -67,6 +67,8 @@ cutscene.chapter = filmato, narrazione parlata, Invio salta
 
 chapterpicture.hint = Invio continua
 
+yearpopup.summary = anno {year}, {chapter}, {age}
+
 pager.next = pagina successiva
 pager.prev = pagina precedente
 

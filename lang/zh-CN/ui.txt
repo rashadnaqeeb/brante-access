@@ -68,6 +68,8 @@ cutscene.chapter = 过场动画，语音旁白，按 Enter 跳过
 
 chapterpicture.hint = 按 Enter 继续
 
+yearpopup.summary = {year}年，{chapter}，{age}
+
 pager.next = 下一页
 pager.prev = 上一页
 

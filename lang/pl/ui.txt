@@ -67,6 +67,8 @@ cutscene.chapter = przerywnik, narracja mówiona, Enter pomija
 
 chapterpicture.hint = Enter kontynuuje
 
+yearpopup.summary = rok {year}, {chapter}, {age}
+
 pager.next = następna strona
 pager.prev = poprzednia strona
 

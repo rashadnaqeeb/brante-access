@@ -68,6 +68,8 @@ cutscene.chapter = Zwischensequenz, gesprochene Erzählung, Eingabe überspringt
 
 chapterpicture.hint = Eingabe setzt fort
 
+yearpopup.summary = Jahr {year}, {chapter}, {age}
+
 pager.next = nächste Seite
 pager.prev = vorherige Seite
 

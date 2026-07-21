@@ -67,6 +67,8 @@ cutscene.chapter = cinématique, narration parlée, Entrée passe
 
 chapterpicture.hint = Entrée continue
 
+yearpopup.summary = année {year}, {chapter}, {age}
+
 pager.next = page suivante
 pager.prev = page précédente
 

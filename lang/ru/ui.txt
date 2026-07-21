@@ -67,6 +67,8 @@ cutscene.chapter = ролик, озвученное повествование, 
 
 chapterpicture.hint = Enter продолжить
 
+yearpopup.summary = {year} год, {chapter}, {age}
+
 pager.next = следующая страница
 pager.prev = предыдущая страница
 
