@@ -241,8 +241,9 @@ namespace BranteAccess.Module.Game
             var parts = new List<string>
             {
                 GameLoc.GetTranslation(p.ParameterName.ToString()),
-                // The game text carries its own final period; the join supplies it.
-                (GameLoc.GetTranslation(p.ParameterName + ".Description") ?? "").TrimEnd('.'),
+                // The game text carries its own final period (sometimes behind a trailing
+                // newline); the join supplies it.
+                (GameLoc.GetTranslation(p.ParameterName + ".Description") ?? "").TrimEnd().TrimEnd('.'),
                 string.Join(", ", rows.ToArray()),
             };
             parts.RemoveAll(string.IsNullOrEmpty);
@@ -263,8 +264,9 @@ namespace BranteAccess.Module.Game
             if (orRows.Count > 0)
                 rows.Add(Loc.T("choice.cond.any",
                     new { rows = string.Join(", ", orRows.ToArray()) }));
-            // The game text carries its own final period; the join supplies it.
-            var parts = new List<string> { (oi.ObjectiveDescription ?? "").TrimEnd('.') };
+            // The game text carries its own final period (sometimes behind a trailing
+            // newline); the join supplies it.
+            var parts = new List<string> { (oi.ObjectiveDescription ?? "").TrimEnd().TrimEnd('.') };
             if (rows.Count > 0) parts.Add(string.Join(", ", rows.ToArray()));
             parts.RemoveAll(string.IsNullOrEmpty);
             return string.Join(". ", parts.ToArray());

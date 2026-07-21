@@ -3,6 +3,7 @@ using BranteAccess.Module.Game;
 using BranteAccess.Module.Speech;
 using BranteAccess.Module.UI.Graph;
 using UnityEngine;
+using ObjectiveInitializer = _Scripts.AMVCC.Views.Windows.Destiny.ObjectiveInitializer;
 using ParameterComponent = _Scripts.AMVCC.Views.Windows.ParameterComponent;
 using ParameterGetSet = _Scripts.AMVCC.Views.Windows.ParameterGetSet;
 
@@ -210,8 +211,13 @@ namespace BranteAccess.Module.UI
             var t = text;
             // Space on a plain stat text still reads the same scale detail the game's
             // ParameterValueTooltip shows on hover, composed from the parameter asset at
-            // speech time.
+            // speech time. An objective row (the finals-reminder popup's ObjectiveInitializer
+            // list) reads its hover tooltip the same way: description plus condition rows.
             var pgs = t.GetComponentInParent<ParameterGetSet>();
+            var oi = t.GetComponentInParent<ObjectiveInitializer>();
+            System.Action tooltip = null;
+            if (pgs != null) tooltip = () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter));
+            else if (oi != null) tooltip = () => Mod.Speech.Speak(Readouts.ObjectiveDetails(oi));
             b.AddItem(ControlId.Referenced(t, idPrefix + ":text:" + t.GetInstanceID()),
                 new NodeVtable
                 {
@@ -224,8 +230,7 @@ namespace BranteAccess.Module.UI
                         new NodeAnnouncement(() => Spoken(UiWidgets.LocalizedLabel(t.gameObject)),
                             kind: AnnouncementKinds.Label),
                     },
-                    OnTooltip = pgs == null ? (System.Action)null
-                        : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
+                    OnTooltip = tooltip,
                 });
         }
     }
