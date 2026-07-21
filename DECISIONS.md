@@ -951,3 +951,16 @@ closing it.
   because the fourth-death resolve rewrites it after Start (the settle/rewrite delivery
   machinery is unchanged). Page ids are qualified by pager instance for the fourth-death
   trial's same-frame scene reloads.
+- **Click scrubs uGUI selection instead of restoring the previous one** (2026-07-21, space
+  phantom-click regression from the full-pointer-sequence fix): Selectable.OnPointerDown
+  selects the pressed button in the EventSystem, and the game ships Unity's default input
+  axes where Submit maps to enter AND space (verified in globalgamemanagers), so every mod
+  activation left a standing Submit target and the tooltip key pressed the last activated
+  control (live evidence: HUD.Relation stuck selected in the user's session). Restore-to-
+  previous was rejected: it would preserve a stale selection forever, including the one the
+  buggy build already planted in any running session. Instead UiWidgets.Click clears any
+  post-click selection unless the selected object is a text input (TMP_InputField/InputField
+  receive typing through selection - name entry). This also removes Enter double-fire and
+  arrows silently driving uGUI selection behind the mod's focus. Mouse-made selections during
+  sighted co-pilot use are scrubbed on the next keyboard activation, accepted: the mod owns
+  keyboard focus and uGUI selection navigation is unused by the game's own keyboard.

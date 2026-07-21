@@ -85,18 +85,32 @@ namespace BranteAccess.Module.Game
         /// choice in OnPointerDown, not onClick); sending only the click silently skips them
         /// and corrupts the playthrough. False when the object handles no click (caller
         /// speaks its "nothing to activate" feedback) or the game is blocking input to it
-        /// (a mouse click could not reach it either).</summary>
+        /// (a mouse click could not reach it either). Afterwards any non-text-input EventSystem
+        /// selection is cleared: Selectable.OnPointerDown selects the pressed button, and the
+        /// game's StandaloneInputModule maps Submit to enter AND space (Unity default axes,
+        /// verified in globalgamemanagers), so a lingering selection turns the tooltip key into
+        /// a phantom click on the last activated control and lets arrows/Enter drive uGUI
+        /// selection behind the mod's focus. Text inputs keep their selection - an input field
+        /// receives typing through it (name entry).</summary>
         public static bool Click(GameObject go)
         {
             if (go == null || !RaycastsReachable(go)) return false;
             var handler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(go);
             if (handler == null) return false;
-            var data = new PointerEventData(EventSystem.current);
+            var eventSystem = EventSystem.current;
+            var data = new PointerEventData(eventSystem);
             var pressed = ExecuteEvents.ExecuteHierarchy(go, data, ExecuteEvents.pointerDownHandler);
             if (pressed == null) pressed = handler;
             data.pointerPress = pressed;
             ExecuteEvents.Execute(pressed, data, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.Execute(handler, data, ExecuteEvents.pointerClickHandler);
+            if (eventSystem != null)
+            {
+                var selected = eventSystem.currentSelectedGameObject;
+                if (selected != null && selected.GetComponent<TMP_InputField>() == null
+                    && selected.GetComponent<InputField>() == null)
+                    eventSystem.SetSelectedGameObject(null);
+            }
             return true;
         }
 
