@@ -153,6 +153,8 @@ namespace BranteAccess.Module
                 new GenericPopupScreen(),
                 new TriggerScenePopupScreen(),
                 new InsurrectionSidePopupScreen(),
+                new YearPopupScreen(),
+                new DayStagePopupScreen(),
             };
             foreach (var s in screens) ScreenManager.Register(s);
             Mod.Log("ScreenManager: " + screens.Length + " outer screens registered");

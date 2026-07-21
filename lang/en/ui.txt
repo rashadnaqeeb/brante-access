@@ -88,6 +88,11 @@ cutscene.chapter = cutscene, spoken narration, Enter skips
 # dismiss control - unusual enough to earn a hint)
 chapterpicture.hint = Enter continues
 
+# Year-increment flash between events. The "year" word is a localized sprite in the game
+# (LocalizationResources.YearSprite) - no game text term exists; the chapter and age values
+# are the popup's own localized texts.
+yearpopup.summary = year {year}, {chapter}, {age}
+
 # Page-turner windows (the game's pager arrows are image-only buttons - no game string)
 pager.next = next page
 pager.prev = previous page

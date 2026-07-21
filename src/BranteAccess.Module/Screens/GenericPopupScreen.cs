@@ -29,7 +29,9 @@ namespace BranteAccess.Module.Screens
             // as Russian/Portuguese titles on chapter entry and the side popup).
             if (p == null || !p.activeInHierarchy
                 || p.GetComponent<_Scripts.AMVCC.Views.Windows.TriggerScenePopupController>() != null
-                || p.GetComponent<InsurrectionSidePopupController>() != null)
+                || p.GetComponent<InsurrectionSidePopupController>() != null
+                || p.GetComponent<_Scripts.AMVCC.Views.Windows.Popup.YearIncrementPopup.YearIncrementPopupController>() != null
+                || p.GetComponent<DayTimePopupController>() != null)
             {
                 _seen = null;
                 return false;
