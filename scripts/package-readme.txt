@@ -49,5 +49,5 @@ game folder and report the problem at the project page.
 Licenses
 --------
 
-The mod is MIT licensed. It bundles BepInEx (LGPL-2.1) and Prism (MPL-2.0);
+The mod is licensed under the GPL version 3. It bundles BepInEx (LGPL-2.1) and Prism (MPL-2.0);
 all license texts are under BepInEx\plugins\BranteAccess\licenses.

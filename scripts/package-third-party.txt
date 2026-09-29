@@ -13,4 +13,4 @@ Prism v0.16.7 - native screen reader and TTS library
   Source: https://github.com/ethindp/prism
 
 Everything else (BranteAccess dlls, the lang folder, these docs) is the mod
-itself: MIT licensed, see BranteAccess__LICENSE.txt in this folder.
+itself: licensed under the GPL version 3, see BranteAccess__LICENSE.txt in this folder.
