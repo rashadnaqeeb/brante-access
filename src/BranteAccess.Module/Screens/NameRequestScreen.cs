@@ -100,7 +100,7 @@ namespace BranteAccess.Module.Screens
                 {
                     if (field.text.Length < 2)
                     {
-                        Mod.Speech.Speak(Loc.T("namerequest.start_unavailable"), interrupt: true);
+                        Mod.Speech.Output(Loc.T("namerequest.start_unavailable"), interrupt: true);
                         return;
                     }
                     UiWidgets.Click(start.gameObject); // honors the button's own interactable state
@@ -150,7 +150,7 @@ namespace BranteAccess.Module.Screens
                         // (MainMenuUITooltip off the toggle's TooltipKeyHolder key).
                         OnTooltip = toggle.GetComponent<TooltipKeyHolder>() == null
                             ? (System.Action)null
-                            : () => Mod.Speech.Speak(I2.Loc.LocalizationManager.GetTranslation(
+                            : () => Mod.Speech.Output(I2.Loc.LocalizationManager.GetTranslation(
                                 toggle.GetComponent<TooltipKeyHolder>().LocalizationKey)),
                     });
             }
@@ -165,7 +165,7 @@ namespace BranteAccess.Module.Screens
             _lastText = field.text;
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(field.gameObject);
             field.ActivateInputField();
-            Mod.Speech.Speak(Loc.T("edit.start"), interrupt: true);
+            Mod.Speech.Output(Loc.T("edit.start"), interrupt: true);
         }
 
         // The edit differ: echo is driven by the FIELD's text changing (model state), not our
@@ -182,12 +182,12 @@ namespace BranteAccess.Module.Screens
                     if (text.Length == _lastText.Length + 1 && text.StartsWith(_lastText))
                     {
                         var added = text[text.Length - 1];
-                        Mod.Speech.Speak(added == ' ' ? Loc.T("edit.space") : added.ToString(),
+                        Mod.Speech.Output(added == ' ' ? Loc.T("edit.space") : added.ToString(),
                             interrupt: true);
                     }
                     else
                     {
-                        Mod.Speech.Speak(text.Length > 0 ? text : Loc.T("edit.blank"),
+                        Mod.Speech.Output(text.Length > 0 ? text : Loc.T("edit.blank"),
                             interrupt: true);
                     }
                 }
@@ -199,7 +199,7 @@ namespace BranteAccess.Module.Screens
                 // the resulting name. A destroyed field means the popup is gone - stay silent,
                 // the screen pop announces the return.
                 if (_editField != null)
-                    Mod.Speech.Speak(_editField.text.Length > 0
+                    Mod.Speech.Output(_editField.text.Length > 0
                         ? _editField.text : Loc.T("edit.blank"), interrupt: true);
             }
             _wasEditing = editing;

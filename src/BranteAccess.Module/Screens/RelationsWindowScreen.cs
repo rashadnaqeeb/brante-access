@@ -105,7 +105,7 @@ namespace BranteAccess.Module.Screens
                         },
                         SearchText = () => Tile(tile).Name.text,
                         OnTooltip = () =>
-                            Mod.Speech.Speak(Readouts.CharacterDetail(tile.CharacterObject)),
+                            Mod.Speech.Output(Readouts.CharacterDetail(tile.CharacterObject)),
                         OnActivate = () =>
                         {
                             UiWidgets.Click(tile.gameObject);

@@ -107,7 +107,7 @@ namespace BranteAccess.Module.Screens
                             var reason = LockReason(item);
                             if (reason != null)
                             {
-                                Mod.Speech.Speak(reason, interrupt: true);
+                                Mod.Speech.Output(reason, interrupt: true);
                                 return;
                             }
                             UiWidgets.Click(go);
@@ -116,7 +116,7 @@ namespace BranteAccess.Module.Screens
                         {
                             var help = (GameObject)HelpBoxField.GetValue(Behaviour());
                             if (UiWidgets.Visible(help))
-                                Mod.Speech.Speak(UiWidgets.LabelText(help));
+                                Mod.Speech.Output(UiWidgets.LabelText(help));
                         },
                     });
             }

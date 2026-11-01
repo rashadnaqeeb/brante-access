@@ -64,7 +64,7 @@ namespace BranteAccess.Module.UI
         // backing up a queue); false for screen-entry / landing readouts (house style: queued).
         protected static void Speak(string text, bool interrupt = false)
         {
-            if (!string.IsNullOrEmpty(text)) Mod.Speech.Speak(text, interrupt);
+            if (!string.IsNullOrEmpty(text)) Mod.Speech.Output(text, interrupt);
         }
     }
 }

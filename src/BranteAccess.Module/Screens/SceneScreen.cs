@@ -136,7 +136,7 @@ namespace BranteAccess.Module.Screens
                 if (!entry)
                 {
                     Navigation.FocusNode(PageId(tc, page), announce: false);
-                    Mod.Speech.Speak(PageText(tc, page));
+                    Mod.Speech.Output(PageText(tc, page));
                 }
                 return;
             }
@@ -145,7 +145,7 @@ namespace BranteAccess.Module.Screens
             // New page delivered: silent re-home, the queued delivery announcement is the speech.
             _spokenPage = page;
             Navigation.FocusNode(PageId(tc, page), announce: false);
-            Mod.Speech.Speak(PageText(tc, page));
+            Mod.Speech.Output(PageText(tc, page));
         }
 
         // The post-choice stat panels (SceneConsequenceGenerator: relation/status panels per
@@ -174,7 +174,7 @@ namespace BranteAccess.Module.Screens
             if (sig.Length == 0) { _spokenStatsSig = null; return; }
             if (sig == _spokenStatsSig) return;
             _spokenStatsSig = sig;
-            Mod.Speech.Speak(sig);
+            Mod.Speech.Output(sig);
         }
 
         public override void Build(GraphBuilder b)
@@ -256,13 +256,13 @@ namespace BranteAccess.Module.Screens
                         SearchText = () => ChoiceText(choice),
                         // The game's hover-tooltip detail (conditions with current values,
                         // consequence stat effects), composed from the choice's own model data.
-                        OnTooltip = () => Mod.Speech.Speak(
+                        OnTooltip = () => Mod.Speech.Output(
                             Readouts.ChoiceDetails(choice) ?? Loc.T("nav.no_details")),
                         OnActivate = () =>
                         {
                             if (!choice.IsButtonInteractable)
                             {
-                                Mod.Speech.Speak(UnavailableReason(choice), interrupt: true);
+                                Mod.Speech.Output(UnavailableReason(choice), interrupt: true);
                                 return;
                             }
                             // The game's own resolving gate: a clicked choice sets it until the

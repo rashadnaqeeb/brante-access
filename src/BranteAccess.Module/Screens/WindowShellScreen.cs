@@ -63,7 +63,7 @@ namespace BranteAccess.Module.Screens
             if (w == null) return;
             if (w.name == _spokenWindow) return;
             _spokenWindow = w.name;
-            Mod.Speech.Speak(HudBar.OpenWindowTitle());
+            Mod.Speech.Output(HudBar.OpenWindowTitle());
         }
 
         // The window-null guard closes a one-frame race: the frame the window dies, a rebuild

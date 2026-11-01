@@ -62,12 +62,12 @@ namespace BranteAccess.Module.Screens
                             kind: AnnouncementKinds.Enabled),
                     },
                     SearchText = () => e.ButtonText.text,
-                    OnTooltip = () => Mod.Speech.Speak(Readouts.CaseDetails(e)),
+                    OnTooltip = () => Mod.Speech.Output(Readouts.CaseDetails(e)),
                     OnActivate = () =>
                     {
                         if (!UiWidgets.Interactable(e.gameObject))
                         {
-                            Mod.Speech.Speak(Readouts.CaseUnavailableReason(e), interrupt: true);
+                            Mod.Speech.Output(Readouts.CaseUnavailableReason(e), interrupt: true);
                             return;
                         }
                         UiWidgets.Click(e.gameObject);

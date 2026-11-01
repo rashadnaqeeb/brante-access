@@ -65,7 +65,7 @@ namespace BranteAccess.Module.UI
                     {
                         if (!UiWidgets.Interactable(bt.gameObject))
                         {
-                            Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
+                            Mod.Speech.Output(Loc.T("state.unavailable"), interrupt: true);
                             return;
                         }
                         UiWidgets.Click(bt.gameObject);
@@ -204,7 +204,7 @@ namespace BranteAccess.Module.UI
                                 kind: AnnouncementKinds.Label),
                         },
                         OnTooltip = scales == null ? (System.Action)null
-                            : () => Mod.Speech.Speak(Readouts.ParameterScales(scales.Parameter)),
+                            : () => Mod.Speech.Output(Readouts.ParameterScales(scales.Parameter)),
                     });
                 return;
             }
@@ -216,8 +216,8 @@ namespace BranteAccess.Module.UI
             var pgs = t.GetComponentInParent<ParameterGetSet>();
             var oi = t.GetComponentInParent<ObjectiveInitializer>();
             System.Action tooltip = null;
-            if (pgs != null) tooltip = () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter));
-            else if (oi != null) tooltip = () => Mod.Speech.Speak(Readouts.ObjectiveDetails(oi));
+            if (pgs != null) tooltip = () => Mod.Speech.Output(Readouts.ParameterScales(pgs.Parameter));
+            else if (oi != null) tooltip = () => Mod.Speech.Output(Readouts.ObjectiveDetails(oi));
             b.AddItem(ControlId.Referenced(t, idPrefix + ":text:" + t.GetInstanceID()),
                 new NodeVtable
                 {

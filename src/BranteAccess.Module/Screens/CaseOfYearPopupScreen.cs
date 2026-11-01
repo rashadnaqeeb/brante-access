@@ -91,7 +91,7 @@ namespace BranteAccess.Module.Screens
                 if (!grew)
                     Navigation.FocusNode(PanelSweep.FirstTextId(p.gameObject, "caseofyear"),
                         announce: false);
-                Mod.Speech.Speak(delivery);
+                Mod.Speech.Output(delivery);
                 return;
             }
             _stats.Reset();
@@ -106,7 +106,7 @@ namespace BranteAccess.Module.Screens
             if (page == _spokenPage) return;
             _spokenPage = page;
             Navigation.FocusNode(PageId(p, page), announce: false);
-            Mod.Speech.Speak(PageText(p, page));
+            Mod.Speech.Output(PageText(p, page));
         }
 
         public override void Build(GraphBuilder b)
