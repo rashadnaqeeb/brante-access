@@ -130,6 +130,8 @@ smoke-tested by calling the patched method from /eval and expecting the announce
 ## Hard rules (migrated from wotr-access and Non-Visual Calculus - binding here)
 
 **Speech & announcements**
+- **Braille rides with speech.** Module code announces through `Mod.Speech.Output` (speech plus
+  braille, same text), never `Mod.Speech.Speak` - a Speak call never reaches a braille display.
 - **Speech never interrupts by default.** Queued is the house style; interrupt only where an
   action supersedes prior speech (focus moves under key repeat). All speech goes through the
   Tts facade / speech pipeline - never call a backend (Prism/SAPI) directly.
