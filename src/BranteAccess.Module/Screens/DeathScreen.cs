@@ -142,7 +142,7 @@ namespace BranteAccess.Module.Screens
             // prefab, so entry announcements catch placeholders: rewrites re-deliver so the
             // player hears the real content.
             string title = Title(w).text;
-            if (_spokenTitle != null && title != _spokenTitle) Mod.Speech.Speak(title);
+            if (_spokenTitle != null && title != _spokenTitle) Mod.Speech.Output(title);
             _spokenTitle = title;
             var t = Turner();
             if (t == null) return;
@@ -174,7 +174,7 @@ namespace BranteAccess.Module.Screens
                 // The new page's row joined the transcript this frame: re-home silently, the
                 // delivery announcement is the speech.
                 Navigation.FocusNode(PageId(t, page), announce: false);
-                Mod.Speech.Speak(text);
+                Mod.Speech.Output(text);
                 return;
             }
             if (text == _spokenText) { _pendingText = null; return; }
@@ -192,7 +192,7 @@ namespace BranteAccess.Module.Screens
                 _pendingSeat = false;
                 Navigation.FocusNode(PageId(t, page), announce: false);
             }
-            Mod.Speech.Speak(text);
+            Mod.Speech.Output(text);
         }
 
         public override void Build(GraphBuilder b)

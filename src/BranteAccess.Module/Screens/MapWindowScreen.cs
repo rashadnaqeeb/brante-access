@@ -61,7 +61,7 @@ namespace BranteAccess.Module.Screens
                         SearchText = name,
                         OnTooltip = string.IsNullOrEmpty(t.TitleMainText)
                             ? (System.Action)null
-                            : () => Mod.Speech.Speak(
+                            : () => Mod.Speech.Output(
                                 GameLoc.GetTranslation(t.TitleMainText)),
                     });
             }

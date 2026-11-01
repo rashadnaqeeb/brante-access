@@ -113,7 +113,7 @@ namespace BranteAccess.Module.Screens
                         {
                             if (!tab.GetComponent<UnityEngine.UI.Button>().interactable)
                             {
-                                Mod.Speech.Speak(LockedReason(tab), interrupt: true);
+                                Mod.Speech.Output(LockedReason(tab), interrupt: true);
                                 return;
                             }
                             UiWidgets.Click(tab);
@@ -151,7 +151,7 @@ namespace BranteAccess.Module.Screens
                                 },
                                 SearchText = () => objective.ObjectiveName.text,
                                 OnTooltip = () =>
-                                    Mod.Speech.Speak(Readouts.ObjectiveDetails(objective)),
+                                    Mod.Speech.Output(Readouts.ObjectiveDetails(objective)),
                             });
                     }
                     b.PopContext();
@@ -192,7 +192,7 @@ namespace BranteAccess.Module.Screens
             var active = ActivePanel(dw);
             if (active == _spokenPanel) return;
             _spokenPanel = active;
-            if (active >= 0) Mod.Speech.Speak(TabLabel(dw.Tabs[active]));
+            if (active >= 0) Mod.Speech.Output(TabLabel(dw.Tabs[active]));
         }
 
         public override string HelpText() => GameUi.WindowHelp();

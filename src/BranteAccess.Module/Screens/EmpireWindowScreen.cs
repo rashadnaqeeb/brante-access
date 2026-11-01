@@ -95,7 +95,7 @@ namespace BranteAccess.Module.Screens
                 {
                     var co = character();
                     if (co != null)
-                        Mod.Speech.Speak(Readouts.CharacterDetail(co));
+                        Mod.Speech.Output(Readouts.CharacterDetail(co));
                 },
             });
         }

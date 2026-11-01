@@ -134,13 +134,13 @@ namespace BranteAccess.Module.Screens
                     if (_deliveredConv == conv.GetInstanceID()) return;
                     _deliveredConv = conv.GetInstanceID();
                     Navigation.FocusNode(FirstConvId(conv), announce: false);
-                    Mod.Speech.Speak(delivery);
+                    Mod.Speech.Output(delivery);
                     return;
                 }
                 if (!grew)
                     Navigation.FocusNode(PanelSweep.FirstTextId(p.gameObject, "interlude"),
                         announce: false);
-                Mod.Speech.Speak(delivery);
+                Mod.Speech.Output(delivery);
                 return;
             }
             _stats.Reset();
@@ -155,7 +155,7 @@ namespace BranteAccess.Module.Screens
             if (page == _spokenPage) return;
             _spokenPage = page;
             Navigation.FocusNode(PageId(p, page), announce: false);
-            Mod.Speech.Speak(PageText(p, page));
+            Mod.Speech.Output(PageText(p, page));
         }
 
         public override void Build(GraphBuilder b)
@@ -311,7 +311,7 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Label),
                         },
                         OnTooltip = scales == null ? (System.Action)null
-                            : () => Mod.Speech.Speak(Readouts.ParameterScales(scales.Parameter)),
+                            : () => Mod.Speech.Output(Readouts.ParameterScales(scales.Parameter)),
                     });
             }
             foreach (var tmp in panel.GetComponentsInChildren<TMPro.TMP_Text>(true))
@@ -347,7 +347,7 @@ namespace BranteAccess.Module.Screens
                             SyncConvPage(conv, page);
                             if (!UiWidgets.Interactable(bt.gameObject))
                             {
-                                Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
+                                Mod.Speech.Output(Loc.T("state.unavailable"), interrupt: true);
                                 return;
                             }
                             UiWidgets.Click(bt.gameObject);

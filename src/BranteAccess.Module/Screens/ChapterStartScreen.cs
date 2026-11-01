@@ -193,7 +193,7 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Label),
                         },
                         SearchText = () => o.ObjectiveName.text,
-                        OnTooltip = () => Mod.Speech.Speak(Readouts.ObjectiveDetails(o)),
+                        OnTooltip = () => Mod.Speech.Output(Readouts.ObjectiveDetails(o)),
                     });
             }
             if (any) return;
@@ -213,7 +213,7 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Label),
                         },
                         OnTooltip = pgs == null ? (System.Action)null
-                            : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
+                            : () => Mod.Speech.Output(Readouts.ParameterScales(pgs.Parameter)),
                     });
             }
             if (any) return;
@@ -329,7 +329,7 @@ namespace BranteAccess.Module.Screens
                     SyncPage(w, page);
                     if (!UiWidgets.Interactable(target))
                     {
-                        Mod.Speech.Speak(Loc.T("state.unavailable"), interrupt: true);
+                        Mod.Speech.Output(Loc.T("state.unavailable"), interrupt: true);
                         return;
                     }
                     UiWidgets.Click(target);
