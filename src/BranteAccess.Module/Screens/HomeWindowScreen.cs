@@ -71,7 +71,7 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Label),
                         },
                         SearchText = () => oi.ObjectiveName.text,
-                        OnTooltip = () => Mod.Speech.Speak(Readouts.ObjectiveDetails(oi)),
+                        OnTooltip = () => Mod.Speech.Output(Readouts.ObjectiveDetails(oi)),
                     });
             }
 

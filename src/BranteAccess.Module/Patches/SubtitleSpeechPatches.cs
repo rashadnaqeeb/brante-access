@@ -54,7 +54,7 @@ namespace BranteAccess.Module.Patches
                 // The component's text was set from I2 this frame; reading it back is the live
                 // localized line. The host pipeline strips TMP rich text. Queued, never interrupts:
                 // lines arrive paced by the scene's own timing.
-                Mod.Speech.Speak(__instance.TextComponent.text);
+                Mod.Speech.Output(__instance.TextComponent.text);
             }
             catch (Exception e)
             {

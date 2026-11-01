@@ -71,7 +71,7 @@ namespace BranteAccess.Module.UI
                             var reason = LockReason(go);
                             if (reason != null)
                             {
-                                Mod.Speech.Speak(reason, interrupt: true);
+                                Mod.Speech.Output(reason, interrupt: true);
                                 return;
                             }
                             UiWidgets.Click(go);

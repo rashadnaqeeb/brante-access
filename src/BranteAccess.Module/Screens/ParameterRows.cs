@@ -31,7 +31,7 @@ namespace BranteAccess.Module.Screens
                                 kind: AnnouncementKinds.Label),
                         },
                         OnTooltip = pgs == null ? (System.Action)null
-                            : () => Mod.Speech.Speak(Readouts.ParameterScales(pgs.Parameter)),
+                            : () => Mod.Speech.Output(Readouts.ParameterScales(pgs.Parameter)),
                     });
             }
         }

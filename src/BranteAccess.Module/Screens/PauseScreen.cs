@@ -134,7 +134,7 @@ namespace BranteAccess.Module.Screens
                 StateText = () => Loc.T(toggle.isOn ? "state.on" : "state.off"),
                 OnTooltip = tip == null || string.IsNullOrEmpty(tip.TitleMainText)
                     ? (System.Action)null
-                    : () => Mod.Speech.Speak(GameLoc.GetTranslation(tip.TitleMainText)),
+                    : () => Mod.Speech.Output(GameLoc.GetTranslation(tip.TitleMainText)),
             });
         }
 
