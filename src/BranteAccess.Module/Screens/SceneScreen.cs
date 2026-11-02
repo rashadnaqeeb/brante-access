@@ -335,7 +335,7 @@ namespace BranteAccess.Module.Screens
                     {
                         name = names.GetCharacterTrueName(cond.Character.Name),
                         status = I2.Loc.LocalizationManager.GetTranslation(
-                            System.Enum.GetName(typeof(CharacterStatus), cond.Status)),
+                            pm.GetCharacterStatusKey(cond.Character, cond.Status) ?? ""),
                     });
                     reqs.Add(cond.Not ? Loc.T("choice.req.not", new { req }) : req);
                 }
@@ -344,8 +344,7 @@ namespace BranteAccess.Module.Screens
                 if (!c.ChecksByObjective[i])
                 {
                     var cond = c.ConditionByObjectives[i];
-                    var req = I2.Loc.LocalizationManager.GetTranslation(
-                        cond.Objective.Name.ToString());
+                    var req = Readouts.ObjectiveTitle(cond.Objective);
                     reqs.Add(cond.Not ? Loc.T("choice.req.not", new { req }) : req);
                 }
 
