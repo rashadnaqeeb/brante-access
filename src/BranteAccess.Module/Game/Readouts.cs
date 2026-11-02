@@ -695,7 +695,9 @@ namespace BranteAccess.Module.Game
                 : text.Replace("<el>", string.Empty).Replace("  ", " ");
         }
 
-        private static string ObjectiveTitle(Objective obj)
+        /// <summary>An objective's localized title (the key is "&lt;enum&gt;.Title", or the asset
+        /// name for ObjectiveEnum.None). Shared with SceneScreen's unavailable-choice readout.</summary>
+        internal static string ObjectiveTitle(Objective obj)
             => GameLoc.GetTranslation(obj.Name == ObjectiveEnum.None
                 ? obj.name + ".Title"
                 : System.Enum.GetName(typeof(ObjectiveEnum), obj.Name) + ".Title");
