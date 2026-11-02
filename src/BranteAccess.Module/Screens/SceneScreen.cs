@@ -300,8 +300,8 @@ namespace BranteAccess.Module.Screens
 
         // Composed from the per-check data the game serialized on the button, using the game's
         // own localized names; only the operations are mod words (the game's terms are bare
-        // symbols - readers voice those unreliably). An OR-tree (DifficultConditions) failure
-        // with no failed simple check falls back to the plain unavailable word.
+        // symbols - readers voice those unreliably). A failed OR-tree (DifficultConditions) adds
+        // its alternatives as "any of, A, B".
         private static string UnavailableReason(ParameterButtonChanger c)
         {
             var reqs = new List<string>();
@@ -347,6 +347,12 @@ namespace BranteAccess.Module.Screens
                     var req = Readouts.ObjectiveTitle(cond.Objective);
                     reqs.Add(cond.Not ? Loc.T("choice.req.not", new { req }) : req);
                 }
+
+            if (c.DifficultConditions)
+            {
+                var any = Readouts.OrRequirement(c.OR_Condition, pm, names);
+                if (any != null) reqs.Add(any);
+            }
 
             if (reqs.Count == 0) return Loc.T("state.unavailable");
             return Loc.T("choice.unavailable", new { req = string.Join(", ", reqs.ToArray()) });

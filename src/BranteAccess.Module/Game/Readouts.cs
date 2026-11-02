@@ -113,6 +113,57 @@ namespace BranteAccess.Module.Game
             });
         }
 
+        // The OR-tree as a plain requirement for the unavailable-choice readout ("any of, A, B"),
+        // or null when a branch already holds. Not via DifficultCondition.GetDifficultConditionValue:
+        // that re-adds every branch to a private dictionary and throws on its second call.
+        internal static string OrRequirement(_Scripts.AMVCC.Views.DifficultCondition or,
+            _Scripts.Managers.ParametersManager pm,
+            _Scripts.AMVCC.Models.Static.KeyChapterParametersController names)
+        {
+            if (or == null) return null;
+            var reqs = new List<string>();
+            bool anyMet = false;
+            foreach (var item in or.ByParameter)
+            {
+                anyMet |= item.GetCompareValue();
+                reqs.Add(Loc.T("choice.req.param", new
+                {
+                    name = GameLoc.GetTranslation(item.Value.ParamName.ParameterName.ToString()),
+                    op = OpWord(item.Value.Operations.ToString()),
+                    value = item.Value.SecondValue,
+                }));
+            }
+            foreach (var item in or.ByRelation)
+            {
+                anyMet |= item.GetCompareValue();
+                reqs.Add(Loc.T("choice.req.relation", new
+                {
+                    name = names.GetCharacterTrueName(item.Value.Character.Name),
+                    op = OpWord(item.Value.Operations.ToString()),
+                    value = item.Value.Value,
+                }));
+            }
+            foreach (var item in or.ByStatus)
+            {
+                anyMet |= item.GetCompareValue();
+                var req = Loc.T("choice.req.status", new
+                {
+                    name = names.GetCharacterTrueName(item.Value.Character.Name),
+                    status = GameLoc.GetTranslation(
+                        pm.GetCharacterStatusKey(item.Value.Character, item.Value.Status) ?? ""),
+                });
+                reqs.Add(item.Value.Not ? Loc.T("choice.req.not", new { req }) : req);
+            }
+            foreach (var item in or.ByObjective)
+            {
+                anyMet |= item.GetCompareValue();
+                var req = ObjectiveTitle(item.Value.Objective);
+                reqs.Add(item.Value.Not ? Loc.T("choice.req.not", new { req }) : req);
+            }
+            if (anyMet || reqs.Count == 0) return null;
+            return Loc.T("choice.cond.any", new { rows = string.Join(", ", reqs.ToArray()) });
+        }
+
         // The OR-tree (any one branch satisfies it), each branch with its live met state.
         private static string OrRows(_Scripts.AMVCC.Views.DifficultCondition or,
             _Scripts.Managers.ParametersManager pm,
