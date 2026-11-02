@@ -155,9 +155,9 @@ namespace BranteAccess.Module.Game
             return Loc.T("choice.cond.any", new { rows = string.Join(", ", rows.ToArray()) });
         }
 
-        // Every stat effect with its live current value, headed by the game's own Consequences
-        // string. The gates are the game's: it hides consequences in story mode, on
-        // NoConsequence choices, and when UseConsequence is off.
+        // Every stat effect with its live current value and the value it moves to, headed by the
+        // game's own Consequences string. The gates are the game's: it hides consequences in story
+        // mode, on NoConsequence choices, and when UseConsequence is off.
         private static string ConsequenceRows(ParameterButtonChanger c)
         {
             if (!c.UseConsequence || c.NoConsequence) return null;
@@ -175,11 +175,14 @@ namespace BranteAccess.Module.Game
                         value = pm.GetHeir(p.Value),
                     }));
                 else
-                    rows.Add(WithNow(Loc.T("choice.cons.param", new
+                {
+                    int now = pm.GetParameterValue(p.Name);
+                    rows.Add(WithResult(Loc.T("choice.cons.param", new
                     {
                         name = GameLoc.GetTranslation(p.Name.ParameterName.ToString()),
                         delta = Signed(p.Value),
-                    }), pm.GetParameterValue(p.Name)));
+                    }), now, PredictParam(p.Name, now, p.Value)));
+                }
             }
 
             // Objectives ride the consequence prefab's generator (absent on most choices).
@@ -202,12 +205,15 @@ namespace BranteAccess.Module.Game
 
             if (c.Relations != null)
                 foreach (var r in c.Relations)
-                    rows.Add(WithNow(Loc.T("choice.cons.relation", new
+                {
+                    int now = pm.GetCharacterRelation(r.Character,
+                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+                    rows.Add(WithResult(Loc.T("choice.cons.relation", new
                     {
                         name = names.GetCharacterTrueName(r.Character.Name),
                         delta = Signed(r.Value),
-                    }), pm.GetCharacterRelation(r.Character,
-                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters)));
+                    }), now, PredictRelation(now, r.Value)));
+                }
 
             if (rows.Count == 0) return null;
             return Loc.T("tooltip.section", new
@@ -485,20 +491,26 @@ namespace BranteAccess.Module.Game
                             value = pm.GetHeir(p.Value),
                         }));
                     else
-                        cons.Add(WithNow(Loc.T("choice.cons.param", new
+                    {
+                        int now = pm.GetParameterValue(p.Name);
+                        cons.Add(WithResult(Loc.T("choice.cons.param", new
                         {
                             name = GameLoc.GetTranslation(p.Name.ParameterName.ToString()),
                             delta = Signed(p.Value),
-                        }), pm.GetParameterValue(p.Name)));
+                        }), now, PredictParam(p.Name, now, p.Value)));
+                    }
                 }
             if (c.RelationValue != null)
                 foreach (var r in c.RelationValue)
-                    cons.Add(WithNow(Loc.T("choice.cons.relation", new
+                {
+                    int now = pm.GetCharacterRelation(r.Character,
+                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+                    cons.Add(WithResult(Loc.T("choice.cons.relation", new
                     {
                         name = names.GetCharacterTrueName(r.Character.Name),
                         delta = Signed(r.Value),
-                    }), pm.GetCharacterRelation(r.Character,
-                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters)));
+                    }), now, PredictRelation(now, r.Value)));
+                }
             if (c.StatusValue != null)
                 foreach (var s in c.StatusValue)
                     cons.Add(Loc.T("choice.cons.set", new
@@ -691,6 +703,36 @@ namespace BranteAccess.Module.Game
         private static string WithNow(string row, int current)
             => Loc.T("choice.cond.now", new
             { row, now = GameLoc.GetTranslation("Now"), current });
+
+        // Consequence rows speak the move, "Perception +1, 3 to 4", not the game's hover badge
+        // "Now: 3": on screen the badge sits beside the delta, but read aloud "+1, now 3" is heard
+        // as the outcome. The result mirrors ParametersManager.SetParameterValue's arithmetic.
+        private static string WithResult(string row, int current, int result)
+            => Loc.T("choice.cons.result", new { row, current, result });
+
+        private static int PredictParam(Parameter p, int current, int delta)
+        {
+            switch (p.ParameterName)
+            {
+                case ParametersList.ConspiracyBrother:
+                case ParametersList.ConspiracySister:
+                    return delta; // the game assigns these outright
+                case ParametersList.FamilyReputation:
+                case ParametersList.Profession:
+                    return current + delta; // the game adds these without clamping
+            }
+            int sum = current + delta;
+            if (sum >= p.MaxValue) return (int)p.MaxValue;
+            if (sum <= p.MinValue) return (int)p.MinValue;
+            return sum;
+        }
+
+        // Relations clamp to -5..5 (ParametersManager.SetParameter(Character, ...)).
+        private static int PredictRelation(int current, int delta)
+        {
+            int sum = current + delta;
+            return sum > 5 ? 5 : sum < -5 ? -5 : sum;
+        }
 
         private static string WithMet(string row, bool met)
             => Loc.T(met ? "choice.cond.met" : "choice.cond.notmet", new { row });

@@ -56,6 +56,7 @@ choice.cond.notmet = {row}, non remplie
 choice.cond.any = une des conditions, {rows}
 choice.cons.param = {name} {delta}
 choice.cons.relation = {name}, relation {delta}
+choice.cons.result = {row}, de {current} à {result}
 choice.cons.set = {name}, {value}
 
 param.scale.single = {value}, {text}

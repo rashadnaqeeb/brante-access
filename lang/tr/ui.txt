@@ -59,6 +59,7 @@ choice.cond.notmet = {row}, karşılanmadı
 choice.cond.any = koşullardan biri, {rows}
 choice.cons.param = {name} {delta}
 choice.cons.relation = {name} ilişkisi {delta}
+choice.cons.result = {row}, şu an {current}, sonra {result}
 choice.cons.set = {name}, {value}
 
 param.scale.single = {value}, {text}

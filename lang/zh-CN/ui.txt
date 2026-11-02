@@ -57,6 +57,7 @@ choice.cond.notmet = {row}，未满足
 choice.cond.any = 其中一项，{rows}
 choice.cons.param = {name} {delta}
 choice.cons.relation = 与{name}的关系 {delta}
+choice.cons.result = {row}，从 {current} 到 {result}
 choice.cons.set = {name}，{value}
 
 param.scale.single = {value}，{text}

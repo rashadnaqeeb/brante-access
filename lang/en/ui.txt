@@ -72,6 +72,7 @@ choice.cond.notmet = {row}, not met
 choice.cond.any = any of, {rows}
 choice.cons.param = {name} {delta}
 choice.cons.relation = {name} relation {delta}
+choice.cons.result = {row}, {current} to {result}
 choice.cons.set = {name}, {value}
 
 # Parameter scale readout (Space/F1 on a stat row) - the game's ParameterValueTooltip data;
