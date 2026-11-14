@@ -37,6 +37,15 @@ If Windows blocks the scripts, run them as `powershell -ExecutionPolicy Bypass -
 
 To build the distributable zip instead, run `package.ps1`: it makes a Release build (dev server compiled out) and writes `artifacts\BranteAccess-<version>.zip`, laid out to extract straight into the game folder. It only reads the game install for reference assemblies and does not need BepInEx installed there.
 
+Releases are installable through the Loadstone mod manager: `loadstone-packages/` describes the game and the install, and each GitHub release carries a `loadstone-release.json` next to the zip. Make it with the Loadstone CLI from a checkout beside this repo (`../loadstone`, from github.com/rashadnaqeeb/loadstone), then attach both files to the release:
+
+```
+../loadstone/target/release/loadstone package --manifest loadstone-packages/brante-access.json --version v<version> --artifact artifacts/BranteAccess-<version>.zip --notes-file <notes.md> --out artifacts/loadstone-release.json
+gh release create v<version> artifacts/BranteAccess-<version>.zip artifacts/loadstone-release.json --notes-file <notes.md>
+```
+
+Build the CLI once with `cargo build --release -p loadstone-cli` in that checkout. After editing the package files, check them with `../loadstone/target/release/loadstone validate loadstone-packages`.
+
 `ROADMAP.md` tracks feature status and `DECISIONS.md` records the judgment calls made during development.
 
 ## License

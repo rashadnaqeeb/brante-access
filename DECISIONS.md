@@ -964,3 +964,11 @@ closing it.
   arrows silently driving uGUI selection behind the mod's focus. Mouse-made selections during
   sighted co-pilot use are scrubbed on the next keyboard activation, accepted: the mod owns
   keyboard focus and uGUI selection navigation is unused by the game's own keyboard.
+- **Loadstone installer** (2026-11-14, user directive): releases also install through the
+  Loadstone mod manager, which hosts all of the user's access mods. `loadstone-packages/`
+  holds the game package (`sir-brante.json`: Steam app 1272160, the exe as marker) and the
+  mod's (`brante-access.json`): extract the release zip into the game folder unchanged,
+  launch the exe directly (the preferred launch, see the Dev driver notes), and on uninstall
+  also remove BepInEx's runtime files. `prefs.txt` and the plugin's BepInEx config are
+  declared user data, so updates keep them and uninstall offers to remove them. Each release
+  carries a `loadstone-release.json` built by the Loadstone CLI (README, Building).

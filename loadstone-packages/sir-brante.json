@@ -1,0 +1,14 @@
+{
+  "manifestVersion": 1,
+  "kind": "game",
+  "id": "sir-brante",
+  "name": "The Life and Suffering of Sir Brante",
+  "detect": {
+    "steam": { "appId": 1272160, "dirName": "The Life and Suffering of Sir Brante" },
+    "gog": {},
+    "markers": ["The Life and Suffering of Sir Brante.exe"]
+  },
+  "userData": {
+    "windows": "${localLow}/Sever/The Life and Suffering of Sir Brante"
+  }
+}

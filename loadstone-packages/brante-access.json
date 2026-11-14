@@ -1,0 +1,94 @@
+{
+  "manifestVersion": 1,
+  "id": "brante-access",
+  "name": "Brante Access",
+  "description": "Screen-reader accessibility for The Life and Suffering of Sir Brante: story text, choices (including locked choices and why they are locked), stats, menus, saves, popups and endings, all playable with speech and the keyboard alone.",
+  "authors": [
+    "Rashad Naqeeb"
+  ],
+  "license": "MIT",
+  "game": "sir-brante",
+  "platforms": [
+    "windows"
+  ],
+  "distributions": {
+    "steam": "supported",
+    "gog": "supported"
+  },
+  "install": [
+    {
+      "step": "expect",
+      "checks": [
+        {
+          "platform": "windows",
+          "message": "Brante Access needs the Windows version of the game."
+        },
+        {
+          "not": {
+            "processRunning": "The Life and Suffering of Sir Brante"
+          },
+          "message": "The game is running. Quit it, then install again."
+        }
+      ]
+    },
+    {
+      "step": "extract-archive",
+      "routes": [
+        {
+          "from": "**",
+          "to": "${gameDir}"
+        }
+      ]
+    },
+    {
+      "step": "expect",
+      "checks": [
+        {
+          "fileExists": "${gameDir}/BepInEx/plugins/BranteAccess/BranteAccess.dll",
+          "message": "The download didn't contain the mod (no BepInEx/plugins/BranteAccess/BranteAccess.dll)."
+        }
+      ]
+    },
+    {
+      "step": "notice",
+      "message": "The keyboard reference is BranteAccess-KEYS.txt in the game folder. The first modded start takes a few seconds longer while the mod loader writes its config."
+    }
+  ],
+  "launch": [
+    {
+      "step": "expect",
+      "when": {
+        "distribution": "steam"
+      },
+      "checks": [
+        {
+          "processRunning": "steam",
+          "message": "Steam isn't running. Open Steam, then press Launch again."
+        }
+      ]
+    },
+    {
+      "step": "run",
+      "program": "${gameDir}/The Life and Suffering of Sir Brante.exe"
+    }
+  ],
+  "uninstall": [
+    {
+      "step": "delete-files",
+      "paths": [
+        "${gameDir}/BepInEx/cache/**/*",
+        "${gameDir}/BepInEx/cache",
+        "${gameDir}/BepInEx/patchers",
+        "${gameDir}/BepInEx/LogOutput.log",
+        "${gameDir}/BepInEx/config/BepInEx.cfg",
+        "${gameDir}/BepInEx/config",
+        "${gameDir}/BepInEx/plugins",
+        "${gameDir}/BepInEx"
+      ]
+    }
+  ],
+  "userData": [
+    "${gameDir}/BepInEx/plugins/BranteAccess/prefs.txt",
+    "${gameDir}/BepInEx/config/com.rashadnaqeeb.branteaccess.cfg"
+  ]
+}
