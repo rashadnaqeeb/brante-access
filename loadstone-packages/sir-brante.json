@@ -6,9 +6,10 @@
   "detect": {
     "steam": { "appId": 1272160, "dirName": "The Life and Suffering of Sir Brante" },
     "gog": {},
+    "epic": {},
     "markers": ["The Life and Suffering of Sir Brante.exe"]
   },
   "userData": {
-    "windows": "${localLow}/Sever/The Life and Suffering of Sir Brante"
+    "windows": "${localLow}/SEVER/The Life and Suffering of Sir Brante"
   }
 }
