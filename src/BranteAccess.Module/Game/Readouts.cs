@@ -113,6 +113,57 @@ namespace BranteAccess.Module.Game
             });
         }
 
+        // The OR-tree as a plain requirement for the unavailable-choice readout ("any of, A, B"),
+        // or null when a branch already holds. Not via DifficultCondition.GetDifficultConditionValue:
+        // that re-adds every branch to a private dictionary and throws on its second call.
+        internal static string OrRequirement(_Scripts.AMVCC.Views.DifficultCondition or,
+            _Scripts.Managers.ParametersManager pm,
+            _Scripts.AMVCC.Models.Static.KeyChapterParametersController names)
+        {
+            if (or == null) return null;
+            var reqs = new List<string>();
+            bool anyMet = false;
+            foreach (var item in or.ByParameter)
+            {
+                anyMet |= item.GetCompareValue();
+                reqs.Add(Loc.T("choice.req.param", new
+                {
+                    name = GameLoc.GetTranslation(item.Value.ParamName.ParameterName.ToString()),
+                    op = OpWord(item.Value.Operations.ToString()),
+                    value = item.Value.SecondValue,
+                }));
+            }
+            foreach (var item in or.ByRelation)
+            {
+                anyMet |= item.GetCompareValue();
+                reqs.Add(Loc.T("choice.req.relation", new
+                {
+                    name = names.GetCharacterTrueName(item.Value.Character.Name),
+                    op = OpWord(item.Value.Operations.ToString()),
+                    value = item.Value.Value,
+                }));
+            }
+            foreach (var item in or.ByStatus)
+            {
+                anyMet |= item.GetCompareValue();
+                var req = Loc.T("choice.req.status", new
+                {
+                    name = names.GetCharacterTrueName(item.Value.Character.Name),
+                    status = GameLoc.GetTranslation(
+                        pm.GetCharacterStatusKey(item.Value.Character, item.Value.Status) ?? ""),
+                });
+                reqs.Add(item.Value.Not ? Loc.T("choice.req.not", new { req }) : req);
+            }
+            foreach (var item in or.ByObjective)
+            {
+                anyMet |= item.GetCompareValue();
+                var req = ObjectiveTitle(item.Value.Objective);
+                reqs.Add(item.Value.Not ? Loc.T("choice.req.not", new { req }) : req);
+            }
+            if (anyMet || reqs.Count == 0) return null;
+            return Loc.T("choice.cond.any", new { rows = string.Join(", ", reqs.ToArray()) });
+        }
+
         // The OR-tree (any one branch satisfies it), each branch with its live met state.
         private static string OrRows(_Scripts.AMVCC.Views.DifficultCondition or,
             _Scripts.Managers.ParametersManager pm,
@@ -155,9 +206,9 @@ namespace BranteAccess.Module.Game
             return Loc.T("choice.cond.any", new { rows = string.Join(", ", rows.ToArray()) });
         }
 
-        // Every stat effect with its live current value, headed by the game's own Consequences
-        // string. The gates are the game's: it hides consequences in story mode, on
-        // NoConsequence choices, and when UseConsequence is off.
+        // Every stat effect with its live current value and the value it moves to, headed by the
+        // game's own Consequences string. The gates are the game's: it hides consequences in story
+        // mode, on NoConsequence choices, and when UseConsequence is off.
         private static string ConsequenceRows(ParameterButtonChanger c)
         {
             if (!c.UseConsequence || c.NoConsequence) return null;
@@ -175,11 +226,14 @@ namespace BranteAccess.Module.Game
                         value = pm.GetHeir(p.Value),
                     }));
                 else
-                    rows.Add(WithNow(Loc.T("choice.cons.param", new
+                {
+                    int now = pm.GetParameterValue(p.Name);
+                    rows.Add(WithResult(Loc.T("choice.cons.param", new
                     {
                         name = GameLoc.GetTranslation(p.Name.ParameterName.ToString()),
                         delta = Signed(p.Value),
-                    }), pm.GetParameterValue(p.Name)));
+                    }), now, PredictParam(p.Name, now, p.Value)));
+                }
             }
 
             // Objectives ride the consequence prefab's generator (absent on most choices).
@@ -202,12 +256,15 @@ namespace BranteAccess.Module.Game
 
             if (c.Relations != null)
                 foreach (var r in c.Relations)
-                    rows.Add(WithNow(Loc.T("choice.cons.relation", new
+                {
+                    int now = pm.GetCharacterRelation(r.Character,
+                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+                    rows.Add(WithResult(Loc.T("choice.cons.relation", new
                     {
                         name = names.GetCharacterTrueName(r.Character.Name),
                         delta = Signed(r.Value),
-                    }), pm.GetCharacterRelation(r.Character,
-                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters)));
+                    }), now, PredictRelation(now, r.Value)));
+                }
 
             if (rows.Count == 0) return null;
             return Loc.T("tooltip.section", new
@@ -485,20 +542,26 @@ namespace BranteAccess.Module.Game
                             value = pm.GetHeir(p.Value),
                         }));
                     else
-                        cons.Add(WithNow(Loc.T("choice.cons.param", new
+                    {
+                        int now = pm.GetParameterValue(p.Name);
+                        cons.Add(WithResult(Loc.T("choice.cons.param", new
                         {
                             name = GameLoc.GetTranslation(p.Name.ParameterName.ToString()),
                             delta = Signed(p.Value),
-                        }), pm.GetParameterValue(p.Name)));
+                        }), now, PredictParam(p.Name, now, p.Value)));
+                    }
                 }
             if (c.RelationValue != null)
                 foreach (var r in c.RelationValue)
-                    cons.Add(WithNow(Loc.T("choice.cons.relation", new
+                {
+                    int now = pm.GetCharacterRelation(r.Character,
+                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters);
+                    cons.Add(WithResult(Loc.T("choice.cons.relation", new
                     {
                         name = names.GetCharacterTrueName(r.Character.Name),
                         delta = Signed(r.Value),
-                    }), pm.GetCharacterRelation(r.Character,
-                        _Scripts.Helpers.CharacterParametersSerializeHelper.Initiate.Characters)));
+                    }), now, PredictRelation(now, r.Value)));
+                }
             if (c.StatusValue != null)
                 foreach (var s in c.StatusValue)
                     cons.Add(Loc.T("choice.cons.set", new
@@ -683,7 +746,9 @@ namespace BranteAccess.Module.Game
                 : text.Replace("<el>", string.Empty).Replace("  ", " ");
         }
 
-        private static string ObjectiveTitle(Objective obj)
+        /// <summary>An objective's localized title (the key is "&lt;enum&gt;.Title", or the asset
+        /// name for ObjectiveEnum.None). Shared with SceneScreen's unavailable-choice readout.</summary>
+        internal static string ObjectiveTitle(Objective obj)
             => GameLoc.GetTranslation(obj.Name == ObjectiveEnum.None
                 ? obj.name + ".Title"
                 : System.Enum.GetName(typeof(ObjectiveEnum), obj.Name) + ".Title");
@@ -691,6 +756,36 @@ namespace BranteAccess.Module.Game
         private static string WithNow(string row, int current)
             => Loc.T("choice.cond.now", new
             { row, now = GameLoc.GetTranslation("Now"), current });
+
+        // Consequence rows speak the move, "Perception +1, 3 to 4", not the game's hover badge
+        // "Now: 3": on screen the badge sits beside the delta, but read aloud "+1, now 3" is heard
+        // as the outcome. The result mirrors ParametersManager.SetParameterValue's arithmetic.
+        private static string WithResult(string row, int current, int result)
+            => Loc.T("choice.cons.result", new { row, current, result });
+
+        private static int PredictParam(Parameter p, int current, int delta)
+        {
+            switch (p.ParameterName)
+            {
+                case ParametersList.ConspiracyBrother:
+                case ParametersList.ConspiracySister:
+                    return delta; // the game assigns these outright
+                case ParametersList.FamilyReputation:
+                case ParametersList.Profession:
+                    return current + delta; // the game adds these without clamping
+            }
+            int sum = current + delta;
+            if (sum >= p.MaxValue) return (int)p.MaxValue;
+            if (sum <= p.MinValue) return (int)p.MinValue;
+            return sum;
+        }
+
+        // Relations clamp to -5..5 (ParametersManager.SetParameter(Character, ...)).
+        private static int PredictRelation(int current, int delta)
+        {
+            int sum = current + delta;
+            return sum > 5 ? 5 : sum < -5 ? -5 : sum;
+        }
 
         private static string WithMet(string row, bool met)
             => Loc.T(met ? "choice.cond.met" : "choice.cond.notmet", new { row });

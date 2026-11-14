@@ -56,6 +56,7 @@ choice.cond.notmet = {row}, не выполнено
 choice.cond.any = одно из условий, {rows}
 choice.cons.param = {name} {delta}
 choice.cons.relation = {name}, отношение {delta}
+choice.cons.result = {row}, с {current} до {result}
 choice.cons.set = {name}, {value}
 
 param.scale.single = {value}, {text}
