@@ -1,8 +1,22 @@
 {
-  "manifestVersion": 1,
+  "manifestVersion": 2,
   "id": "brante-access",
   "name": "Brante Access",
-  "description": "Screen-reader accessibility for The Life and Suffering of Sir Brante: story text, choices (including locked choices and why they are locked), stats, menus, saves, popups and endings, all playable with speech and the keyboard alone.",
+  "description": {
+    "en": "Screen-reader accessibility for The Life and Suffering of Sir Brante: story text, choices (including locked choices and why they are locked), stats, menus, saves, popups and endings, all playable with speech and the keyboard alone.",
+    "de": "Screenreader-Zugänglichkeit für The Life and Suffering of Sir Brante: Erzähltext, Entscheidungen (auch nicht verfügbare, mit dem Grund der Sperre), Werte, Menüs, Spielstände, Pop-ups und Enden, alles allein mit Sprachausgabe und Tastatur spielbar.",
+    "es": "Accesibilidad con lector de pantalla para The Life and Suffering of Sir Brante: texto de la historia, decisiones (incluidas las no disponibles y el motivo por el que están bloqueadas), estadísticas, menús, partidas guardadas, ventanas emergentes y finales, todo jugable solo con voz y teclado.",
+    "fr": "Accessibilité au lecteur d'écran pour The Life and Suffering of Sir Brante : texte du récit, choix (y compris les choix indisponibles et la raison de leur verrouillage), statistiques, menus, sauvegardes, fenêtres contextuelles et fins, le tout jouable uniquement avec la synthèse vocale et le clavier.",
+    "it": "Accessibilità con screen reader per The Life and Suffering of Sir Brante: testo della storia, scelte (comprese quelle non disponibili e il motivo per cui sono bloccate), statistiche, menu, salvataggi, finestre popup e finali, tutto giocabile solo con la sintesi vocale e la tastiera.",
+    "ja": "The Life and Suffering of Sir Brante をスクリーンリーダーで遊べるようにする MOD です。物語のテキスト、選択肢（利用不可の選択肢とその理由も含む）、ステータス、メニュー、セーブ、ポップアップ、エンディングまで、音声とキーボードだけでプレイできます。",
+    "ko": "The Life and Suffering of Sir Brante의 스크린 리더 접근성 모드입니다. 이야기 텍스트, 선택지(사용 불가 선택지와 그 이유 포함), 능력치, 메뉴, 저장, 팝업, 엔딩까지 음성과 키보드만으로 플레이할 수 있습니다.",
+    "pl": "Dostępność z czytnikiem ekranu dla The Life and Suffering of Sir Brante: tekst fabuły, wybory (także niedostępne, wraz z powodem blokady), statystyki, menu, zapisy gry, okna podręczne i zakończenia – wszystko grywalne wyłącznie z mową i klawiaturą.",
+    "pt-BR": "Acessibilidade com leitor de tela para The Life and Suffering of Sir Brante: texto da história, escolhas (incluindo as indisponíveis e o motivo do bloqueio), atributos, menus, jogos salvos, janelas pop-up e finais, tudo jogável apenas com voz e teclado.",
+    "ru": "Поддержка программ чтения с экрана в The Life and Suffering of Sir Brante: текст истории, варианты выбора (включая недоступные и причину, по которой они закрыты), характеристики, меню, сохранения, всплывающие окна и концовки — всю игру можно пройти только с речью и клавиатурой.",
+    "tr": "The Life and Suffering of Sir Brante için ekran okuyucu erişilebilirliği: hikâye metni, seçimler (kullanılamayan seçimler ve neden kilitli oldukları dahil), istatistikler, menüler, kayıtlar, açılır pencereler ve sonlar; hepsi yalnızca konuşma ve klavyeyle oynanabilir.",
+    "zh-Hans": "为《The Life and Suffering of Sir Brante》提供读屏无障碍支持：剧情文本、选项（包括不可用的选项及其原因）、属性、菜单、存档、弹窗和结局，全部只用语音和键盘即可游玩。",
+    "zh-Hant": "為《The Life and Suffering of Sir Brante》提供螢幕閱讀器無障礙支援：劇情文字、選項（包括不可用的選項及其原因）、屬性、選單、存檔、彈出視窗和結局，全部只用語音和鍵盤即可遊玩。"
+  },
   "authors": [
     "Rashad Naqeeb"
   ],
@@ -21,13 +35,41 @@
       "checks": [
         {
           "platform": "windows",
-          "message": "Brante Access needs the Windows version of the game."
+          "message": {
+            "en": "Brante Access needs the Windows version of the game.",
+            "de": "Brante Access benötigt die Windows-Version des Spiels.",
+            "es": "Brante Access necesita la versión para Windows del juego.",
+            "fr": "Brante Access nécessite la version Windows du jeu.",
+            "it": "Brante Access richiede la versione Windows del gioco.",
+            "ja": "Brante Access にはゲームの Windows 版が必要です。",
+            "ko": "Brante Access를 사용하려면 Windows 버전 게임이 필요합니다.",
+            "pl": "Brante Access wymaga wersji gry na Windows.",
+            "pt-BR": "O Brante Access precisa da versão do jogo para Windows.",
+            "ru": "Для Brante Access нужна Windows-версия игры.",
+            "tr": "Brante Access, oyunun Windows sürümünü gerektirir.",
+            "zh-Hans": "Brante Access 需要 Windows 版游戏。",
+            "zh-Hant": "Brante Access 需要 Windows 版遊戲。"
+          }
         },
         {
           "not": {
             "processRunning": "The Life and Suffering of Sir Brante"
           },
-          "message": "The game is running. Quit it, then install again."
+          "message": {
+            "en": "The game is running. Quit it, then install again.",
+            "de": "Das Spiel läuft. Beenden Sie es und installieren Sie dann erneut.",
+            "es": "El juego se está ejecutando. Ciérralo y vuelve a instalar.",
+            "fr": "Le jeu est en cours d'exécution. Quittez-le, puis relancez l'installation.",
+            "it": "Il gioco è in esecuzione. Chiudilo, poi ripeti l'installazione.",
+            "ja": "ゲームが実行中です。ゲームを終了してから、もう一度インストールしてください。",
+            "ko": "게임이 실행 중입니다. 게임을 종료한 후 다시 설치하세요.",
+            "pl": "Gra jest uruchomiona. Zamknij ją, a potem zainstaluj ponownie.",
+            "pt-BR": "O jogo está em execução. Feche-o e instale novamente.",
+            "ru": "Игра запущена. Закройте её и повторите установку.",
+            "tr": "Oyun çalışıyor. Oyundan çıkın, ardından yeniden yükleyin.",
+            "zh-Hans": "游戏正在运行。请退出游戏，然后重新安装。",
+            "zh-Hant": "遊戲正在執行。請結束遊戲，然後重新安裝。"
+          }
         }
       ]
     },
@@ -45,13 +87,41 @@
       "checks": [
         {
           "fileExists": "${gameDir}/BepInEx/plugins/BranteAccess/BranteAccess.dll",
-          "message": "The download didn't contain the mod (no BepInEx/plugins/BranteAccess/BranteAccess.dll)."
+          "message": {
+            "en": "The download didn't contain the mod (no BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "de": "Der Download enthielt die Mod nicht (keine BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "es": "La descarga no contenía el mod (falta BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "fr": "Le téléchargement ne contenait pas le mod (BepInEx/plugins/BranteAccess/BranteAccess.dll absent).",
+            "it": "Il download non conteneva la mod (manca BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "ja": "ダウンロードに MOD が含まれていませんでした（BepInEx/plugins/BranteAccess/BranteAccess.dll がありません）。",
+            "ko": "다운로드에 모드가 들어 있지 않습니다(BepInEx/plugins/BranteAccess/BranteAccess.dll 없음).",
+            "pl": "Pobrany plik nie zawierał moda (brak BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "pt-BR": "O download não continha o mod (falta BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "ru": "В загрузке нет мода (отсутствует BepInEx/plugins/BranteAccess/BranteAccess.dll).",
+            "tr": "İndirilen dosyada mod yoktu (BepInEx/plugins/BranteAccess/BranteAccess.dll bulunamadı).",
+            "zh-Hans": "下载内容中没有此模组（缺少 BepInEx/plugins/BranteAccess/BranteAccess.dll）。",
+            "zh-Hant": "下載內容中沒有此模組（缺少 BepInEx/plugins/BranteAccess/BranteAccess.dll）。"
+          }
         }
       ]
     },
     {
       "step": "notice",
-      "message": "The keyboard reference is BranteAccess-KEYS.txt in the game folder. The first modded start takes a few seconds longer while the mod loader writes its config."
+      "message": {
+        "en": "The keyboard reference is BranteAccess-KEYS.txt in the game folder. The first modded start takes a few seconds longer while the mod loader writes its config.",
+        "de": "Die Tastaturübersicht ist BranteAccess-KEYS.txt im Spielordner. Der erste Start mit Mod dauert ein paar Sekunden länger, während der Mod-Loader seine Konfiguration schreibt.",
+        "es": "La referencia de teclas es BranteAccess-KEYS.txt, en la carpeta del juego. El primer inicio con el mod tarda unos segundos más mientras el cargador de mods escribe su configuración.",
+        "fr": "La référence des touches est le fichier BranteAccess-KEYS.txt dans le dossier du jeu. Le premier démarrage avec le mod prend quelques secondes de plus, le temps que le chargeur de mods écrive sa configuration.",
+        "it": "La guida ai tasti è BranteAccess-KEYS.txt nella cartella del gioco. Il primo avvio con la mod richiede qualche secondo in più, mentre il loader delle mod scrive la sua configurazione.",
+        "ja": "キー操作の一覧はゲームのフォルダーにある BranteAccess-KEYS.txt です。MOD を入れて初めて起動するときは、MOD ローダーが設定を書き込むため数秒長くかかります。",
+        "ko": "키 안내는 게임 폴더의 BranteAccess-KEYS.txt입니다. 모드를 적용한 첫 실행은 모드 로더가 설정을 기록하느라 몇 초 더 걸립니다.",
+        "pl": "Opis klawiszy znajduje się w pliku BranteAccess-KEYS.txt w folderze gry. Pierwsze uruchomienie z modem trwa kilka sekund dłużej, bo loader modów zapisuje swoją konfigurację.",
+        "pt-BR": "A referência de teclas é o arquivo BranteAccess-KEYS.txt na pasta do jogo. A primeira inicialização com o mod leva alguns segundos a mais enquanto o carregador de mods grava sua configuração.",
+        "ru": "Список клавиш находится в файле BranteAccess-KEYS.txt в папке игры. Первый запуск с модом длится на несколько секунд дольше, пока загрузчик модов записывает свою конфигурацию.",
+        "tr": "Tuş başvurusu, oyun klasöründeki BranteAccess-KEYS.txt dosyasıdır. Modlu ilk açılış, mod yükleyici yapılandırmasını yazarken birkaç saniye daha uzun sürer.",
+        "zh-Hans": "按键说明见游戏文件夹中的 BranteAccess-KEYS.txt。首次带模组启动会多花几秒钟，因为模组加载器要写入配置。",
+        "zh-Hant": "按鍵說明請見遊戲資料夾中的 BranteAccess-KEYS.txt。首次載入模組啟動時會多花幾秒鐘，因為模組載入器要寫入設定。"
+      }
     }
   ],
   "launch": [
@@ -63,7 +133,21 @@
       "checks": [
         {
           "processRunning": "steam",
-          "message": "Steam isn't running. Open Steam, then press Launch again."
+          "message": {
+            "en": "Steam isn't running. Open Steam, then press Launch game again.",
+            "de": "Steam läuft nicht. Öffnen Sie Steam und drücken Sie dann erneut „Spiel starten“.",
+            "es": "Steam no se está ejecutando. Abre Steam y vuelve a pulsar Iniciar el juego.",
+            "fr": "Steam n'est pas lancé. Ouvrez Steam, puis appuyez de nouveau sur Lancer le jeu.",
+            "it": "Steam non è in esecuzione. Apri Steam, poi premi di nuovo Avvia il gioco.",
+            "ja": "Steam が起動していません。Steam を開いてから、もう一度「ゲームを起動」を押してください。",
+            "ko": "Steam이 실행 중이 아닙니다. Steam을 연 후 게임 실행을 다시 누르세요.",
+            "pl": "Steam nie jest uruchomiony. Otwórz Steam, a potem ponownie naciśnij Uruchom grę.",
+            "pt-BR": "O Steam não está em execução. Abra o Steam e pressione Iniciar o jogo novamente.",
+            "ru": "Steam не запущен. Откройте Steam и снова нажмите «Запустить игру».",
+            "tr": "Steam çalışmıyor. Steam'i açın, ardından Oyunu başlat düğmesine yeniden basın.",
+            "zh-Hans": "Steam 未运行。请打开 Steam，然后再次按“启动游戏”。",
+            "zh-Hant": "Steam 未在執行。請開啟 Steam，然後再按一次「啟動遊戲」。"
+          }
         }
       ]
     },
