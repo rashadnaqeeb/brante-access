@@ -15,7 +15,9 @@ This mod was developed entirely by Claude (Anthropic's AI, via Claude Code) with
 
 ## Installing
 
-Download the latest `BranteAccess-<version>.zip` from the [Releases page](https://github.com/rashadnaqeeb/brante-access/releases) and extract it straight into the game folder (the one containing `The Life and Suffering of Sir Brante.exe`). That is the whole install: the zip bundles BepInEx, the plugin, and the speech library. Full steps and the key reference are in the `BranteAccess-README.txt` and `BranteAccess-KEYS.txt` files inside the zip.
+The easiest way to install is [Loadstone](https://github.com/bradjrenshaw/loadstone), an accessible mod manager for screen-reader accessibility mods. Download `Loadstone.exe` from [Loadstone's latest release](https://github.com/bradjrenshaw/loadstone/releases/latest), run it, choose Brante Access in the list of mods, and press Install. Loadstone finds your Steam copy of the game on its own; for GOG, browse to the game folder. Press Launch in Loadstone to play. The same page in Loadstone updates the mod and uninstalls it.
+
+To install by hand instead, download the latest `BranteAccess-<version>.zip` from the [Releases page](https://github.com/rashadnaqeeb/brante-access/releases) and extract it straight into the game folder (the one containing `The Life and Suffering of Sir Brante.exe`). That is the whole install: the zip bundles BepInEx, the plugin, and the speech library. Full steps and the key reference are in the `BranteAccess-README.txt` and `BranteAccess-KEYS.txt` files inside the zip.
 
 ## How it is built
 
